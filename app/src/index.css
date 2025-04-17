@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* In your main CSS file (e.g., index.css) */
+:root {
+  /* Light theme variables */
+  --bg-light: #f5f5f5;
+  --text-light: #333333;
+  --accent-light: #5f6fff;
+
+  /* Dark theme variables */
+  --bg-dark: #222831;
+  --text-dark: #eeeeee;
+  --accent-dark: #00adb5;
+}
+
+body.light-theme {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+body.dark-theme {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+/* Additional theme-specific styles */
+.light-theme .special-element {
+  background: linear-gradient(to right, #5f6fff, #3b82f6);
+}
+
+.dark-theme .special-element {
+  background: linear-gradient(to right, #00adb5, #3b82f6);
+}
