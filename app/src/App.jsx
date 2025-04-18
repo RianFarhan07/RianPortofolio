@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDialog from "./components/ProjectDialog";
 import ScrollToTop from "./components/ScrollToTop";
+import AboutPreview from "./components/AboutPreview";
 
 const AppContent = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -40,14 +41,14 @@ const AppContent = () => {
             element={
               <>
                 <Hero />
-                <About />
+                <AboutPreview />
                 <Projects openProjectDialog={openProjectDialog} />
                 <Certificates />
                 <Contact />
               </>
             }
           />
-          <Route path="/about" element={<About fullPage />} />
+          <Route path="/about" element={<About />} />
           <Route
             path="/projects"
             element={
