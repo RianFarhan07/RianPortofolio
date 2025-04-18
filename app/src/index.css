@@ -33,3 +33,12 @@ body.dark-theme {
 .dark-theme .special-element {
   background: linear-gradient(to right, #00adb5, #3b82f6);
 }
+
+/* Sembunyikan scrollbar tetapi tetap bisa scroll */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}

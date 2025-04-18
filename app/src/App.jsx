@@ -11,6 +11,7 @@ import Certificates from "./components/Certificates";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDialog from "./components/ProjectDialog";
+import ScrollToTop from "./components/ScrollToTop";
 
 const AppContent = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -31,6 +32,7 @@ const AppContent = () => {
   return (
     <>
       <Navbar />
+      <ScrollToTop />
       <PageTransition>
         <Routes location={location}>
           <Route
