@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import fotoRian from "../assets/foto_rian.jpg";
+// Remove the import "particles.js" line completely
 
 const TechBadge = ({ icon, text, delay, style }) => {
   const { theme } = useTheme();
@@ -45,35 +46,17 @@ const TechBadge = ({ icon, text, delay, style }) => {
   );
 };
 
-// Optimized static particle component to reduce animation load
-const Particle = ({ x, y, size, delay, isDark }) => {
-  return (
-    <div
-      className={`absolute rounded-full ${
-        isDark ? "bg-primary/40" : "bg-primaryInLight/40"
-      }`}
-      style={{
-        left: `${x}%`,
-        top: `${y}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-        opacity: 0.1 + Math.random() * 0.3,
-        willChange: "transform, opacity",
-        animation: `float ${15 + delay}s infinite linear`,
-        animationDelay: `${delay}s`,
-      }}
-    />
-  );
-};
-
 export default function Hero() {
   const containerRef = useRef(null);
+  const particlesRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
+
+  // Removed particles state and generation
 
   // Typed text effect
   const [text] = useTypewriter({
@@ -90,20 +73,75 @@ export default function Hero() {
     delaySpeed: 2000,
   });
 
+  // For particles.js initialization
   useEffect(() => {
-    // Add CSS animation for particles to the document
-    const style = document.createElement("style");
-    style.textContent = `
-      @keyframes float {
-        0% { transform: translate(0, 0); opacity: 0.1; }
-        25% { transform: translate(10px, -15px); opacity: 0.3; }
-        50% { transform: translate(20px, -25px); opacity: 0.2; }
-        75% { transform: translate(10px, -10px); opacity: 0.3; }
-        100% { transform: translate(0, 0); opacity: 0.1; }
-      }
-    `;
-    document.head.appendChild(style);
+    // Add a small delay to ensure the DOM element is ready
+    const timer = setTimeout(() => {
+      if (
+        typeof window !== "undefined" &&
+        window.particlesJS &&
+        document.getElementById("particles-js")
+      ) {
+        console.log("Initializing particles.js");
+        window.particlesJS("particles-js", {
+          particles: {
+            number: { value: 20, density: { enable: true, value_area: 800 } },
+            color: { value: isDark ? "#00adb5" : "#14b8a6" },
+            opacity: {
+              value: 0.4, // Slightly more opaque
+              random: true, // Random opacity for bubble effect
+              anim: {
+                enable: true,
+                speed: 0.5,
+                opacity_min: 0.3,
+                sync: false,
+              },
+            },
+            size: {
+              value: 6, // Larger size for bubbles
+              random: true, // Random sizes
+              anim: {
+                enable: true,
+                speed: 2,
+                size_min: 2,
+                sync: false,
+              },
+            },
+            line_linked: {
+              enable: false, // No links between particles
+            },
+            move: {
+              enable: true,
+              speed: 0.8, // Slower speed
+              direction: "none",
+              random: true,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+            },
+          },
+        });
 
+        console.log("Particles initialized"); // Add this to debug
+      } else {
+        console.error("Particles.js not available or element not found", {
+          particlesJS: !!window.particlesJS,
+          element: !!document.getElementById("particles-js"),
+        }); // More detailed debug
+      }
+    }, 1500); // Small delay to ensure rendering
+
+    return () => {
+      clearTimeout(timer);
+      // Cleanup if necessary
+      if (window.pJSDom && window.pJSDom.length) {
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+      }
+    };
+  }, [isDark]);
+
+  useEffect(() => {
     const handleMouseMove = (e) => {
       if (!containerRef.current || isMobile) return;
       const { left, top, width, height } =
@@ -129,7 +167,6 @@ export default function Hero() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
-      document.head.removeChild(style);
     };
   }, [isMobile]);
 
@@ -138,8 +175,8 @@ export default function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.5,
+        staggerChildren: 0.3,
+        delayChildren: 1.5,
       },
     },
   };
@@ -162,20 +199,6 @@ export default function Hero() {
     },
     tap: { scale: 0.95 },
   };
-
-  // Generate static particles - reduced number for better performance
-  const particles = [];
-  const particleCount = isMobile ? 8 : 15; // Further reduce particles on mobile
-
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      id: i,
-      x: Math.random() * 100, // percentage-based positioning
-      y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
-      delay: Math.random() * 5,
-    });
-  }
 
   // Adjust tech badge positions for mobile
   const getTechBadgePosition = (position) => {
@@ -223,7 +246,14 @@ export default function Hero() {
       transition={{ duration: 0.6 }}
       ref={containerRef}
     >
-      {/* Animated background with gradient mesh */}
+      {/* Particles.js container */}
+      <div
+        id="particles-js"
+        ref={particlesRef}
+        className="absolute inset-0 z-0"
+      ></div>
+
+      {/* Gradient background */}
       <div className="absolute inset-0 z-0">
         <div
           className={`absolute inset-0 opacity-20 ${
@@ -253,18 +283,6 @@ export default function Hero() {
             animation: "pulse 8s infinite ease-in-out reverse",
           }}
         />
-
-        {/* Static particles with CSS animations instead of JS animations */}
-        {particles.map((particle) => (
-          <Particle
-            key={particle.id}
-            x={particle.x}
-            y={particle.y}
-            size={particle.size}
-            delay={particle.delay}
-            isDark={isDark}
-          />
-        ))}
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 z-10">
@@ -300,25 +318,25 @@ export default function Hero() {
                   <TechBadge
                     icon={<Code size={16} />}
                     text="React"
-                    delay={1.5}
+                    delay={2}
                     style={getTechBadgePosition("topLeft")}
                   />
                   <TechBadge
                     icon={<Layout size={16} />}
                     text="UI/UX"
-                    delay={2.0}
+                    delay={2.5}
                     style={getTechBadgePosition("topRight")}
                   />
                   <TechBadge
                     icon={<Smartphone size={16} />}
                     text="Mobile"
-                    delay={2.5}
+                    delay={3.0}
                     style={getTechBadgePosition("bottomRight")}
                   />
                   <TechBadge
                     icon={<Server size={16} />}
                     text="Backend"
-                    delay={3.0}
+                    delay={3.5}
                     style={getTechBadgePosition("bottomLeft")}
                   />
                 </>
@@ -428,13 +446,17 @@ export default function Hero() {
               } mb-3 md:mb-4`}
               variants={itemVariants}
             >
-              Hello, I'm{" "}
+              Hello I'm
+              <br />
               <span
-                className={`${
-                  isDark
-                    ? "text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400"
-                    : "text-transparent bg-clip-text bg-gradient-to-r from-primaryInLight to-blue-500"
-                }`}
+                className={`text-transparent bg-clip-text 
+              bg-gradient-to-r 
+              ${
+                isDark
+                  ? "from-primary via-blue-400 to-cyan-400"
+                  : "from-primaryInLight via-teal-400 to-sky-500"
+              } 
+              bg-[length:200%_200%] animate-gradient-x`}
               >
                 Rian Farhan
               </span>
