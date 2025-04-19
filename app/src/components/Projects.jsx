@@ -1,6 +1,3 @@
-// Projects.jsx
-"use client";
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -17,106 +14,106 @@ import {
   Lock,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { projectsData } from "../data/projects";
 
-// Project data - this would typically come from an API or CMS
-const projectsData = [
-  {
-    id: 1,
-    title: "FurniShop",
-    description:
-      "E-commerce platform for modern furniture with AR previews for an immersive shopping experience",
-    image: "/projects/furnishop.jpg",
-    technologies: ["React", "Next.js", "Tailwind CSS", "Three.js"],
-    category: "web",
-    featured: true,
-    githubUrl: "https://github.com/username/furnishop",
-    liveUrl: "https://furnishop.example.com",
-  },
-  {
-    id: 2,
-    title: "FinTrack",
-    description:
-      "Personal finance tracking app with expense analytics and budgeting features",
-    image: "/projects/fintrack.jpg",
-    technologies: ["React Native", "Firebase", "Redux", "Chart.js"],
-    category: "mobile",
-    featured: true,
-    githubUrl: "https://github.com/username/fintrack",
-    liveUrl: "https://fintrack.example.com",
-  },
-  {
-    id: 3,
-    title: "DevCollab",
-    description:
-      "Real-time collaboration tool for developers with code sharing and version control",
-    image: "/projects/devcollab.jpg",
-    technologies: ["Vue.js", "Node.js", "Socket.io", "MongoDB"],
-    category: "web",
-    featured: true,
-    githubUrl: "https://github.com/username/devcollab",
-    liveUrl: "https://devcollab.example.com",
-  },
-  {
-    id: 4,
-    title: "HealthMate",
-    description:
-      "Health monitoring application with sleep tracking and nutrition recommendations",
-    image: "/projects/healthmate.jpg",
-    technologies: ["Kotlin", "Android SDK", "Room Database", "ML Kit"],
-    category: "mobile",
-    featured: false,
-    githubUrl: "https://github.com/username/healthmate",
-    liveUrl: "https://healthmate.example.com",
-  },
-  {
-    id: 5,
-    title: "SecurePass",
-    description:
-      "Password manager with advanced encryption and cross-platform synchronization",
-    image: "/projects/securepass.jpg",
-    technologies: ["Electron", "React", "Node.js", "SQLite"],
-    category: "desktop",
-    featured: false,
-    githubUrl: "https://github.com/username/securepass",
-    liveUrl: "https://securepass.example.com",
-  },
-  {
-    id: 6,
-    title: "DataVizPro",
-    description:
-      "Data visualization dashboard with customizable widgets and real-time updates",
-    image: "/projects/datavizpro.jpg",
-    technologies: ["Angular", "D3.js", "Express", "PostgreSQL"],
-    category: "web",
-    featured: false,
-    githubUrl: "https://github.com/username/datavizpro",
-    liveUrl: "https://datavizpro.example.com",
-  },
-  {
-    id: 7,
-    title: "CloudStore",
-    description:
-      "Secure cloud storage solution with file sharing and permissions management",
-    image: "/projects/cloudstore.jpg",
-    technologies: ["AWS S3", "React", "Node.js", "MongoDB"],
-    category: "backend",
-    featured: false,
-    githubUrl: "https://github.com/username/cloudstore",
-    liveUrl: "https://cloudstore.example.com",
-  },
-  {
-    id: 8,
-    title: "TravelBuddy",
-    description:
-      "Travel companion app with itinerary planning and location-based recommendations",
-    image: "/projects/travelbuddy.jpg",
-    technologies: ["Flutter", "Firebase", "Google Maps API"],
-    category: "mobile",
-    featured: false,
-    githubUrl: "https://github.com/username/travelbuddy",
-    liveUrl: "https://travelbuddy.example.com",
-  },
-];
+// const projectsData = [
+//   {
+//     id: 1,
+//     title: "FurniShop",
+//     description:
+//       "E-commerce platform for modern furniture with AR previews for an immersive shopping experience",
+//     image: "/projects/furnishop.jpg",
+//     technologies: ["React", "Next.js", "Tailwind CSS", "Three.js"],
+//     category: "web",
+//     featured: true,
+//     githubUrl: "https://github.com/username/furnishop",
+//     liveUrl: "https://furnishop.example.com",
+//   },
+//   {
+//     id: 2,
+//     title: "FinTrack",
+//     description:
+//       "Personal finance tracking app with expense analytics and budgeting features",
+//     image: "/projects/fintrack.jpg",
+//     technologies: ["React Native", "Firebase", "Redux", "Chart.js"],
+//     category: "mobile",
+//     featured: true,
+//     githubUrl: "https://github.com/username/fintrack",
+//     liveUrl: "https://fintrack.example.com",
+//   },
+//   {
+//     id: 3,
+//     title: "DevCollab",
+//     description:
+//       "Real-time collaboration tool for developers with code sharing and version control",
+//     image: "/projects/devcollab.jpg",
+//     technologies: ["Vue.js", "Node.js", "Socket.io", "MongoDB"],
+//     category: "web",
+//     featured: true,
+//     githubUrl: "https://github.com/username/devcollab",
+//     liveUrl: "https://devcollab.example.com",
+//   },
+//   {
+//     id: 4,
+//     title: "HealthMate",
+//     description:
+//       "Health monitoring application with sleep tracking and nutrition recommendations",
+//     image: "/projects/healthmate.jpg",
+//     technologies: ["Kotlin", "Android SDK", "Room Database", "ML Kit"],
+//     category: "mobile",
+//     featured: false,
+//     githubUrl: "https://github.com/username/healthmate",
+//     liveUrl: "https://healthmate.example.com",
+//   },
+//   {
+//     id: 5,
+//     title: "SecurePass",
+//     description:
+//       "Password manager with advanced encryption and cross-platform synchronization",
+//     image: "/projects/securepass.jpg",
+//     technologies: ["Electron", "React", "Node.js", "SQLite"],
+//     category: "desktop",
+//     featured: false,
+//     githubUrl: "https://github.com/username/securepass",
+//     liveUrl: "https://securepass.example.com",
+//   },
+//   {
+//     id: 6,
+//     title: "DataVizPro",
+//     description:
+//       "Data visualization dashboard with customizable widgets and real-time updates",
+//     image: "/projects/datavizpro.jpg",
+//     technologies: ["Angular", "D3.js", "Express", "PostgreSQL"],
+//     category: "web",
+//     featured: false,
+//     githubUrl: "https://github.com/username/datavizpro",
+//     liveUrl: "https://datavizpro.example.com",
+//   },
+//   {
+//     id: 7,
+//     title: "CloudStore",
+//     description:
+//       "Secure cloud storage solution with file sharing and permissions management",
+//     image: "/projects/cloudstore.jpg",
+//     technologies: ["AWS S3", "React", "Node.js", "MongoDB"],
+//     category: "backend",
+//     featured: false,
+//     githubUrl: "https://github.com/username/cloudstore",
+//     liveUrl: "https://cloudstore.example.com",
+//   },
+//   {
+//     id: 8,
+//     title: "TravelBuddy",
+//     description:
+//       "Travel companion app with itinerary planning and location-based recommendations",
+//     image: "/projects/travelbuddy.jpg",
+//     technologies: ["Flutter", "Firebase", "Google Maps API"],
+//     category: "mobile",
+//     featured: false,
+//     githubUrl: "https://github.com/username/travelbuddy",
+//     liveUrl: "https://travelbuddy.example.com",
+//   },
+// ];
 
 // Define category options with icons
 const categories = [
@@ -275,16 +272,16 @@ const ProjectCard = ({ project, isDark }) => {
             Technologies
           </p>
           <div className="flex flex-wrap gap-1.5">
-            {project.technologies.slice(0, 3).map((tech, index) => (
+            {project.techLogos.slice(0, 3).map((tech, index) => (
               <TechBadge key={index} text={tech} />
             ))}
-            {project.technologies.length > 3 && (
+            {project.techLogos.length > 3 && (
               <span
                 className={`text-xs px-2 py-1 ${
                   isDark ? "text-gray-400" : "text-gray-500"
                 }`}
               >
-                +{project.technologies.length - 3} more
+                +{project.techLogos.length - 3} more
               </span>
             )}
           </div>
@@ -317,7 +314,7 @@ export default function Projects() {
       const searchMatch =
         project.title.toLowerCase().includes(query) ||
         project.description.toLowerCase().includes(query) ||
-        project.technologies.some((tech) => tech.toLowerCase().includes(query));
+        project.techLogos.some((tech) => tech.toLowerCase().includes(query));
 
       return categoryMatch && searchMatch;
     });

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -19,7 +17,7 @@ import {
   Layout,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
-import aboutImage from "../assets/foto-nobg.png"; // Replace with your actual image path
+import aboutImage from "../assets/foto-nobg.png";
 
 const SkillCard = ({ icon, title, description, index, inView }) => {
   const { theme } = useTheme();

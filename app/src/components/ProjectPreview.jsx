@@ -1,63 +1,12 @@
-// ProjectPreview.jsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import {
-  ArrowRight,
-  ArrowLeft,
-  Code,
-  Globe,
-  Github,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowRight, ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
-
-// Sample project data
-const projects = [
-  {
-    id: 1,
-    title: "FurniShop",
-    description: "E-commerce platform for modern furniture with AR previews",
-    image: "/projects/furnishop.jpg",
-    technologies: ["React", "Next.js", "Tailwind CSS"],
-    category: "web",
-    githubUrl: "https://github.com/username/furnishop",
-    liveUrl: "https://furnishop.example.com",
-  },
-  {
-    id: 2,
-    title: "FinTrack",
-    description: "Personal finance tracking app with expense analytics",
-    image: "/projects/fintrack.jpg",
-    technologies: ["React Native", "Firebase", "Redux"],
-    category: "mobile",
-    githubUrl: "https://github.com/username/fintrack",
-    liveUrl: "https://fintrack.example.com",
-  },
-  {
-    id: 3,
-    title: "DevCollab",
-    description: "Real-time collaboration tool for developers",
-    image: "/projects/devcollab.jpg",
-    technologies: ["Vue.js", "Node.js", "Socket.io"],
-    category: "web",
-    githubUrl: "https://github.com/username/devcollab",
-    liveUrl: "https://devcollab.example.com",
-  },
-  {
-    id: 4,
-    title: "HealthMate",
-    description: "Health monitoring application with sleep tracking",
-    image: "/projects/healthmate.jpg",
-    technologies: ["Kotlin", "Android SDK", "Room Database"],
-    category: "mobile",
-    githubUrl: "https://github.com/username/healthmate",
-    liveUrl: "https://healthmate.example.com",
-  },
-];
+import { bestProjects as projects } from "../data/bestProjects";
 
 const TechBadge = ({ text }) => {
   const { theme } = useTheme();
@@ -288,14 +237,14 @@ export default function ProjectPreview() {
               {/* Project Slider */}
               <div className="relative">
                 <motion.div
-                  className="flex flex-col md:flex-row"
+                  className="flex flex-col md:flex-row md:h-[400px]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
                 >
                   {/* Image Section */}
-                  <div className="w-full md:w-1/2 relative aspect-[4/3] md:aspect-auto">
+                  <div className="w-full md:w-1/2 relative aspect-[4/3] md:h-[500px]">
                     <div
                       className={`absolute inset-0 ${
                         isDark ? "bg-gray-900" : "bg-gray-100"
@@ -320,7 +269,7 @@ export default function ProjectPreview() {
                   <div
                     className={`w-full md:w-1/2 p-6 md:p-8 ${
                       isDark ? "bg-gray-900" : "bg-white"
-                    }`}
+                    } md:h-[400px] overflow-y-auto`}
                   >
                     {/* Project Number */}
                     <div className="mb-4">
@@ -363,7 +312,7 @@ export default function ProjectPreview() {
                         Technologies
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {currentProject.technologies.map((tech, index) => (
+                        {currentProject.techLogos.map((tech, index) => (
                           <TechBadge key={index} text={tech} />
                         ))}
                       </div>

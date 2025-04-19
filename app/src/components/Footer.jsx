@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
@@ -12,7 +14,6 @@ import {
   Code,
   Sparkles,
 } from "lucide-react";
-import Parallax from "parallax-js";
 import Lottie from "react-lottie-player";
 import scrollAnimation from "../assets/scrollAnimation.json";
 import { Tooltip } from "react-tooltip";
@@ -20,42 +21,103 @@ import { Tooltip } from "react-tooltip";
 export default function Footer() {
   const { theme } = useTheme();
   const particlesRef = useRef(null);
-  const parallaxSceneRef = useRef(null);
+  const footerRef = useRef(null);
+  const shapesContainerRef = useRef(null);
   const isDark = theme === "dark";
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredNav, setHoveredNav] = useState(null);
   const controls = useAnimation();
   const [particlesLoaded, setParticlesLoaded] = useState(false);
+  const [inView, setInView] = useState(false);
 
   const currentYear = new Date().getFullYear();
 
-  // Improved parallax initialization
+  // Check if footer is in viewport
   useEffect(() => {
-    if (parallaxSceneRef.current) {
-      // Destroy any existing instance first
-      if (parallaxSceneRef.current.parallaxInstance) {
-        parallaxSceneRef.current.parallaxInstance.destroy();
-      }
+    const checkIfInView = () => {
+      if (!footerRef.current) return;
 
-      // Create new instance with better settings
-      const parallaxInstance = new Parallax(parallaxSceneRef.current, {
-        relativeInput: true,
-        clipRelativeInput: false, // Allow elements to move more freely
-        hoverOnly: false, // Make parallax respond to device movement too
-        scalarX: 5, // Increase movement on X axis significantly
-        scalarY: 5, // Increase movement on Y axis significantly
+      const rect = footerRef.current.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom >= 0;
+      setInView(isInView);
+    };
+
+    window.addEventListener("scroll", checkIfInView);
+    window.addEventListener("resize", checkIfInView);
+
+    // Initial check
+    checkIfInView();
+
+    return () => {
+      window.removeEventListener("scroll", checkIfInView);
+      window.removeEventListener("resize", checkIfInView);
+    };
+  }, []);
+
+  // Custom parallax effect instead of using parallax-js library
+  useEffect(() => {
+    if (!shapesContainerRef.current || !inView) return;
+
+    const shapes =
+      shapesContainerRef.current.querySelectorAll(".parallax-shape");
+
+    const handleMouseMove = (e) => {
+      const container = shapesContainerRef.current;
+      if (!container) return;
+
+      const containerRect = container.getBoundingClientRect();
+
+      // Calculate mouse position relative to the container center
+      const centerX = containerRect.left + containerRect.width / 2;
+      const centerY = containerRect.top + containerRect.height / 2;
+
+      const mouseX = e.clientX - centerX;
+      const mouseY = e.clientY - centerY;
+
+      // Apply movement to each shape based on its data-depth
+      shapes.forEach((shape) => {
+        const depth = Number.parseFloat(
+          shape.getAttribute("data-depth") || 0.1
+        );
+        const moveX = (mouseX * depth * -1) / 5; // Reduced movement factor
+        const moveY = (mouseY * depth * -1) / 5; // Reduced movement factor
+
+        shape.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) ${
+          shape.getAttribute("data-rotate") || ""
+        }`;
       });
+    };
 
-      // Store the instance for cleanup
-      parallaxSceneRef.current.parallaxInstance = parallaxInstance;
+    // Add a small random movement to shapes even when mouse isn't moving
+    const intervalId = setInterval(() => {
+      if (!shapesContainerRef.current || !inView) return;
 
-      return () => {
-        if (parallaxSceneRef.current?.parallaxInstance) {
-          parallaxSceneRef.current.parallaxInstance.destroy();
+      shapes.forEach((shape) => {
+        const depth = Number.parseFloat(
+          shape.getAttribute("data-depth") || 0.1
+        );
+        const randomX = (Math.random() - 0.5) * 10 * depth;
+        const randomY = (Math.random() - 0.5) * 10 * depth;
+
+        const currentTransform = shape.style.transform || "";
+        if (currentTransform.includes("translate3d")) {
+          // If already has transform from mouse movement, don't override
+          return;
         }
-      };
-    }
-  }, [theme]); // Re-initialize when theme changes
+
+        shape.style.transform = `translate3d(${randomX}px, ${randomY}px, 0) ${
+          shape.getAttribute("data-rotate") || ""
+        }`;
+      });
+    }, 3000);
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearInterval(intervalId);
+    };
+  }, [inView]);
 
   useEffect(() => {
     // Show back to top button only when scrolled down
@@ -101,7 +163,7 @@ export default function Footer() {
 
   // Initialize particles when loaded and when theme changes
   useEffect(() => {
-    if (!particlesLoaded || !particlesRef.current) return;
+    if (!particlesLoaded || !particlesRef.current || !inView) return;
 
     // Clear any existing particles
     if (window.pJSDom && window.pJSDom.length) {
@@ -208,7 +270,7 @@ export default function Footer() {
         window.pJSDom = [];
       }
     };
-  }, [isDark, particlesLoaded]);
+  }, [isDark, particlesLoaded, inView]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -271,71 +333,130 @@ export default function Footer() {
     },
   ];
 
-  // Create parallax shapes
+  // Create parallax shapes - using relative positioning within the footer
   const parallaxShapes = [
     {
       depth: "0.1",
-      className: `absolute top-20 left-20 w-16 h-16 rotate-45 ${
+      className: `parallax-shape absolute w-16 h-16 ${
         isDark ? "bg-cyan-500" : "bg-blue-400"
       } opacity-20 rounded-md`,
+      style: { left: "15%", top: "10%" },
+      rotate: "rotate(45deg)",
     },
     {
       depth: "0.2",
-      className: `absolute bottom-40 right-40 w-24 h-24 ${
+      className: `parallax-shape absolute w-24 h-24 ${
         isDark ? "bg-indigo-500" : "bg-indigo-400"
       } opacity-25 rounded-full`,
+      style: { right: "20%", bottom: "30%" },
     },
     {
       depth: "0.3",
-      className: `absolute top-1/2 left-1/3 w-12 h-12 rotate-12 ${
+      className: `parallax-shape absolute w-12 h-12 ${
         isDark ? "bg-pink-500" : "bg-pink-400"
       } opacity-20 rounded-full`,
+      style: { left: "60%", top: "40%" },
+      rotate: "rotate(12deg)",
     },
     {
       depth: "0.6",
-      className: `absolute top-20 right-1/4 w-20 h-20 ${
+      className: `parallax-shape absolute w-20 h-20 ${
         isDark ? "bg-teal-500" : "bg-teal-400"
-      } opacity-20 rounded-md transform rotate-12`,
+      } opacity-20 rounded-md`,
+      style: { right: "30%", top: "15%" },
+      rotate: "rotate(12deg)",
     },
     {
       depth: "0.4",
-      className: `absolute bottom-20 left-1/4 w-32 h-8 ${
+      className: `parallax-shape absolute w-32 h-8 ${
         isDark ? "bg-purple-500" : "bg-purple-400"
       } opacity-20 rounded-full`,
+      style: { left: "40%", bottom: "15%" },
     },
-    // Large colored gradients
+    // Add more shapes with better distribution
     {
       depth: "0.5",
-      className: `absolute w-96 h-96 rounded-full blur-3xl ${
-        isDark ? "bg-blue-500" : "bg-blue-300"
-      } opacity-30 -top-48 -right-48`,
+      className: `parallax-shape absolute w-16 h-16 ${
+        isDark ? "bg-amber-500" : "bg-amber-400"
+      } opacity-20 rounded-md`,
+      style: { right: "60%", top: "60%" },
+      rotate: "rotate(45deg)",
     },
     {
       depth: "0.7",
-      className: `absolute w-96 h-96 rounded-full blur-3xl ${
-        isDark ? "bg-primary" : "bg-primaryInLight"
-      } opacity-30 -bottom-48 -left-48`,
+      className: `parallax-shape absolute w-20 h-20 ${
+        isDark ? "bg-emerald-500" : "bg-emerald-400"
+      } opacity-20 rounded-full`,
+      style: { left: "75%", top: "25%" },
     },
-    // Add floating icons (will be more visible)
+    {
+      depth: "0.8",
+      className: `parallax-shape absolute w-24 h-12 ${
+        isDark ? "bg-rose-500" : "bg-rose-400"
+      } opacity-20 rounded-md`,
+      style: { right: "45%", bottom: "45%" },
+      rotate: "rotate(12deg)",
+    },
+    // Large colored gradients with better positioning
+    {
+      depth: "0.5",
+      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl ${
+        isDark ? "bg-blue-500" : "bg-blue-300"
+      } opacity-30`,
+      style: { right: "-5%", top: "-10%" },
+    },
+    {
+      depth: "0.7",
+      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl ${
+        isDark ? "bg-primary" : "bg-primaryInLight"
+      } opacity-30`,
+      style: { left: "-5%", bottom: "-10%" },
+    },
+    // Add floating icons with better distribution
     {
       depth: "0.4",
-      className: "absolute top-1/4 right-1/3",
+      className: "parallax-shape absolute",
+      style: { right: "25%", top: "30%" },
       content: (
         <Sparkles
-          size={24}
-          className={`${isDark ? "text-cyan-400" : "text-primary"} opacity-50`}
+          size={28}
+          className={`${isDark ? "text-cyan-400" : "text-primary"} opacity-70`}
         />
       ),
     },
     {
       depth: "0.5",
-      className: "absolute bottom-1/3 left-1/3",
+      className: "parallax-shape absolute",
+      style: { left: "20%", bottom: "25%" },
       content: (
         <Code
-          size={28}
+          size={32}
           className={`${
             isDark ? "text-purple-400" : "text-purple-500"
-          } opacity-50`}
+          } opacity-70`}
+        />
+      ),
+    },
+    // Add more floating icons
+    {
+      depth: "0.3",
+      className: "parallax-shape absolute",
+      style: { left: "80%", top: "50%" },
+      content: (
+        <Heart
+          size={24}
+          className={`${isDark ? "text-pink-400" : "text-pink-500"} opacity-70`}
+        />
+      ),
+    },
+    {
+      depth: "0.6",
+      className: "parallax-shape absolute",
+      style: { right: "70%", bottom: "60%" },
+      content: (
+        <Github
+          size={30}
+          className={`${isDark ? "text-gray-400" : "text-gray-500"} opacity-70`}
         />
       ),
     },
@@ -343,6 +464,7 @@ export default function Footer() {
 
   return (
     <footer
+      ref={footerRef}
       className={`py-16 relative overflow-hidden ${
         isDark
           ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
@@ -356,14 +478,14 @@ export default function Footer() {
         className="absolute inset-0 z-0"
       ></div>
 
-      {/* Improved Parallax background effects */}
+      {/* Custom parallax implementation instead of using parallax-js library */}
       <div
-        ref={parallaxSceneRef}
+        ref={shapesContainerRef}
         className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ height: "100%", width: "100%", position: "absolute" }}
       >
         {/* Grid Pattern for visibility */}
         <div
-          data-depth="0.2"
           className={`absolute inset-0 opacity-20 ${
             isDark ? "bg-grid-white/5" : "bg-grid-black/5"
           }`}
@@ -371,7 +493,13 @@ export default function Footer() {
 
         {/* Dynamically render all parallax shapes */}
         {parallaxShapes.map((shape, index) => (
-          <div key={index} data-depth={shape.depth} className={shape.className}>
+          <div
+            key={index}
+            data-depth={shape.depth}
+            data-rotate={shape.rotate}
+            className={shape.className}
+            style={shape.style}
+          >
             {shape.content}
           </div>
         ))}
@@ -459,7 +587,7 @@ export default function Footer() {
                     opacity: [0.3, 0.6, 0.3],
                     scale: [1, 1.05, 1],
                   }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                 />
 
                 <motion.span
@@ -470,7 +598,11 @@ export default function Footer() {
                     opacity: [0.2, 0.4, 0.2],
                     scale: [1.1, 1.15, 1.1],
                   }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                  transition={{
+                    duration: 3,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: 0.5,
+                  }}
                 />
 
                 {/* Outer glow ring */}
@@ -482,7 +614,11 @@ export default function Footer() {
                     opacity: [0.1, 0.2, 0.1],
                     scale: [1.25, 1.3, 1.25],
                   }}
-                  transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                  transition={{
+                    duration: 4,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: 1,
+                  }}
                 />
               </span>
             </motion.h2>
@@ -580,7 +716,7 @@ export default function Footer() {
                 }}
                 transition={{
                   duration: 2,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                 }}
               >

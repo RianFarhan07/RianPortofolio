@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -68,7 +66,7 @@ export default function AboutPreview() {
       setIsMobile(window.innerWidth < 768);
     };
 
-    handleResize(); // Set initial value
+    handleResize();
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
 
@@ -114,7 +112,7 @@ export default function AboutPreview() {
       }`}
       ref={containerRef}
     >
-      {/* Background decor */}
+      {/* warna background untuk dekorasi */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl ${
@@ -160,7 +158,7 @@ export default function AboutPreview() {
                 willChange: "transform",
               }}
             >
-              {/* Decorative elements */}
+              {/* dekorasi image */}
               <div
                 className={`absolute rounded-xl ${
                   isDark ? "border-primary" : "border-primaryInLight"
@@ -210,14 +208,14 @@ export default function AboutPreview() {
                   }`}
                 >
                   <img
-                    src={aboutImage || "/placeholder.svg"}
+                    src={aboutImage}
                     alt="About Me"
                     className="w-full h-full rounded-xl"
                   />
                 </div>
               </div>
 
-              {/* Experience badge */}
+              {/* Education badge */}
               <motion.div
                 className={`absolute -bottom-6 -right-6 ${
                   isDark
@@ -240,10 +238,10 @@ export default function AboutPreview() {
                     size={16}
                     className="fill-yellow-300 text-yellow-300"
                   />
-                  BS in Computer Science
+                  BE in Computer Science
                 </span>
                 <span className="text-xs sm:text-sm opacity-90">
-                  University of Tech
+                  State University of Makassar
                 </span>
               </motion.div>
             </motion.div>
@@ -251,7 +249,7 @@ export default function AboutPreview() {
 
           {/* Content Section */}
           <motion.div
-            className="w-full md:w-7/12 text-center md:text-left"
+            className="w-full md:w-7/12 sm:mt-0 mt-5 text-center md:text-left"
             variants={itemVariants}
           >
             <motion.div
