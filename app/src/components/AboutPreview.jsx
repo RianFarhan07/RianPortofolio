@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
-import aboutImage from "../assets/foto_rian.jpg"; // Replace with your actual image path
+import aboutImage from "../assets/foto-nobg.png";
 
 const SkillBadge = ({ icon, text, delay, index }) => {
   const { theme } = useTheme();
@@ -210,7 +210,7 @@ export default function AboutPreview() {
                   <img
                     src={aboutImage || "/placeholder.svg"}
                     alt="About Me"
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full rounded-xl"
                   />
                 </div>
               </div>
