@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
@@ -15,9 +13,12 @@ import {
   Layout,
   Smartphone,
   Server,
+  MessageCircle,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import fotoRian from "../assets/foto_rian.jpg";
+import GradientText from "./GradientText";
+import { Link } from "react-router-dom";
 
 const TechBadge = ({ icon, text, delay, style }) => {
   const { theme } = useTheme();
@@ -95,8 +96,8 @@ export default function Hero() {
               },
             },
             size: {
-              value: 6, // Larger size for bubbles
-              random: true, // Random sizes
+              value: 6,
+              random: true,
               anim: {
                 enable: true,
                 speed: 2,
@@ -105,7 +106,7 @@ export default function Hero() {
               },
             },
             line_linked: {
-              enable: false, // No links between particles
+              enable: false,
             },
             move: {
               enable: true,
@@ -195,7 +196,7 @@ export default function Hero() {
 
   const getTechBadgePosition = (position) => {
     if (isMobile) {
-      // Mobile positions - keep badges closer to the profile image
+      // kalau di mobile posisi badge diubah supaya lebih dekat
       switch (position) {
         case "topLeft":
           return { top: "-10%", left: "10%" };
@@ -210,7 +211,7 @@ export default function Hero() {
       }
     }
 
-    // Desktop positions
+    // kalau di desktop posisi badge tetap seperti biasa
     switch (position) {
       case "topLeft":
         return { top: "-15%", left: "20%" };
@@ -232,7 +233,7 @@ export default function Hero() {
         isDark
           ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
           : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      } py-16 md:py-0`} // Added padding for mobile
+      } py-16 md:py-0`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -253,7 +254,7 @@ export default function Hero() {
           }`}
         ></div>
 
-        {/* Gradient blobs - simplified to use CSS instead of JS animation */}
+        {/* bola bola gradient */}
         <div
           className={`absolute w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl ${
             isDark ? "bg-blue-500" : "bg-blue-300"
@@ -284,7 +285,7 @@ export default function Hero() {
           initial="hidden"
           animate="visible"
         >
-          {/* Profile image section - moved to top on mobile */}
+          {/* Profile image section - pindah ke atas kalau di mobile */}
           <motion.div
             className="order-1 md:order-2 flex justify-center"
             variants={itemVariants}
@@ -304,7 +305,7 @@ export default function Hero() {
                 willChange: "transform",
               }}
             >
-              {/* Floating tech badges - Fixed positioning */}
+              {/* tech badges melayang  */}
               {isVisible && (
                 <>
                   <TechBadge
@@ -334,7 +335,7 @@ export default function Hero() {
                 </>
               )}
 
-              {/* Animated rings - Using CSS animations instead of JS */}
+              {/* rings samping foto*/}
               <div
                 className={`absolute rounded-full ${
                   isDark ? "border-primary" : "border-primaryInLight"
@@ -365,7 +366,7 @@ export default function Hero() {
                 }}
               />
 
-              {/* Main profile image */}
+              {/* foto profile*/}
               <div
                 className={`absolute inset-0 rounded-full overflow-hidden ${
                   isDark
@@ -395,7 +396,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Experience badge - repositioned for mobile */}
+              {/* badge pengalaman */}
               <motion.div
                 className={`absolute ${
                   isSmallMobile ? "-bottom-4 -right-3" : "-bottom-6 -right-6"
@@ -440,18 +441,14 @@ export default function Hero() {
             >
               Hello I'm
               <br />
-              <span
-                className={`text-transparent bg-clip-text 
-              bg-gradient-to-r 
-              ${
-                isDark
-                  ? "from-primary via-blue-400 to-cyan-400"
-                  : "from-primaryInLight via-teal-400 to-sky-500"
-              } 
-              bg-[length:200%_200%] animate-gradient-x`}
+              <GradientText
+                colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                animationSpeed={4}
+                showBorder={false}
+                className="md:text-left text-center"
               >
                 Rian Farhan
-              </span>
+              </GradientText>
             </motion.h1>
 
             <motion.div
@@ -477,8 +474,8 @@ export default function Hero() {
               } mb-6 md:mb-8 max-w-lg mx-auto md:mx-0 text-base sm:text-lg`}
               variants={itemVariants}
             >
-              Passionate about creating intuitive, responsive applications with
-              clean code and optimal user experiences.
+              Passionate about turning ideas into reality through thoughtful
+              design and high-performance code.
             </motion.p>
 
             <motion.div
@@ -511,24 +508,25 @@ export default function Hero() {
                 />
               </motion.a>
 
-              <motion.a
-                href="#contact"
-                className={`px-4 sm:px-6 py-2.5 sm:py-3 border-2 ${
-                  isDark
-                    ? "border-primary text-primary hover:bg-primary/10"
-                    : "border-primaryInLight text-primaryInLight hover:bg-primaryInLight/10"
-                } rounded-lg font-medium hover:text-white transition-colors relative overflow-hidden group text-sm sm:text-base`}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <span className="relative z-10">Contact Me</span>
-                <motion.span
-                  className={`absolute bottom-0 left-0 w-full h-0 ${
-                    isDark ? "bg-primary" : "bg-primaryInLight"
-                  } opacity-20 transition-all duration-300 group-hover:h-full`}
-                />
-              </motion.a>
+              <Link to="/contact">
+                <motion.div
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 border-2 ${
+                    isDark
+                      ? "border-primary text-primary hover:bg-primary/10"
+                      : "border-primaryInLight text-primaryInLight hover:bg-primaryInLight/10"
+                  } rounded-lg font-medium hover:text-white transition-colors relative overflow-hidden group text-sm sm:text-base`}
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <span className="relative z-10">Contact Me</span>
+                  <motion.span
+                    className={`absolute bottom-0 left-0 w-full h-0 ${
+                      isDark ? "bg-primary" : "bg-primaryInLight"
+                    } opacity-20 transition-all duration-300 group-hover:h-full`}
+                  />
+                </motion.div>
+              </Link>
 
               <motion.a
                 href="rianCV.pdf"
@@ -566,7 +564,7 @@ export default function Hero() {
               variants={itemVariants}
             >
               <motion.a
-                href="https://github.com/username"
+                href="https://github.com/RianFarhan07"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
@@ -580,7 +578,7 @@ export default function Hero() {
                 <Github size={isSmallMobile ? 18 : 22} />
               </motion.a>
               <motion.a
-                href="https://linkedin.com/in/username"
+                href="https://www.linkedin.com/in/baso-rian-farhan-82bb73245/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
@@ -593,8 +591,22 @@ export default function Hero() {
               >
                 <Linkedin size={isSmallMobile ? 18 : 22} />
               </motion.a>
+              <Link to={"/contact"}>
+                <motion.div
+                  className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
+                    isDark
+                      ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
+                      : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
+                  } flex items-center justify-center transition-colors border-2 border-transparent`}
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Mail size={isSmallMobile ? 18 : 22} />
+                </motion.div>
+              </Link>
               <motion.a
-                href="mailto:email@example.com"
+                href="https://wa.me/6282280372670?text=Hi%20Rian,%20I%20would%20like%20to%20discuss%20a%20job%20opportunity%20we%20have%20and%20see%20if%20you%20might%20be%20interested."
+                target="_blank"
                 className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
                   isDark
                     ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
@@ -603,14 +615,14 @@ export default function Hero() {
                 whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Mail size={isSmallMobile ? 18 : 22} />
+                <MessageCircle size={isSmallMobile ? 18 : 22} />
               </motion.a>
             </motion.div>
           </div>
         </motion.div>
       </div>
 
-      {/* Scroll indicator - hidden on very small screens */}
+      {/* scroll ke bawah button */}
       <motion.div
         className={`absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 ${
           isSmallMobile ? "hidden" : "block"
@@ -658,8 +670,9 @@ export default function Hero() {
         </motion.a>
       </motion.div>
 
-      {/* Add CSS animations */}
-      <style jsx global>{`
+      {/* CSS Animations agar lebih hidup */}
+      <style jsx="" global="true">{`
+        /* Animasi pulse: memberikan efek denyut pada elemen */
         @keyframes pulse {
           0%,
           100% {
@@ -672,6 +685,7 @@ export default function Hero() {
           }
         }
 
+        /* Animasi spin: memberikan efek putar pada elemen */
         @keyframes spin {
           from {
             transform: translateZ(-10px) rotate(0deg);
@@ -681,6 +695,7 @@ export default function Hero() {
           }
         }
 
+        /* Animasi pulse-shadow: memberikan efek bayangan yang "berdenyut" */
         @keyframes pulse-shadow {
           0%,
           100% {
@@ -693,6 +708,7 @@ export default function Hero() {
           }
         }
 
+        /* Animasi float-badge: memberikan efek gerakan mengambang (floating) */
         @keyframes float-badge {
           0%,
           100% {
@@ -703,7 +719,8 @@ export default function Hero() {
           }
         }
 
-        /* Add media query for reducing animations on small screens */
+        /* Media query untuk perangkat dengan layar kecil (max-width: 640px) */
+        /* Mengurangi efek bayangan agar lebih ringan pada perangkat mobile */
         @media (max-width: 640px) {
           @keyframes pulse-shadow {
             0%,

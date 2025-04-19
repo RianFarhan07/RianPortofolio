@@ -221,7 +221,7 @@ export default function About() {
   const containerRef = useRef(null);
 
   const [heroRef, heroInView] = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.2,
   });
   const [skillsRef, skillsInView] = useInView({
@@ -345,7 +345,7 @@ export default function About() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 1.5,
       },
     },
   };
@@ -371,7 +371,6 @@ export default function About() {
             : "bg-gradient-to-b from-gray-100 to-bgLight"
         }`}
         ref={heroRef}
-        id="hero"
       >
         {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -419,9 +418,8 @@ export default function About() {
                   } border-2 opacity-20 w-4/5 h-4/5 -top-4 left-8 z-10`}
                 />
 
-                {/* Increased the Lanyard's z-index so it stays on top */}
+                {/* We'll modify this part to add the delay */}
                 <div className="relative z-40 flex justify-center items-center w-full">
-                  {/* Adjusted the positioning values for better responsiveness */}
                   <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
                 </div>
               </div>
@@ -468,7 +466,7 @@ export default function About() {
                         ease: "easeInOut",
                       }}
                     >
-                      <ChevronDown size={isSmallMobile ? 432 : 42} />
+                      <ChevronDown size={isSmallMobile ? 24 : 42} />
                     </motion.div>
                   </motion.a>
                 </motion.div>
@@ -951,7 +949,7 @@ export default function About() {
           </motion.div>
         </div>
       </section>
-      <style jsx global>{`
+      <style jsx="true" global="true">{`
         @keyframes pulse {
           0%,
           100% {

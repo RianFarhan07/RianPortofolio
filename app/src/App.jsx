@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -18,21 +18,49 @@ import CertificatesPreview from "./components/CertificatesPreview";
 import MainLayout from "./layouts/mainLayout";
 import ContactPreview from "./components/ContactPreview";
 
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong. Please refresh the page.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+// Kemudian gunakan pada komponen utama:
+// <ErrorBoundary>
+//   <About />
+// </ErrorBoundary>
+
 const AppContent = () => {
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [selectedProject, setSelectedProject] = useState(null);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const location = useLocation();
 
-  const openProjectDialog = (project) => {
-    setSelectedProject(project);
-    setIsDialogOpen(true);
-    document.body.style.overflow = "hidden";
-  };
+  // const openProjectDialog = (project) => {
+  //   setSelectedProject(project);
+  //   setIsDialogOpen(true);
+  //   document.body.style.overflow = "hidden";
+  // };
 
-  const closeProjectDialog = () => {
-    setIsDialogOpen(false);
-    document.body.style.overflow = "auto";
-  };
+  // const closeProjectDialog = () => {
+  //   setIsDialogOpen(false);
+  //   document.body.style.overflow = "auto";
+  // };
 
   return (
     <>
@@ -53,37 +81,34 @@ const AppContent = () => {
             }
           />
           <Route path="/about" element={<About />} />
-          <Route
-            path="/projects"
-            element={
-              <Projects openProjectDialog={openProjectDialog} fullPage />
-            }
-          />
-          <Route path="/certificates" element={<Certificates fullPage />} />
-          <Route path="/contact" element={<Contact fullPage />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/certificates" element={<Certificates />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </PageTransition>
       <Footer />
 
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {isDialogOpen && (
           <ProjectDialog
             project={selectedProject}
             onClose={closeProjectDialog}
           />
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
     </>
   );
 };
 
 const App = () => {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -43,4 +43,7 @@ html {
   scrollbar-width: none;
 }
 
-/* hero section */
+/* smooth scroll */
+html {
+  scroll-behavior: smooth;
+}

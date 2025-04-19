@@ -142,7 +142,7 @@ export default function ProjectPreview() {
 
   return (
     <section
-      id="projects-preview"
+      id="projects"
       className={`py-16 md:py-24 relative overflow-hidden ${
         isDark
           ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
