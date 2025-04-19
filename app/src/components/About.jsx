@@ -13,11 +13,14 @@ import {
   Linkedin,
   Mail,
   Server,
+  ChevronDown,
   Smartphone,
   Layout,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import aboutImage from "../assets/foto-nobg.png";
+import RotatingText from "./RotatingText";
+import Lanyard from "./Lanyard";
 
 const SkillCard = ({ icon, title, description, index, inView }) => {
   const { theme } = useTheme();
@@ -214,6 +217,7 @@ export default function About() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
   const containerRef = useRef(null);
 
   const [heroRef, heroInView] = useInView({
@@ -234,6 +238,7 @@ export default function About() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
+      setIsSmallMobile(window.innerWidth < 480);
     };
 
     handleResize(); // Set initial value
@@ -359,7 +364,6 @@ export default function About() {
       className={`min-h-screen ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
       ref={containerRef}
     >
-      {/* Hero Section */}
       <section
         className={`py-16 md:py-24 relative overflow-hidden ${
           isDark
@@ -367,6 +371,7 @@ export default function About() {
             : "bg-gradient-to-b from-gray-100 to-bgLight"
         }`}
         ref={heroRef}
+        id="hero"
       >
         {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -389,61 +394,85 @@ export default function About() {
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
-            className="flex flex-col md:flex-row items-center gap-8 md:gap-12"
+            className="flex flex-col md:flex-row gap-8 md:gap-12"
             variants={heroVariants}
             initial="hidden"
             animate={heroInView ? "visible" : "hidden"}
           >
-            {/* Image section */}
+            {/* Lanyard container - modified for proper positioning */}
             <motion.div
-              className="w-full md:w-1/3 flex justify-center md:order-2"
+              className="w-full md:w-1/3 flex flex-col items-center md:order-2 relative"
               variants={itemVariants}
             >
-              <div className="relative">
-                {/* Decorative elements */}
+              {/* Increased z-index and added relative positioning */}
+              <div className="relative z-30 w-full flex justify-center items-center">
+                {/* Decorative frame elements - adjusted to not overlap Lanyard */}
                 <div
                   className={`absolute rounded-xl ${
                     isDark ? "border-primary" : "border-primaryInLight"
-                  } border-2 opacity-20 w-full h-full top-4 -left-4`}
+                  } border-2 opacity-20 w-4/5 h-4/5 top-8 -left-4 z-10`}
                 />
 
                 <div
                   className={`absolute rounded-xl ${
                     isDark ? "border-blue-500" : "border-blue-400"
-                  } border-2 opacity-20 w-full h-full -top-4 left-4`}
+                  } border-2 opacity-20 w-4/5 h-4/5 -top-4 left-8 z-10`}
                 />
 
-                {/* Main image */}
-                <div
-                  className={`relative rounded-xl overflow-hidden ${
-                    isDark
-                      ? "bg-gradient-to-br from-primary via-blue-500 to-purple-500"
-                      : "bg-gradient-to-br from-primaryInLight via-blue-500 to-purple-400"
-                  } p-1.5 shadow-2xl`}
-                  style={{
-                    width: "280px",
-                    height: "350px",
-                  }}
-                >
-                  <div
-                    className={`w-full h-full rounded-xl p-0.5 backdrop-blur-sm bg-gradient-to-br ${
-                      isDark
-                        ? "from-white/10 to-black/30"
-                        : "from-white/80 to-white/20"
-                    }`}
-                  >
-                    <img
-                      src={aboutImage || "/placeholder.svg"}
-                      alt="About Me"
-                      className={`w-full h-full object-cover rounded-xl ${
-                        isDark
-                          ? "filter grayscale hover:grayscale-0 transition-all duration-500"
-                          : ""
-                      }`}
-                    />
-                  </div>
+                {/* Increased the Lanyard's z-index so it stays on top */}
+                <div className="relative z-40 flex justify-center items-center w-full">
+                  {/* Adjusted the positioning values for better responsiveness */}
+                  <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
                 </div>
               </div>
+
+              {/* Mobile scroll indicator - only shown on mobile */}
+              {isMobile && (
+                <motion.div
+                  className="absolute bottom-[600px] "
+                  animate={{
+                    y: [0, 10, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <motion.a
+                    href="#skills"
+                    className={`flex flex-col items-center ${
+                      isDark
+                        ? "text-gray-400 hover:text-primary"
+                        : "text-gray-500 hover:text-primaryInLight"
+                    } transition-colors`}
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    <span className="text-3xl sm:text-sm font-medium mb-1">
+                      Scroll Down
+                    </span>
+                    <motion.div
+                      className={`w-28 h-28 sm:w-10 sm:h-10 rounded-full ${
+                        isDark ? "border-gray-700" : "border-gray-300"
+                      } border flex items-center justify-center`}
+                      animate={{
+                        boxShadow: [
+                          "0 0 0 rgba(255, 255, 255, 0)",
+                          "0 0 10px rgba(255, 255, 255, 0.3)",
+                          "0 0 0 rgba(255, 255, 255, 0)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <ChevronDown size={isSmallMobile ? 432 : 42} />
+                    </motion.div>
+                  </motion.a>
+                </motion.div>
+              )}
             </motion.div>
 
             {/* Content section */}
@@ -486,7 +515,28 @@ export default function About() {
                   {" "}
                   Rian Farhan
                 </span>
-                , Full Stack Developer
+                ,{" "}
+                <div className="inline-block">
+                  <RotatingText
+                    texts={[
+                      "Software Engineer",
+                      "Full Stack Developer",
+                      "UI/UX Enthusiast",
+                      "Mobile Developer",
+                      "Problem Solver",
+                      "Tech Enthusiast",
+                      "AI Prompter",
+                    ]}
+                    staggerFrom={"last"}
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.025}
+                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                    rotationInterval={4000}
+                  />
+                </div>
               </motion.h1>
 
               <motion.p
@@ -569,12 +619,62 @@ export default function About() {
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Desktop scroll indicator - only shown on desktop */}
+        {!isMobile && (
+          <motion.div
+            className="absolute bottom-60 left-1/2 transform -translate-x-1/2"
+            animate={{
+              y: [0, 10, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          >
+            <motion.a
+              href="#skills"
+              className={`flex flex-col items-center ${
+                isDark
+                  ? "text-gray-400 hover:text-primary"
+                  : "text-gray-500 hover:text-primaryInLight"
+              } transition-colors`}
+              whileHover={{ scale: 1.1 }}
+            >
+              <span className="text-xs sm:text-sm font-medium mb-1">
+                Scroll Down
+              </span>
+              <motion.div
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${
+                  isDark ? "border-gray-700" : "border-gray-300"
+                } border flex items-center justify-center`}
+                animate={{
+                  boxShadow: [
+                    "0 0 0 rgba(255, 255, 255, 0)",
+                    "0 0 10px rgba(255, 255, 255, 0.3)",
+                    "0 0 0 rgba(255, 255, 255, 0)",
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                <ChevronDown size={isSmallMobile ? 18 : 24} />
+              </motion.div>
+            </motion.a>
+          </motion.div>
+        )}
       </section>
 
+      {/* Rest of the component remains unchanged */}
       {/* Skills Section */}
       <section
         className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
         ref={skillsRef}
+        id="skills"
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -742,7 +842,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
       {/* Technologies Section */}
       <section
         className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
@@ -806,7 +905,6 @@ export default function About() {
           </motion.div>
         </div>
       </section>
-
       {/* Call to Action */}
       <section
         className={`py-16 ${
@@ -856,7 +954,6 @@ export default function About() {
           </motion.div>
         </div>
       </section>
-
       {/* Add CSS animations similar to Hero component */}
       <style jsx global>{`
         @keyframes pulse {
