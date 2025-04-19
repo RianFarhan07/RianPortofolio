@@ -515,7 +515,7 @@ export default function About() {
                   {" "}
                   Rian Farhan
                 </span>
-                ,{" "}
+                , <br />
                 <div className="inline-block">
                   <RotatingText
                     texts={[
@@ -668,8 +668,6 @@ export default function About() {
           </motion.div>
         )}
       </section>
-
-      {/* Rest of the component remains unchanged */}
       {/* Skills Section */}
       <section
         className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
@@ -741,7 +739,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
       {/* Experience & Education Section */}
       <section
         className={`py-16 relative ${
@@ -954,7 +951,6 @@ export default function About() {
           </motion.div>
         </div>
       </section>
-      {/* Add CSS animations similar to Hero component */}
       <style jsx global>{`
         @keyframes pulse {
           0%,

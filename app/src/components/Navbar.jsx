@@ -42,6 +42,11 @@ export default function Navbar() {
     open: { opacity: 1, x: 0 },
   };
 
+  const menuItemVariants = {
+    closed: { opacity: 0, y: 20 },
+    open: { opacity: 1, y: 0 },
+  };
+
   const linkVariants = {
     hover: {
       y: -3,
@@ -166,9 +171,14 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className={`md:hidden ${isDark ? "text-white" : "text-gray-800"}`}
+            className={`md:hidden p-2 rounded-full ${
+              isDark
+                ? "text-white hover:bg-gray-800"
+                : "text-gray-800 hover:bg-gray-100"
+            }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             whileTap={{ scale: 0.9 }}
+            aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </motion.button>
@@ -179,93 +189,110 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className={`fixed inset-0 ${
+            className={`fixed top-0 left-0 right-0 ${
               isDark ? "bg-gray-900 bg-opacity-95" : "bg-white bg-opacity-95"
-            } z-40 md:hidden`}
+            } shadow-xl z-40 mt-16 max-h-screen overflow-y-auto md:hidden`}
             initial="closed"
             animate="open"
             exit="closed"
             variants={mobileMenuVariants}
-            transition={{ type: "tween", duration: 0.3 }}
           >
-            <div className="flex flex-col items-center justify-center h-full space-y-6">
+            <div className="flex flex-col py-6">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
 
                 return (
                   <motion.div
                     key={link.title}
-                    whileHover={{
-                      scale: 1.1,
-                      color: isDark ? "#00adb5" : "#14b8a6",
+                    variants={menuItemVariants}
+                    className="border-b border-opacity-20 last:border-0"
+                    style={{
+                      borderColor: isDark
+                        ? "rgba(255,255,255,0.1)"
+                        : "rgba(0,0,0,0.1)",
                     }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     <Link
                       to={link.path}
-                      className={`text-xl font-medium ${
+                      className={`block py-4 px-8 text-lg font-medium transition-all duration-300 ${
                         isActive
                           ? isDark
-                            ? "text-cyan-400"
-                            : "text-teal-500"
+                            ? "text-cyan-400 bg-gray-800 bg-opacity-40"
+                            : "text-teal-500 bg-gray-100"
                           : isDark
-                          ? "text-white"
-                          : "text-gray-800"
+                          ? "text-white hover:bg-gray-800 hover:bg-opacity-40"
+                          : "text-gray-800 hover:bg-gray-100"
                       }`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {link.title}
+                      {isActive && (
+                        <motion.span
+                          className={`inline-block ml-2 ${
+                            isDark ? "text-cyan-400" : "text-teal-500"
+                          }`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                        >
+                          •
+                        </motion.span>
+                      )}
                     </Link>
                   </motion.div>
                 );
               })}
 
-              <motion.button
-                onClick={() => {
-                  toggleTheme();
-                  setIsMobileMenuOpen(false);
-                }}
-                disabled={isTransitioning}
-                className={`mt-6 p-3 rounded-full ${
-                  isDark
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-200 text-gray-800"
-                } relative overflow-hidden`}
-                whileHover={{
-                  scale: 1.1,
-                  boxShadow: isDark
-                    ? "0 0 20px rgba(0, 173, 181, 0.6)"
-                    : "0 0 20px rgba(20, 184, 166, 0.6)",
-                }}
-                whileTap={{ scale: 0.9 }}
+              <motion.div
+                className="mt-4 px-8 py-4"
+                variants={menuItemVariants}
               >
-                <motion.div
-                  initial={{ rotate: 0 }}
-                  animate={{
-                    rotate: isTransitioning ? (isDark ? 360 : -360) : 0,
-                  }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {isDark ? <Sun size={24} /> : <Moon size={24} />}
-                </motion.div>
-
-                {/* Button ripple effect */}
-                <motion.span
-                  className="absolute inset-0 rounded-full"
-                  initial={{ scale: 0, opacity: 0.5 }}
-                  whileTap={{
-                    scale: 4,
-                    opacity: 0,
-                    transition: { duration: 0.5 },
-                  }}
-                  style={{
-                    background: isDark
-                      ? "rgba(0, 173, 181, 0.3)"
-                      : "rgba(20, 184, 166, 0.3)",
-                    transformOrigin: "center",
-                  }}
-                />
-              </motion.button>
+                <div className="flex items-center justify-between">
+                  <span className={isDark ? "text-gray-300" : "text-gray-600"}>
+                    Toggle theme
+                  </span>
+                  <motion.button
+                    onClick={toggleTheme}
+                    disabled={isTransitioning}
+                    className={`p-3 rounded-full ${
+                      isDark
+                        ? "bg-gray-800 text-white"
+                        : "bg-gray-200 text-gray-800"
+                    } relative overflow-hidden`}
+                    whileHover={{
+                      scale: 1.1,
+                      boxShadow: isDark
+                        ? "0 0 20px rgba(0, 173, 181, 0.6)"
+                        : "0 0 20px rgba(20, 184, 166, 0.6)",
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <motion.div
+                      initial={{ rotate: 0 }}
+                      animate={{
+                        rotate: isTransitioning ? (isDark ? 360 : -360) : 0,
+                      }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {isDark ? <Sun size={24} /> : <Moon size={24} />}
+                    </motion.div>
+                    <motion.span
+                      className="absolute inset-0 rounded-full"
+                      initial={{ scale: 0, opacity: 0.5 }}
+                      whileTap={{
+                        scale: 4,
+                        opacity: 0,
+                        transition: { duration: 0.5 },
+                      }}
+                      style={{
+                        background: isDark
+                          ? "rgba(0, 173, 181, 0.3)"
+                          : "rgba(20, 184, 166, 0.3)",
+                        transformOrigin: "center",
+                      }}
+                    />
+                  </motion.button>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         )}

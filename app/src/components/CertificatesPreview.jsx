@@ -15,53 +15,7 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 
-// Sample certificates data
-const certificates = [
-  {
-    id: 1,
-    title: "Advanced React & Redux",
-    issuer: "Udemy",
-    image: "/certificates/react-redux.jpg",
-    issueDate: "November 2023",
-    credentialId: "UC-12345678",
-    category: "frontend",
-    credentialUrl: "https://udemy.com/certificate/UC-12345678/",
-    skills: ["React", "Redux", "React Router", "Redux Thunk"],
-  },
-  {
-    id: 2,
-    title: "Full Stack Web Development",
-    issuer: "freeCodeCamp",
-    image: "/certificates/fullstack.jpg",
-    issueDate: "August 2023",
-    credentialId: "FCC-98765432",
-    category: "fullstack",
-    credentialUrl: "https://freecodecamp.org/certification/user/fullstack",
-    skills: ["JavaScript", "Node.js", "MongoDB", "Express"],
-  },
-  {
-    id: 3,
-    title: "AWS Certified Developer",
-    issuer: "Amazon Web Services",
-    image: "/certificates/aws-dev.jpg",
-    issueDate: "March 2024",
-    credentialId: "AWS-DEV-1234567",
-    category: "cloud",
-    credentialUrl: "https://aws.amazon.com/verification",
-    skills: ["AWS Lambda", "S3", "DynamoDB", "CloudFormation"],
-  },
-  {
-    id: 4,
-    title: "UX/UI Design Fundamentals",
-    issuer: "Interaction Design Foundation",
-    image: "/certificates/uxui.jpg",
-    issueDate: "January 2024",
-    credentialId: "IDF-87654321",
-    category: "design",
-    credentialUrl: "https://www.interaction-design.org/certificates/87654321",
-    skills: ["Wireframing", "Prototyping", "User Research", "UI Design"],
-  },
-];
+import { bestCertificates as certificates } from "../data/bestSertificates";
 
 export default function CertificatesPreview() {
   const { theme } = useTheme();
