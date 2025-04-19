@@ -15,6 +15,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import AboutPreview from "./components/AboutPreview";
 import ProjectPreview from "./components/ProjectPreview";
 import CertificatesPreview from "./components/CertificatesPreview";
+import MainLayout from "./layouts/mainLayout";
+import ContactPreview from "./components/ContactPreview";
 
 const AppContent = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -46,7 +48,7 @@ const AppContent = () => {
                 <AboutPreview />
                 <ProjectPreview />
                 <CertificatesPreview />
-                <Contact />
+                <ContactPreview />
               </>
             }
           />

@@ -108,7 +108,9 @@ export default function AboutPreview() {
     <section
       id="about-preview"
       className={`py-16 md:py-24 relative overflow-hidden ${
-        isDark ? "bg-bgDark" : "bg-bgLight"
+        isDark
+          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
+          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
       }`}
       ref={containerRef}
     >

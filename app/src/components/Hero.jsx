@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import fotoRian from "../assets/foto_rian.jpg";
-// Remove the import "particles.js" line completely
 
 const TechBadge = ({ icon, text, delay, style }) => {
   const { theme } = useTheme();
@@ -56,9 +55,7 @@ export default function Hero() {
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
 
-  // Removed particles state and generation
-
-  // Typed text effect
+  // efek typewriter
   const [text] = useTypewriter({
     words: [
       "Android Developer",
@@ -73,9 +70,9 @@ export default function Hero() {
     delaySpeed: 2000,
   });
 
-  // For particles.js initialization
+  // untuk inisialisasi particles.js
   useEffect(() => {
-    // Add a small delay to ensure the DOM element is ready
+    // tambahkan sedikit delay untuk memastikan bahwa elemen telah dimuat
     const timer = setTimeout(() => {
       if (
         typeof window !== "undefined" &&
@@ -88,8 +85,8 @@ export default function Hero() {
             number: { value: 20, density: { enable: true, value_area: 800 } },
             color: { value: isDark ? "#00adb5" : "#14b8a6" },
             opacity: {
-              value: 0.4, // Slightly more opaque
-              random: true, // Random opacity for bubble effect
+              value: 0.4,
+              random: true, // agar opacitiynya random
               anim: {
                 enable: true,
                 speed: 0.5,
@@ -112,7 +109,7 @@ export default function Hero() {
             },
             move: {
               enable: true,
-              speed: 0.8, // Slower speed
+              speed: 0.8,
               direction: "none",
               random: true,
               straight: false,
@@ -121,19 +118,16 @@ export default function Hero() {
             },
           },
         });
-
-        console.log("Particles initialized"); // Add this to debug
       } else {
         console.error("Particles.js not available or element not found", {
           particlesJS: !!window.particlesJS,
           element: !!document.getElementById("particles-js"),
-        }); // More detailed debug
+        });
       }
-    }, 1500); // Small delay to ensure rendering
+    }, 1500); // delay agar muncul setelah transisi
 
     return () => {
       clearTimeout(timer);
-      // Cleanup if necessary
       if (window.pJSDom && window.pJSDom.length) {
         window.pJSDom[0].pJS.fn.vendors.destroypJS();
         window.pJSDom = [];
@@ -156,11 +150,10 @@ export default function Hero() {
       setIsSmallMobile(window.innerWidth < 480);
     };
 
-    handleResize(); // Set initial value
+    handleResize();
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
 
-    // Set visibility after a short delay for initial animations
     const timer = setTimeout(() => setIsVisible(true), 500);
 
     return () => {
@@ -200,7 +193,6 @@ export default function Hero() {
     tap: { scale: 0.95 },
   };
 
-  // Adjust tech badge positions for mobile
   const getTechBadgePosition = (position) => {
     if (isMobile) {
       // Mobile positions - keep badges closer to the profile image
