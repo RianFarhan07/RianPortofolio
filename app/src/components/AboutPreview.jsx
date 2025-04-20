@@ -1,28 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import {
-  ArrowRight,
-  Code,
-  Coffee,
-  BookOpen,
-  Lightbulb,
-  Award,
-  Database,
-  GitBranch,
-  Cpu,
-  PenTool,
-  Search,
-  Clock,
-  MessageSquare,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Award } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import aboutImage from "../assets/foto-nobg.png";
-import Stack from "./CardRotate";
+import BounceCards from "./BounceCards";
 
-import { stackData } from "../data/skills";
+const images = [
+  "https://images.prismic.io/qovery/5fbe059d-281e-4748-8c1b-e4ba3d0ea75c_5e88cdbcbcf6e13c14c276d8_kotlin.jpg?ixlib=gatsbyFP&auto=compress%2Cformat&fit=max",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4vxfPlxUGB4j6dO4NSYh6LAPH94CGS-T7TgdL04X9dMHXhQd-7Bc-XRTXqo-WYLHtxzk&usqp=CAU",
+  "https://miro.medium.com/v2/resize:fit:848/1*RuVFJ8RMnzjKm6ZwDYE8bA.png",
+  "https://static.cdnlogo.com/logos/t/96/typescript.svg",
+  "https://static.cdnlogo.com/logos/j/44/javascript.svg",
+];
+
+const transformStyles = [
+  "rotate(5deg) translate(-150px)",
+  "rotate(0deg) translate(-70px)",
+  "rotate(-5deg)",
+  "rotate(5deg) translate(70px)",
+  "rotate(-5deg) translate(150px)",
+];
 
 export default function AboutPreview() {
   const { theme } = useTheme();
@@ -30,7 +29,6 @@ export default function AboutPreview() {
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [animationKey, setAnimationKey] = useState(0);
 
   const [ref, inView] = useInView({
     triggerOnce: false,
@@ -62,15 +60,6 @@ export default function AboutPreview() {
   }, [isMobile]);
 
   //biar tulisan my techstacknya loop terus
-  useEffect(() => {
-    if (inView) {
-      const animationInterval = setInterval(() => {
-        setAnimationKey((prev) => prev + 1);
-      }, 3000);
-
-      return () => clearInterval(animationInterval);
-    }
-  }, [inView]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -88,40 +77,6 @@ export default function AboutPreview() {
       y: 0,
       opacity: 1,
       transition: { type: "spring", stiffness: 100 },
-    },
-  };
-
-  const techStackTitleVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        delay: 0.3,
-      },
-    },
-  };
-
-  const continuousLetterVariants = {
-    initial: { y: 20, opacity: 0 },
-    animate: (i) => ({
-      y: 0,
-      opacity: 1,
-      transition: {
-        delay: i * 0.05,
-        duration: 0.5,
-        type: "spring",
-        stiffness: 100,
-      },
-    }),
-    exit: {
-      y: -20,
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-      },
     },
   };
 
@@ -332,94 +287,17 @@ export default function AboutPreview() {
               className="flex flex-wrap gap-6 mb-6 items-center justify-center md:justify-start"
               variants={itemVariants}
             >
-              {/* gambar tech stack sama tulisan my techstacknya */}
-              {!isMobile && (
-                <motion.div
-                  className={`flex flex-col items-center justify-center ${
-                    isDark
-                      ? "bg-gray-800/70 text-primary border border-primary/30"
-                      : "bg-white/70 text-primaryInLight border border-primaryInLight/30"
-                  } rounded-xl px-6 py-4 shadow-lg`}
-                  variants={techStackTitleVariants}
-                  whileHover={{
-                    boxShadow: isDark
-                      ? "0 0 20px rgba(0, 173, 181, 0.4)"
-                      : "0 0 20px rgba(20, 184, 166, 0.4)",
-                    scale: 1.03,
-                    transition: { duration: 0.3 },
-                  }}
-                >
-                  <motion.div
-                    className="mb-2"
-                    animate={{
-                      x: [0, 5, 0],
-                      transition: {
-                        repeat: Infinity,
-                        duration: 1.5,
-                        ease: "easeInOut",
-                      },
-                    }}
-                  >
-                    <ArrowRight
-                      size={24}
-                      className={
-                        isDark ? "text-primary" : "text-primaryInLight"
-                      }
-                    />
-                  </motion.div>
-                  <div className="flex h-8">
-                    <motion.div
-                      key={animationKey}
-                      className="flex"
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                    >
-                      {[
-                        "M",
-                        "y",
-                        " ",
-                        "T",
-                        "e",
-                        "c",
-                        "h",
-                        " ",
-                        "S",
-                        "t",
-                        "a",
-                        "c",
-                        "k",
-                      ].map((letter, i) => (
-                        <motion.span
-                          key={i}
-                          custom={i}
-                          variants={continuousLetterVariants}
-                          className={`font-bold text-xl md:text-2xl ${
-                            letter === " " ? "w-2" : ""
-                          } ${
-                            isDark
-                              ? "text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400"
-                              : "text-transparent bg-clip-text bg-gradient-to-r from-primaryInLight to-blue-500"
-                          }`}
-                        >
-                          {letter}
-                        </motion.span>
-                      ))}
-                    </motion.div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* comment ini kalau mobile tidak muncul apa apa */}
-              {!isMobile && (
-                <Stack
-                  randomRotation={true}
-                  sensitivity={180}
-                  sendToBackOnClick={false}
-                  cardDimensions={{ width: 300, height: 300 }}
-                  cardsData={stackData}
-                />
-              )}
+              <BounceCards
+                images={images}
+                containerWidth={500}
+                containerHeight={250}
+                animationDelay={1}
+                animationStagger={0.08}
+                easeType="elastic.out(1, 0.5)"
+                transformStyles={transformStyles}
+                enableHover={false}
+                isDark={isDark}
+              />
             </motion.div>
 
             <motion.div variants={itemVariants}>
