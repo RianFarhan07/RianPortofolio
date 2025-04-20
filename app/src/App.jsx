@@ -13,10 +13,10 @@ import Footer from "./components/Footer";
 import ProjectDialog from "./components/ProjectDialog";
 import ScrollToTop from "./components/ScrollToTop";
 import AboutPreview from "./components/AboutPreview";
-import ProjectPreview from "./components/ProjectPreview";
 import CertificatesPreview from "./components/CertificatesPreview";
 import MainLayout from "./layouts/mainLayout";
-import ContactPreview from "./components/ContactPreview";
+import ContactPreview from "./components/ContactPreview2";
+import ProjectPreview from "./components/ProjectPreview";
 
 class ErrorBoundary extends Component {
   constructor(props) {

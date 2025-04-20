@@ -1,29 +1,11 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import { bestProjects as projects } from "../data/bestProjects";
-
-const TechBadge = ({ text }) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  return (
-    <div
-      className={`px-3 py-1 rounded-full text-xs font-medium ${
-        isDark
-          ? "bg-gray-800 text-primary border border-primary/30"
-          : "bg-white text-primaryInLight border border-primaryInLight/30"
-      } shadow-sm`}
-    >
-      {text}
-    </div>
-  );
-};
+import { TechStackTabs } from "./TechStackTabs";
 
 export default function ProjectPreview() {
   const { theme } = useTheme();
@@ -31,26 +13,12 @@ export default function ProjectPreview() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const sliderRef = useRef(null);
 
   const [ref, inView] = useInView({
     triggerOnce: false,
     threshold: 0.2,
   });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize(); // Set initial value
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
@@ -118,17 +86,8 @@ export default function ProjectPreview() {
     },
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  };
-
   useEffect(() => {
-    // Auto-slide every 5 seconds if not interacting
+    // Auto-slide setiap 5 detik
     const timer = setInterval(() => {
       if (!dragging) {
         nextSlide();
@@ -271,7 +230,7 @@ export default function ProjectPreview() {
                       isDark ? "bg-gray-900" : "bg-white"
                     } md:h-[400px] overflow-y-auto`}
                   >
-                    {/* Project Number */}
+                    {/* Nomor Project */}
                     <div className="mb-4">
                       <span
                         className={`text-xs font-bold px-3 py-1 rounded-full ${
@@ -304,55 +263,51 @@ export default function ProjectPreview() {
 
                     {/* Technologies */}
                     <div className="mb-6">
-                      <div
-                        className={`text-xs uppercase font-semibold mb-2 ${
-                          isDark ? "text-gray-500" : "text-gray-400"
-                        }`}
-                      >
-                        Technologies
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {currentProject.techLogos.map((tech, index) => (
-                          <TechBadge key={index} text={tech} />
-                        ))}
-                      </div>
+                      <TechStackTabs techStack={currentProject.techStack} />
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3">
-                      <a
-                        href={currentProject.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium ${
-                          isDark
-                            ? "bg-gray-800 text-white hover:bg-gray-700"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        } transition-colors`}
-                      >
-                        <Github size={14} />
-                        <span>Source Code</span>
-                      </a>
-                      <a
-                        href={currentProject.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium ${
-                          isDark
-                            ? "bg-primary text-white hover:bg-primary/90"
-                            : "bg-primaryInLight text-white hover:bg-primaryInLight/90"
-                        } transition-colors`}
-                      >
-                        <ExternalLink size={14} />
-                        <span>Live Demo</span>
-                      </a>
-                    </div>
+                    {/* Action Buttons muncul ketika ada github URL atau Live Url */}
+                    {currentProject.githubUrl ||
+                      (currentProject.liveUrl && (
+                        <div className="flex flex-wrap gap-3">
+                          {currentProject.githubUrl && (
+                            <a
+                              href={currentProject.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium ${
+                                isDark
+                                  ? "bg-gray-800 text-white hover:bg-gray-700"
+                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              } transition-colors`}
+                            >
+                              <Github size={14} />
+                              <span>Source Code</span>
+                            </a>
+                          )}
+                          {currentProject.liveUrl && (
+                            <a
+                              href={currentProject.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium ${
+                                isDark
+                                  ? "bg-primary text-white hover:bg-primary/90"
+                                  : "bg-primaryInLight text-white hover:bg-primaryInLight/90"
+                              } transition-colors`}
+                            >
+                              <ExternalLink size={14} />
+                              <span>Live Demo</span>
+                            </a>
+                          )}
+                        </div>
+                      ))}
                   </div>
                 </motion.div>
               </div>
             </div>
 
-            {/* Slider controls - only show on desktop/tablet */}
+            {/* Slider controls - muncul kalau di atas mobile saja */}
             <div className="hidden sm:block">
               <button
                 onClick={prevSlide}
@@ -401,7 +356,7 @@ export default function ProjectPreview() {
           </div>
         </motion.div>
 
-        {/* View All Projects Button */}
+        {/* button lihat semua project */}
         <motion.div
           className="mt-10 text-center"
           initial={{ opacity: 0, y: 20 }}

@@ -10,6 +10,8 @@ import {
   Instagram,
   ArrowRight,
   MessageSquare,
+  Handshake,
+  Clock,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -23,52 +25,53 @@ export default function ContactPreview() {
     threshold: 0.2,
   });
 
-  // Load Disqus when component mounts
+  // Load Giscus
   useEffect(() => {
-    const loadDisqus = () => {
-      // Reset Disqus if it was already loaded
-      if (window.DISQUS) {
-        window.DISQUS.reset({
-          reload: true,
-          config: function () {
-            this.page.identifier = "contact-preview";
-            this.page.url = window.location.href;
-            this.page.title = "Contact Me | Rian Farhan";
-          },
-        });
-      } else {
-        // Load Disqus for the first time
-        const script = document.createElement("script");
-        script.src = "https://YOUR_SHORTNAME.disqus.com/embed.js";
-        script.setAttribute("data-timestamp", +new Date());
-        script.async = true;
+    const loadGiscus = () => {
+      // hilangkan script jika sudah ada
+      const existingScript = document.getElementById("giscus-script");
+      if (existingScript) {
+        existingScript.remove();
+      }
 
-        // Configure Disqus
-        window.disqus_config = function () {
-          this.page.identifier = "contact-preview";
-          this.page.url = window.location.href;
-          this.page.title = "Contact Me | Rian Farhan";
-        };
+      // buat dan konfigurasi giscus
+      const script = document.createElement("script");
+      script.src = "https://giscus.app/client.js";
+      script.id = "giscus-script";
+      script.setAttribute("data-repo", "RianFarhan07/RianPortofolio");
+      script.setAttribute("data-repo-id", "R_kgDOObW8sg");
+      script.setAttribute("data-category", "General");
+      script.setAttribute("data-category-id", "DIC_kwDOObW8ss4CpSL1");
+      script.setAttribute("data-mapping", "pathname");
+      script.setAttribute("data-strict", "0");
+      script.setAttribute("data-reactions-enabled", "1");
+      script.setAttribute("data-emit-metadata", "0");
+      script.setAttribute("data-input-position", "top");
+      script.setAttribute("data-theme", isDark ? "dark" : "light");
+      script.setAttribute("data-lang", "en");
+      script.setAttribute("crossorigin", "anonymous");
+      script.async = true;
 
-        document.body.appendChild(script);
+      //tambahkan script ke halaman
+      const giscusContainer = document.getElementById("giscus-container");
+      if (giscusContainer) {
+        giscusContainer.appendChild(script);
       }
     };
 
-    // Only load Disqus when section is in view for better performance
+    // untuk performance load giscus saat komponen inView
     if (inView) {
-      loadDisqus();
+      loadGiscus();
     }
 
     return () => {
-      // Clean up script if component unmounts
-      const disqusScript = document.querySelector(
-        'script[src*="disqus.com/embed.js"]'
-      );
-      if (disqusScript) {
-        disqusScript.remove();
+      // kalau unmount bersihkan script
+      const giscusScript = document.getElementById("giscus-script");
+      if (giscusScript) {
+        giscusScript.remove();
       }
     };
-  }, [inView]);
+  }, [inView, isDark]);
 
   const contactInfo = [
     {
@@ -89,9 +92,20 @@ export default function ContactPreview() {
       value: "Siddo, Kec. Soppeng Riaja, Kabupaten Barru, Sulawesi Selatan",
       link: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z/data=!4m15!1m8!3m7!1s0x2d959037d3877ecf:0xfbffc78763dca0b3!2sSiddo,+Kec.+Soppeng+Riaja,+Kabupaten+Barru,+Sulawesi+Selatan!3b1!8m2!3d-4.2420418!4d119.6441212!16s%2Fg%2F121mkpx2!3m5!1s0x2d95906ab81869db:0xbdb867d18d33b203!8m2!3d-4.2377172!4d119.6253708!16s%2Fg%2F11qg28lb6m?entry=ttu&g_ep=EgoyMDI1MDQxNi4xIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D",
     },
+    {
+      icon: <Handshake size={20} />,
+      title: "Collaboration",
+      value: "Let’s build something great!",
+      link: "mailto:rian.mallanti@gmail.com",
+    },
+    {
+      icon: <Clock size={20} />,
+      title: "Available For",
+      value: "Full-Time / Contract / Freelance",
+      link: "#about",
+    },
   ];
 
-  // Social media links
   const socialLinks = [
     {
       icon: <Linkedin size={18} />,
@@ -131,7 +145,7 @@ export default function ContactPreview() {
 
   return (
     <section
-      id="contact-preview"
+      id="contact"
       className={`py-16 md:py-24 relative overflow-hidden ${
         isDark
           ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
@@ -258,7 +272,7 @@ export default function ContactPreview() {
               </motion.a>
             ))}
 
-            {/* Social Links for mobile */}
+            {/* Social Links buat di mobile */}
             <motion.div className="flex flex-wrap gap-3 justify-center lg:justify-start pt-2 lg:hidden">
               {socialLinks.map((social, index) => (
                 <motion.a
@@ -280,7 +294,7 @@ export default function ContactPreview() {
             </motion.div>
           </motion.div>
 
-          {/* Disqus Comments Section */}
+          {/* Giscus Comments Section */}
           <motion.div className="lg:col-span-8" variants={itemVariants}>
             <div
               className={`p-6 rounded-lg ${
@@ -304,7 +318,7 @@ export default function ContactPreview() {
                   </h3>
                 </div>
 
-                {/* Social links - desktop only */}
+                {/* Social links - di desktop aja */}
                 <div className="hidden lg:flex gap-2">
                   {socialLinks.map((social, index) => (
                     <motion.a
@@ -326,9 +340,9 @@ export default function ContactPreview() {
                 </div>
               </div>
 
-              {/* Disqus container */}
+              {/* Giscus container */}
               <div className="min-h-64 mb-2">
-                <div id="disqus_thread" className="w-full"></div>
+                <div id="giscus-container" className="w-full"></div>
 
                 {/* Instructions notice */}
                 <div
@@ -339,10 +353,10 @@ export default function ContactPreview() {
                   }`}
                 >
                   <p>
-                    <strong>Note for implementation:</strong> Replace{" "}
-                    <code>YOUR_SHORTNAME</code> in the code with your actual
-                    Disqus shortname. You can get this from your Disqus admin
-                    panel after creating a site.
+                    <strong>Note :</strong> Please log in to your GitHub account
+                    and leave a comment below! 😊 Don't forget to add an emoji
+                    reaction like ❤️, 🚀, or any emoji you like to show your
+                    thoughts!
                   </p>
                 </div>
               </div>

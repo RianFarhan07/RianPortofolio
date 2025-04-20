@@ -422,7 +422,7 @@ export default function Hero() {
                     size={isSmallMobile ? 14 : 16}
                     className="fill-yellow-300 text-yellow-300"
                   />
-                  3+ Years
+                  4+ Years
                 </span>
                 <span className="text-xs sm:text-sm opacity-90">
                   Experience

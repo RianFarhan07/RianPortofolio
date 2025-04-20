@@ -1,7 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { ArrowRight, Award } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  Calendar,
+  Quote,
+  Briefcase,
+  Clock,
+} from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import aboutImage from "../assets/foto-nobg.png";
@@ -59,8 +66,6 @@ export default function AboutPreview() {
     };
   }, [isMobile]);
 
-  //biar tulisan my techstacknya loop terus
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -77,6 +82,15 @@ export default function AboutPreview() {
       y: 0,
       opacity: 1,
       transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  const infoCardVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100, delay: 0.4 },
     },
   };
 
@@ -222,6 +236,31 @@ export default function AboutPreview() {
                   State University of Makassar
                 </span>
               </motion.div>
+
+              {/* Birthday Badge */}
+              <motion.div
+                className={`absolute -top-6 -left-6 ${
+                  isDark
+                    ? "bg-gradient-to-r from-primary to-purple-500"
+                    : "bg-gradient-to-r from-primaryInLight to-purple-500"
+                } text-white rounded-xl px-4 py-2.5 shadow-xl`}
+                style={{
+                  transform: "translateZ(30px)",
+                }}
+                initial={{ scale: 0, rotate: 10 }}
+                animate={{
+                  scale: inView ? 1 : 0,
+                  transition: {
+                    scale: { duration: 0.5, delay: 0.5 },
+                  },
+                }}
+              >
+                <span className="text-xs sm:text-sm opacity-90">Born on</span>
+                <span className="text-base sm:text-lg font-bold flex items-center gap-1">
+                  <Calendar size={16} className="text-white" />
+                  July 07, 2002
+                </span>
+              </motion.div>
             </motion.div>
           </motion.div>
 
@@ -283,6 +322,109 @@ export default function AboutPreview() {
               enjoy bringing complex projects to life.
             </motion.p>
 
+            {/* Motto */}
+            <motion.div
+              className={`p-4 mb-6 rounded-lg ${
+                isDark ? "bg-gray-800/50" : "bg-white/70"
+              } backdrop-blur-sm border ${
+                isDark ? "border-gray-700" : "border-gray-200"
+              } shadow-sm`}
+              variants={infoCardVariants}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Quote
+                  size={18}
+                  className={isDark ? "text-primary" : "text-primaryInLight"}
+                />
+                <h3
+                  className={`font-semibold ${
+                    isDark ? "text-white" : "text-gray-800"
+                  }`}
+                >
+                  My Motto
+                </h3>
+              </div>
+              <p
+                className={`${
+                  isDark ? "text-gray-300" : "text-gray-600"
+                } italic`}
+              >
+                "It always seems impossible, until its done." - Nelson Mandela
+              </p>
+              <p className="mt-1 text-[10px] text-muted-foreground font-thin">
+                This quote reminds me to keep going, especially when building
+                something that feels too big at first.
+              </p>
+            </motion.div>
+
+            {/* Info Cards */}
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6"
+              variants={infoCardVariants}
+            >
+              {/* Available For */}
+              <div
+                className={`p-4 rounded-lg ${
+                  isDark ? "bg-gray-800/50" : "bg-white/70"
+                } backdrop-blur-sm border ${
+                  isDark ? "border-gray-700" : "border-gray-200"
+                } shadow-sm`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Briefcase
+                    size={18}
+                    className={isDark ? "text-primary" : "text-primaryInLight"}
+                  />
+                  <h3
+                    className={`font-semibold ${
+                      isDark ? "text-white" : "text-gray-800"
+                    }`}
+                  >
+                    Available For
+                  </h3>
+                </div>
+                <ul
+                  className={`${
+                    isDark ? "text-gray-300" : "text-gray-600"
+                  } space-y-1`}
+                >
+                  <li>• Full-time Positions</li>
+                  <li>• Freelance Projects</li>
+                  <li>• Contract</li>
+                </ul>
+              </div>
+
+              {/* Journey Started */}
+              <div
+                className={`p-4 rounded-lg ${
+                  isDark ? "bg-gray-800/50" : "bg-white/70"
+                } backdrop-blur-sm border ${
+                  isDark ? "border-gray-700" : "border-gray-200"
+                } shadow-sm`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock
+                    size={18}
+                    className={isDark ? "text-primary" : "text-primaryInLight"}
+                  />
+                  <h3
+                    className={`font-semibold ${
+                      isDark ? "text-white" : "text-gray-800"
+                    }`}
+                  >
+                    Journey Started
+                  </h3>
+                </div>
+                <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                  Coding since 2021
+                  <br />
+                  <span className="text-sm opacity-80">
+                    4+ years of experience
+                  </span>
+                </p>
+              </div>
+            </motion.div>
+
             <motion.div
               className="flex flex-wrap gap-6 mb-6 items-center justify-center md:justify-start"
               variants={itemVariants}
@@ -295,7 +437,7 @@ export default function AboutPreview() {
                 animationStagger={0.08}
                 easeType="elastic.out(1, 0.5)"
                 transformStyles={transformStyles}
-                enableHover={false}
+                enableHover={true}
                 isDark={isDark}
               />
             </motion.div>

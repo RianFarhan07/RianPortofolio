@@ -32,7 +32,7 @@ export default function Footer() {
 
   const currentYear = new Date().getFullYear();
 
-  // Check if footer is in viewport
+  // check kalau footer di viewport
   useEffect(() => {
     const checkIfInView = () => {
       if (!footerRef.current) return;
@@ -54,7 +54,7 @@ export default function Footer() {
     };
   }, []);
 
-  // Custom parallax effect instead of using parallax-js library
+  // Custom parallax effect
   useEffect(() => {
     if (!shapesContainerRef.current || !inView) return;
 
@@ -67,20 +67,20 @@ export default function Footer() {
 
       const containerRect = container.getBoundingClientRect();
 
-      // Calculate mouse position relative to the container center
+      // kalkulasi posisi mouse
       const centerX = containerRect.left + containerRect.width / 2;
       const centerY = containerRect.top + containerRect.height / 2;
 
       const mouseX = e.clientX - centerX;
       const mouseY = e.clientY - centerY;
 
-      // Apply movement to each shape based on its data-depth
+      // implementasikan gerakan berdasarkan data depth
       shapes.forEach((shape) => {
         const depth = Number.parseFloat(
           shape.getAttribute("data-depth") || 0.1
         );
-        const moveX = (mouseX * depth * -1) / 5; // Reduced movement factor
-        const moveY = (mouseY * depth * -1) / 5; // Reduced movement factor
+        const moveX = (mouseX * depth * -1) / 5; // turunkan faktor movement
+        const moveY = (mouseY * depth * -1) / 5; // turunkan faktor movement
 
         shape.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) ${
           shape.getAttribute("data-rotate") || ""
@@ -88,7 +88,7 @@ export default function Footer() {
       });
     };
 
-    // Add a small random movement to shapes even when mouse isn't moving
+    //  tambahkan random movement kecil ke shape bahkan jika mouse tidak bergerak
     const intervalId = setInterval(() => {
       if (!shapesContainerRef.current || !inView) return;
 
@@ -101,7 +101,7 @@ export default function Footer() {
 
         const currentTransform = shape.style.transform || "";
         if (currentTransform.includes("translate3d")) {
-          // If already has transform from mouse movement, don't override
+          // jangan override transform yang sudah ada
           return;
         }
 
@@ -120,7 +120,7 @@ export default function Footer() {
   }, [inView]);
 
   useEffect(() => {
-    // Show back to top button only when scrolled down
+    // tampilkan back to top button jika di viewport
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
         setIsVisible(true);
@@ -140,9 +140,8 @@ export default function Footer() {
     });
   };
 
-  // Improved particles.js initialization
   useEffect(() => {
-    // Load particles.js if not already loaded
+    // Load particles.js kalau belum di load
     if (typeof window !== "undefined" && !window.particlesJS) {
       const script = document.createElement("script");
       script.src =
@@ -161,11 +160,10 @@ export default function Footer() {
     }
   }, []);
 
-  // Initialize particles when loaded and when theme changes
+  // Initialize particles ketika di load dan ketika thema ganti
   useEffect(() => {
     if (!particlesLoaded || !particlesRef.current || !inView) return;
 
-    // Clear any existing particles
     if (window.pJSDom && window.pJSDom.length) {
       window.pJSDom.forEach((dom) => {
         if (dom && dom.pJS && dom.pJS.fn && dom.pJS.fn.vendors) {
@@ -178,12 +176,12 @@ export default function Footer() {
     const particlesConfig = {
       particles: {
         number: {
-          value: 40, // More particles
+          value: 40,
           density: { enable: true, value_area: 800 },
         },
         color: { value: isDark ? "#00adb5" : "#14b8a6" },
         opacity: {
-          value: 0.7, // Increased opacity further
+          value: 0.7,
           random: true,
           anim: {
             enable: true,
@@ -193,7 +191,7 @@ export default function Footer() {
           },
         },
         size: {
-          value: 8, // Larger size for better visibility
+          value: 8,
           random: true,
           anim: {
             enable: true,
@@ -203,7 +201,7 @@ export default function Footer() {
           },
         },
         line_linked: {
-          enable: true, // Enable links between particles for better visual effect
+          enable: true,
           distance: 150,
           color: isDark ? "#00adb5" : "#14b8a6",
           opacity: 0.3,
@@ -211,7 +209,7 @@ export default function Footer() {
         },
         move: {
           enable: true,
-          speed: 1.2, // Slightly faster
+          speed: 1.2,
           direction: "none",
           random: true,
           straight: false,
@@ -248,7 +246,7 @@ export default function Footer() {
       retina_detect: true,
     };
 
-    // Initialize particles with a small delay to ensure DOM is ready
+    // Initialize particles dengan delay agar memastikan dom sudah di load
     setTimeout(() => {
       if (window.particlesJS && particlesRef.current) {
         try {
@@ -296,7 +294,7 @@ export default function Footer() {
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
     { name: "Projects", href: "#projects" },
-    { name: "Skills", href: "#skills" },
+    { name: "Certificates", href: "#certificates" },
     { name: "Contact", href: "#contact" },
   ];
 
@@ -304,36 +302,36 @@ export default function Footer() {
     {
       name: "GitHub",
       icon: <Github size={18} />,
-      href: "https://github.com/username",
+      href: "https://github.com/RianFarhan07",
       color: "#171515",
     },
     {
       name: "LinkedIn",
       icon: <Linkedin size={18} />,
-      href: "https://linkedin.com/in/username",
+      href: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/",
       color: "#0077B5",
     },
     {
       name: "Twitter",
       icon: <Twitter size={18} />,
-      href: "https://twitter.com/username",
+      href: "https://x.com/RianFarhanM",
       color: "#1DA1F2",
     },
     {
       name: "Instagram",
       icon: <Instagram size={18} />,
-      href: "https://instagram.com/username",
+      href: "https://www.instagram.com/rianfarhan/",
       color: "#E4405F",
     },
     {
       name: "Email",
       icon: <Mail size={18} />,
-      href: "mailto:email@example.com",
+      href: "#contact",
       color: "#D44638",
     },
   ];
 
-  // Create parallax shapes - using relative positioning within the footer
+  // Create parallax shapes
   const parallaxShapes = [
     {
       depth: "0.1",
@@ -373,7 +371,6 @@ export default function Footer() {
       } opacity-20 rounded-full`,
       style: { left: "40%", bottom: "15%" },
     },
-    // Add more shapes with better distribution
     {
       depth: "0.5",
       className: `parallax-shape absolute w-16 h-16 ${
@@ -397,7 +394,7 @@ export default function Footer() {
       style: { right: "45%", bottom: "45%" },
       rotate: "rotate(12deg)",
     },
-    // Large colored gradients with better positioning
+
     {
       depth: "0.5",
       className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl ${
@@ -412,7 +409,7 @@ export default function Footer() {
       } opacity-30`,
       style: { left: "-5%", bottom: "-10%" },
     },
-    // Add floating icons with better distribution
+
     {
       depth: "0.4",
       className: "parallax-shape absolute",
@@ -437,7 +434,7 @@ export default function Footer() {
         />
       ),
     },
-    // Add more floating icons
+
     {
       depth: "0.3",
       className: "parallax-shape absolute",
@@ -471,27 +468,26 @@ export default function Footer() {
           : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
       }`}
     >
-      {/* Particle container with unique ID */}
+      {/* Particle container dengan id unique */}
       <div
         id="footer-particles-js"
         ref={particlesRef}
         className="absolute inset-0 z-0"
       ></div>
 
-      {/* Custom parallax implementation instead of using parallax-js library */}
+      {/* Custom parallax */}
       <div
         ref={shapesContainerRef}
         className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{ height: "100%", width: "100%", position: "absolute" }}
       >
-        {/* Grid Pattern for visibility */}
         <div
           className={`absolute inset-0 opacity-20 ${
             isDark ? "bg-grid-white/5" : "bg-grid-black/5"
           }`}
         />
 
-        {/* Dynamically render all parallax shapes */}
+        {/* render dinamik semua shapes */}
         {parallaxShapes.map((shape, index) => (
           <div
             key={index}
@@ -513,7 +509,7 @@ export default function Footer() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {/* Back to top button with animation */}
+          {/* animasi back to top */}
           <motion.div
             className="mb-12"
             variants={itemVariants}
@@ -561,7 +557,6 @@ export default function Footer() {
             <Tooltip id="scroll-tooltip" />
           </motion.div>
 
-          {/* Logo/Brand with ENHANCED hover effect and glow */}
           <motion.div className="mb-8 relative" variants={itemVariants}>
             <motion.h2
               className={`text-2xl font-bold ${
@@ -575,10 +570,8 @@ export default function Footer() {
                   isDark ? "text-cyan-400" : "text-primary"
                 }`}
               >
-                {/* Enhanced glow effect for Farhan */}
                 <span className={`relative z-20`}>Farhan</span>
 
-                {/* Multiple layers of glow for enhanced effect */}
                 <motion.span
                   className={`absolute inset-0 blur-md rounded-lg ${
                     isDark ? "bg-cyan-500" : "bg-blue-500"
@@ -605,7 +598,6 @@ export default function Footer() {
                   }}
                 />
 
-                {/* Outer glow ring */}
                 <motion.span
                   className={`absolute -inset-1 blur-xl rounded-lg ${
                     isDark ? "bg-cyan-400" : "bg-primary"
@@ -624,7 +616,6 @@ export default function Footer() {
             </motion.h2>
           </motion.div>
 
-          {/* Dynamic Navigation */}
           <motion.div className="mb-12" variants={itemVariants}>
             <ul className="flex flex-wrap justify-center gap-6 md:gap-10">
               {navItems.map((item, index) => (
@@ -660,7 +651,6 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Enhanced Social Links - Interactive Cards */}
           <motion.div
             className="flex flex-wrap justify-center gap-4 mb-12"
             variants={itemVariants}
@@ -698,7 +688,6 @@ export default function Footer() {
             ))}
           </motion.div>
 
-          {/* Animated Copyright */}
           <motion.div className="text-center" variants={itemVariants}>
             <motion.p
               className={`flex items-center justify-center gap-1 ${

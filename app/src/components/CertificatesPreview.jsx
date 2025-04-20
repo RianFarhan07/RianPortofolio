@@ -1,6 +1,3 @@
-// CertificatesPreview.jsx
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -11,6 +8,7 @@ import {
   Calendar,
   Tag,
   CheckCircle,
+  ChevronRight,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -23,25 +21,11 @@ export default function CertificatesPreview() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   const autoplayRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const [ref, inView] = useInView({
     triggerOnce: false,
     threshold: 0.2,
   });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize(); // Set initial value
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     if (autoplay) {
@@ -87,8 +71,8 @@ export default function CertificatesPreview() {
 
   return (
     <section
-      id="certificates-preview"
-      className={`py-16 md:py-24 relative overflow-hidden ${
+      id="certificates"
+      className={`py-10 md:py-24 relative overflow-hidden ${
         isDark
           ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
           : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
@@ -117,12 +101,12 @@ export default function CertificatesPreview() {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center gap-2 mb-4 justify-center">
+          <div className="flex items-center gap-2 mb-3 md:mb-4 justify-center">
             <div
               className={`h-1 w-8 md:w-12 ${
                 isDark ? "bg-primary" : "bg-primaryInLight"
@@ -160,14 +144,69 @@ export default function CertificatesPreview() {
           </h2>
         </motion.div>
 
-        {/* Certificate Showcase */}
+        {/* selecor certificate - kalau di mobile hilang */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12"
+          className="flex overflow-x-auto pb-4 gap-3 mb-4 md:hidden scrollbar-hide"
+          variants={itemVariants}
+          onTouchStart={() => setAutoplay(false)}
+        >
+          {certificates.map((cert, index) => (
+            <div
+              key={cert.id}
+              className={`flex-shrink-0 w-64 p-3 rounded-lg cursor-pointer transition-colors ${
+                activeIndex === index
+                  ? isDark
+                    ? "bg-gray-800 border-l-2 border-primary"
+                    : "bg-gray-100 border-l-2 border-primaryInLight"
+                  : isDark
+                  ? "bg-gray-900/50 border border-gray-800"
+                  : "bg-white/50 border border-gray-200"
+              }`}
+              onClick={() => handleCertificateClick(index)}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex-shrink-0 p-2 rounded-full ${
+                    activeIndex === index
+                      ? isDark
+                        ? "bg-primary/20 text-primary"
+                        : "bg-primaryInLight/20 text-primaryInLight"
+                      : isDark
+                      ? "bg-gray-800 text-gray-400"
+                      : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  <Award size={18} />
+                </div>
+                <div className="flex-grow">
+                  <h4
+                    className={`font-medium text-sm ${
+                      isDark ? "text-white" : "text-gray-800"
+                    } line-clamp-1`}
+                  >
+                    {cert.title}
+                  </h4>
+                  <p
+                    className={`text-xs ${
+                      isDark ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    {cert.issuer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Showcase Sertifikat */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12"
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {/* Left side - Selected Certificate */}
+          {/* Left side - pilihan sertifikat */}
           <motion.div
             className="md:col-span-7 order-2 md:order-1"
             variants={itemVariants}
@@ -180,7 +219,7 @@ export default function CertificatesPreview() {
               } h-full`}
             >
               {/* Certificate Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div className="relative aspect-[16/9] md:aspect-[4/3] overflow-hidden">
                 <motion.img
                   src={currentCertificate.image || "/placeholder.svg"}
                   alt={currentCertificate.title}
@@ -192,21 +231,21 @@ export default function CertificatesPreview() {
                   transition={{ duration: 0.5 }}
                 />
 
-                {/* Certificate Issuer Overlay */}
+                {/* overlay issuer sertifikat*/}
                 <div
                   className={`absolute bottom-0 right-0 ${
                     isDark ? "bg-gray-900/80" : "bg-white/80"
-                  } backdrop-blur-sm py-2 px-4 m-4 rounded-lg flex items-center gap-2`}
+                  } backdrop-blur-sm py-1.5 px-3 m-3 md:m-4 rounded-md flex items-center gap-2 text-xs md:text-sm`}
                 >
                   <span
-                    className={`text-sm font-medium ${
+                    className={`font-medium ${
                       isDark ? "text-white" : "text-gray-800"
                     }`}
                   >
                     Issued by:
                   </span>
                   <span
-                    className={`text-sm font-bold ${
+                    className={`font-bold ${
                       isDark ? "text-primary" : "text-primaryInLight"
                     }`}
                   >
@@ -216,9 +255,9 @@ export default function CertificatesPreview() {
               </div>
 
               {/* Certificate Details */}
-              <div className="p-6">
+              <div className="p-4 md:p-6">
                 <h3
-                  className={`text-xl md:text-2xl font-bold mb-3 ${
+                  className={`text-lg md:text-2xl font-bold mb-2 md:mb-3 ${
                     isDark ? "text-white" : "text-gray-800"
                   }`}
                 >
@@ -227,44 +266,44 @@ export default function CertificatesPreview() {
 
                 {/* Certificate Meta */}
                 <div
-                  className={`flex flex-wrap gap-4 mb-4 ${
+                  className={`flex flex-wrap gap-3 mb-3 md:mb-4 ${
                     isDark ? "text-gray-400" : "text-gray-600"
                   }`}
                 >
                   <div className="flex items-center gap-1.5">
-                    <Calendar size={16} />
-                    <span className="text-sm">
+                    <Calendar size={14} />
+                    <span className="text-xs md:text-sm">
                       {currentCertificate.issueDate}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Tag size={16} />
-                    <span className="text-sm">
+                    <Tag size={14} />
+                    <span className="text-xs md:text-sm">
                       ID: {currentCertificate.credentialId}
                     </span>
                   </div>
                 </div>
 
                 {/* Skills */}
-                <div className="mb-5">
+                <div className="mb-4 md:mb-5">
                   <h4
-                    className={`text-sm font-semibold mb-2 ${
+                    className={`text-xs md:text-sm font-semibold mb-1.5 md:mb-2 ${
                       isDark ? "text-gray-400" : "text-gray-600"
                     }`}
                   >
                     Skills & Knowledge
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2">
                     {currentCertificate.skills.map((skill, i) => (
                       <div
                         key={i}
-                        className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                        className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
                           isDark
                             ? "bg-gray-800 text-gray-300"
                             : "bg-gray-100 text-gray-700"
                         }`}
                       >
-                        <CheckCircle size={12} />
+                        <CheckCircle size={10} className="hidden md:inline" />
                         {skill}
                       </div>
                     ))}
@@ -276,7 +315,7 @@ export default function CertificatesPreview() {
                   href={currentCertificate.credentialUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg ${
+                  className={`inline-flex items-center justify-center gap-1.5 text-xs md:text-sm px-4 py-2 rounded-lg w-full md:w-auto ${
                     isDark
                       ? "bg-primary text-white hover:bg-primary/90"
                       : "bg-primaryInLight text-white hover:bg-primaryInLight/90"
@@ -289,9 +328,9 @@ export default function CertificatesPreview() {
             </div>
           </motion.div>
 
-          {/* Right side - Certificate List */}
+          {/* Right side - Certificate List (Hidden on mobile) */}
           <motion.div
-            className="md:col-span-5 order-1 md:order-2"
+            className="md:col-span-5 order-1 md:order-2 hidden md:block"
             variants={itemVariants}
           >
             <div
@@ -354,13 +393,6 @@ export default function CertificatesPreview() {
                         {cert.issuer} • {cert.issueDate}
                       </p>
                     </div>
-                    {activeIndex === index && (
-                      <div
-                        className={`flex-shrink-0 h-2 w-2 rounded-full ${
-                          isDark ? "bg-primary" : "bg-primaryInLight"
-                        } animate-pulse`}
-                      />
-                    )}
                   </motion.div>
                 ))}
               </div>
@@ -385,6 +417,24 @@ export default function CertificatesPreview() {
             </div>
           </motion.div>
         </motion.div>
+
+        {/* button view all di mobile */}
+        <div className="mt-6 md:hidden">
+          <Link
+            to="/certificates"
+            className={`flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg ${
+              isDark
+                ? "bg-gray-800 text-white hover:bg-gray-700"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+            } transition-colors font-medium text-sm group`}
+          >
+            View All Certificates
+            <ChevronRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </div>
       </div>
     </section>
   );
