@@ -71,13 +71,13 @@ const AppContent = () => {
           <Route
             path="/"
             element={
-              <>
+              <div className="mt-5">
                 <Hero />
                 <AboutPreview />
                 <ProjectPreview />
                 <CertificatesPreview />
                 <ContactPreview />
-              </>
+              </div>
             }
           />
           <Route path="/about" element={<About />} />

@@ -356,7 +356,9 @@ export default function ContactPreview() {
                     <strong>Note :</strong> Please log in to your GitHub account
                     and leave a comment below! 😊 Don't forget to add an emoji
                     reaction like ❤️, 🚀, or any emoji you like to show your
-                    thoughts!
+                    thoughts! <br />
+                    Feel free to check out my repository, and don't forget to
+                    star it ⭐ if you find it useful! 🙌
                   </p>
                 </div>
               </div>
