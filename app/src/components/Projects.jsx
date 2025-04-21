@@ -69,6 +69,8 @@ export default function Projects() {
       const categoryMatch =
         activeCategory === "all" ||
         activeCategory === item.type ||
+        (activeCategory === "mobile" &&
+          (item.category === "mobile" || item.category === "android")) ||
         activeCategory === item.category;
 
       // Filter berdasarkan search query
