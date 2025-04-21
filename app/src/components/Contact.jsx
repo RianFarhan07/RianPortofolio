@@ -37,7 +37,6 @@ export default function Contact() {
     threshold: 0.1,
   });
 
-  // Contact information data
   const contactInfo = [
     {
       icon: <Phone size={20} />,
@@ -71,7 +70,6 @@ export default function Contact() {
     },
   ];
 
-  // Social media links
   const socialLinks = [
     {
       icon: <Linkedin size={18} />,
@@ -97,7 +95,6 @@ export default function Contact() {
       [name]: value,
     });
 
-    // Clear error for this field if it exists
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -128,8 +125,6 @@ export default function Contact() {
 
     setFormStatus("submitting");
 
-    // EmailJS configuration
-    // Replace these with your actual EmailJS service ID, template ID, and public key
     const serviceId = "service_gqzjzjd";
     const templateId = "template_n3a7ndg";
     const publicKey = "2G8xLwErCmOXqXE70";
@@ -139,11 +134,11 @@ export default function Contact() {
       from_email: formState.email,
       subject: formState.subject,
       message: formState.message,
-      to_name: "Rian Farhan", // Your name
+      to_name: "Rian Farhan",
     };
 
     try {
-      // Send email using EmailJS
+      // Kirim email pakai EmailJS
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
       setFormStatus("success");
@@ -154,7 +149,6 @@ export default function Contact() {
         message: "",
       });
 
-      // Reset form status after 3 seconds
       setTimeout(() => {
         setFormStatus(null);
       }, 3000);
