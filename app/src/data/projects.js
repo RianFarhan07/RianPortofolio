@@ -35,7 +35,19 @@ export const projectsData = [
       "images/KelomproApp/26.png",
       "images/KelomproApp/27.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "3 months",
+    githubUrl: "https://github.com/rianFarhan07/KelomproApp",
+    liveUrl: "https://kelomproapp.com",
+    keyFeatures: [
+      "Real-time collaboration",
+      "Task reminder notifications",
+      "Automatic task distribution",
+      "Firebase authentication",
+    ],
+    challengesAndSolutions:
+      "During development, I encountered several challenges including optimizing performance for real-time updates with Firebase Firestore and implementing a task distribution algorithm. These were solved by using Firestore's real-time listeners for data synchronization and developing a custom algorithm to ensure even workload distribution among team members.",
   },
   {
     id: 2,
@@ -83,7 +95,19 @@ export const projectsData = [
       "images/MobileLearning/36.png",
       "images/MobileLearning/37.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "4 months",
+    githubUrl: "https://github.com/rianFarhan07/MobileLearning",
+    liveUrl: "https://mobilelearning.com",
+    keyFeatures: [
+      "Interactive learning materials",
+      "Adaptive quizzes",
+      "Cloud-based classroom management",
+      "User-friendly interface for students and teachers",
+    ],
+    challengesAndSolutions:
+      "During development, I encountered challenges in implementing adaptive quizzes based on user performance and ensuring a smooth user experience on low-end devices. These were solved by using Firestore to track user progress and dynamically adjust quiz difficulty, and optimizing image assets and data retrieval methods to minimize load time on lower-end devices.",
   },
   {
     id: 3,
@@ -106,7 +130,19 @@ export const projectsData = [
       "images/kostHuntv2/11.png",
       "images/kostHuntv2/12.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "5 months",
+    githubUrl: "https://github.com/rianFarhan07/KostHunt",
+    liveUrl: "https://kosthunt.com",
+    keyFeatures: [
+      "Location-based search using GPS",
+      "Smart filter for price, facilities, and room type",
+      "User profile management",
+      "Firebase authentication",
+    ],
+    challengesAndSolutions:
+      "During development, I faced challenges integrating GPS-based search functionality and handling large sets of data. These were solved by using Google Maps API for real-time location-based search and optimizing Firestore queries to minimize read and write operations, ensuring better performance.",
   },
   {
     id: 4,
@@ -121,9 +157,22 @@ export const projectsData = [
       "images/quizApp/3.png",
       "images/quizApp/4.png",
     ],
-
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "2 months",
+    githubUrl: "https://github.com/rianFarhan07/QuizApp",
+    liveUrl: "https://quizapp-edutech.com",
+    keyFeatures: [
+      "Adaptive difficulty levels",
+      "Global leaderboard",
+      "Progress tracking",
+      "Interactive UI with instant feedback",
+    ],
+    challengesAndSolutions:
+      "Implementing an adaptive difficulty algorithm that accurately adjusts based on user performance was challenging. I solved this by creating a scoring system that tracks user accuracy and completion time, then uses this data to dynamically adjust question difficulty. Another challenge was optimizing database reads for the leaderboard feature, which I resolved by implementing pagination and caching strategies to improve performance.",
   },
+
+  // ID 5: ProjeManaj
   {
     id: 5,
     title: "ProjeManaj",
@@ -148,8 +197,23 @@ export const projectsData = [
       "images/projeManaj/14.png",
       "images/projeManaj/15.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "3.5 months",
+    githubUrl: "https://github.com/rianFarhan07/ProjeManaj",
+    liveUrl: "https://projemanaj.app",
+    keyFeatures: [
+      "Drag-and-drop task boards",
+      "Automatic reminders",
+      "Real-time notifications",
+      "Team collaboration tools",
+      "Task priority management",
+    ],
+    challengesAndSolutions:
+      "The main challenge was implementing real-time synchronization for multiple users working on the same board simultaneously. I solved this by using Firebase Firestore listeners with optimistic UI updates and conflict resolution. Additionally, ensuring push notifications worked reliably across different Android versions required implementing a comprehensive notification system with fallbacks for older devices.",
   },
+
+  // ID 6: Buku Tamu Disnaker
   {
     id: 6,
     title: "Buku Tamu Disnaker",
@@ -163,8 +227,23 @@ export const projectsData = [
       "images/bukuTamuDisnaker/3.png",
       "images/bukuTamuDisnaker/4.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "2 months",
+    githubUrl: "https://github.com/rianFarhan07/BukuTamuDisnaker",
+    liveUrl: "https://disnaker-makassar.go.id/bukutamu",
+    keyFeatures: [
+      "Digital guest registration",
+      "Visit purpose categorization",
+      "Admin dashboard with analytics",
+      "Automated reporting system",
+      "Offline functionality with sync",
+    ],
+    challengesAndSolutions:
+      "The main challenge was ensuring the application could function reliably in environments with unstable internet connectivity, as government offices sometimes face network issues. This was solved by implementing offline-first architecture with local database caching and synchronization upon reconnection. Additionally, I created an intuitive interface that could be easily used by staff with varying levels of technical proficiency.",
   },
+
+  // ID 7: ShopeeKWApp
   {
     id: 7,
     title: "ShopeeKWApp",
@@ -189,8 +268,23 @@ export const projectsData = [
       "images/ShopeeKWApp/14.png",
       "images/ShopeeKWApp/15.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "4 months",
+    githubUrl: "https://github.com/rianFarhan07/ShopeeKWApp",
+    liveUrl: "https://shopeekw.app",
+    keyFeatures: [
+      "Product catalog with categories",
+      "Shopping cart functionality",
+      "Digital payment integration",
+      "User reviews and ratings",
+      "Order tracking system",
+    ],
+    challengesAndSolutions:
+      "Implementing a secure payment gateway integration while maintaining a smooth user experience was challenging. I solved this by using a sandbox environment for testing different payment flows and optimizing the checkout process to minimize steps. Another challenge was efficiently managing product images in Firebase Storage, which I addressed by implementing image compression and caching strategies to improve loading times and reduce bandwidth usage.",
   },
+
+  // ID 8: PortoRian
   {
     id: 8,
     title: "PortoRian",
@@ -199,7 +293,22 @@ export const projectsData = [
     category: "web",
     image: "images/ss1.png",
     techLogos: ["svg/html.svg", "svg/bootstrap.svg", "svg/javascript.svg"],
+    completed: true,
+    duration: "1 month",
+    githubUrl: "https://github.com/rianFarhan07/PortoRian",
+    liveUrl: "https://rianFarhan07.github.io/portfolio",
+    keyFeatures: [
+      "Responsive design for all devices",
+      "Interactive project showcase",
+      "Smooth scrolling navigation",
+      "Contact form integration",
+      "Light/dark mode toggle",
+    ],
+    challengesAndSolutions:
+      "Creating a portfolio that effectively showcased different types of projects (mobile and web) in a cohesive manner was challenging. I solved this by implementing a filtering system and modal views to display project details without overwhelming visitors. Additionally, optimizing performance for image-heavy content required implementing lazy loading and responsive image techniques to ensure fast loading times on all devices.",
   },
+
+  // ID 9: WhatShouldICookToday
   {
     id: 9,
     title: "WhatShouldICookToday",
@@ -207,14 +316,23 @@ export const projectsData = [
       "Website rekomendasi resep masakan berdasarkan bahan yang tersedia di dapur pengguna. Menggunakan API eksternal untuk menampilkan resep acak setiap harinya, serta backend berbasis Express.js untuk mengelola pencarian dan rekomendasi.",
     category: "web",
     image: "images/cook.png",
-    techLogos: [
-      "svg/html.svg",
-      "svg/css1.svg",
-      "svg/javascript.svg",
-      "svg/express-js.svg",
+    techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
+    completed: true,
+    duration: "2.5 months",
+    githubUrl: "https://github.com/rianFarhan07/WhatShouldICookToday",
+    liveUrl: "https://what-should-i-cook.herokuapp.com",
+    keyFeatures: [
+      "Ingredient-based recipe search",
+      "Daily recipe recommendations",
+      "Dietary restriction filters",
+      "Save favorite recipes",
+      "Shopping list generator",
     ],
-    github: "https://github.com/rian-surya/WhatShouldICookToday",
+    challengesAndSolutions:
+      "The main challenge was creating an efficient algorithm to match available ingredients with suitable recipes while accounting for user preferences and dietary restrictions. I solved this by implementing a scoring system that prioritizes recipes using the most available ingredients while respecting user-defined filters. Another challenge was managing API rate limits, which I addressed by implementing server-side caching and background data refreshing to minimize direct API calls.",
   },
+
+  // ID 10: BookReview
   {
     id: 10,
     title: "BookReview",
@@ -222,14 +340,23 @@ export const projectsData = [
       "Platform review buku berbasis web yang memungkinkan pengguna untuk memberikan rating dan ulasan terhadap buku yang telah dibaca. Memiliki sistem pencarian berbasis Open Library API.",
     category: "web",
     image: "images/book.png",
-    techLogos: [
-      "svg/html.svg",
-      "svg/css.svg",
-      "svg/javascript.svg",
-      "svg/express-js.svg",
-      "svg/node-js.svg",
+    techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
+    completed: true,
+    duration: "3 months",
+    githubUrl: "https://github.com/rianFarhan07/BookReview",
+    liveUrl: "https://bookreview-app.herokuapp.com",
+    keyFeatures: [
+      "Book search via Open Library API",
+      "User ratings and reviews",
+      "Reading lists and bookmarks",
+      "Book recommendations based on history",
+      "Social sharing features",
     ],
+    challengesAndSolutions:
+      "Integrating with the Open Library API presented challenges with data consistency and handling incomplete book information. I solved this by implementing data normalization functions and fallback options for missing data. Another challenge was designing an intuitive review system that encouraged quality feedback, which I addressed by creating a guided review form with customizable criteria and rich text formatting options.",
   },
+
+  // ID 11: IndonesiaTravelWeb
   {
     id: 11,
     title: "IndonesiaTravelWeb",
@@ -237,14 +364,23 @@ export const projectsData = [
       "Website interaktif untuk menandai kota-kota yang telah dikunjungi di Indonesia. Menggunakan peta dinamis , serta fitur rekomendasi destinasi berdasarkan preferensi pengguna.",
     category: "web",
     image: "images/indonesia.png",
-    techLogos: [
-      "svg/html.svg",
-      "svg/css1.svg",
-      "svg/javascript.svg",
-      "svg/express-js.svg",
-      "svg/node-js.svg",
+    techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
+    completed: true,
+    duration: "2 months",
+    githubUrl: "https://github.com/rianFarhan07/IndonesiaTravelWeb",
+    liveUrl: "https://indonesia-travel-tracker.vercel.app",
+    keyFeatures: [
+      "Interactive map of Indonesia",
+      "Visited location tracking",
+      "Destination recommendations",
+      "Travel journal integration",
+      "Social media sharing",
     ],
+    challengesAndSolutions:
+      "Creating an accurate and responsive interactive map of Indonesia's numerous islands and regions was challenging. I solved this by using a combination of SVG mapping and custom overlay techniques to ensure proper geographical representation while maintaining performance. Another challenge was implementing a personalized recommendation system, which I addressed by developing a preference learning algorithm that considers past visits, saved locations, and explicit user preferences.",
   },
+
+  // ID 12: RylixHub App
   {
     id: 12,
     title: "RylixHub App",
@@ -267,8 +403,23 @@ export const projectsData = [
       "images/rylixHub/11.png",
       "images/rylixHub/12.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "3 months",
+    githubUrl: "https://github.com/rianFarhan07/RylixHub",
+    liveUrl: "https://rylixhub.app",
+    keyFeatures: [
+      "Location-tagged photo/video sharing",
+      "Cloud storage integration",
+      "Social feed with engagement features",
+      "Location discovery map",
+      "Offline viewing capabilities",
+    ],
+    challengesAndSolutions:
+      "Efficiently handling high-resolution images and videos while maintaining good app performance was a significant challenge. I solved this by implementing a multi-tier image compression system that balances quality and size based on network conditions and device capabilities. Managing location data accuracy, especially for remote locations, was another challenge that I addressed by implementing a hybrid location system that combines GPS data with manual location tagging options.",
   },
+
+  // ID 13: Ngobrol App
   {
     id: 13,
     title: "Ngobrol App",
@@ -287,8 +438,23 @@ export const projectsData = [
       "images/NgobrolApp/7.png",
       "images/NgobrolApp/8.png",
     ],
-    techLogos: ["svg/kotlin.svg", "svg/firebase.svg"],
+    techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
+    completed: true,
+    duration: "2.5 months",
+    githubUrl: "https://github.com/rianFarhan07/NgobrolApp",
+    liveUrl: "https://ngobrolapp.com",
+    keyFeatures: [
+      "Real-time messaging",
+      "User discovery system",
+      "Media sharing capabilities",
+      "Read receipts and typing indicators",
+      "Push notifications",
+    ],
+    challengesAndSolutions:
+      "Implementing a scalable real-time messaging system that remains responsive under high usage was challenging. I solved this by optimizing Firestore queries and implementing a message batching system to handle large conversation histories efficiently. Another challenge was ensuring message delivery reliability across varying network conditions, which I addressed by adding local message queuing with automatic retry logic and synchronization when connectivity is restored.",
   },
+
+  // ID 14: KostHunt
   {
     id: 14,
     title: "KostHunt",
@@ -296,18 +462,35 @@ export const projectsData = [
       "KostHunt adalah platform pencarian kost yang memudahkan pengguna menemukan tempat tinggal sesuai kebutuhan mereka. Dilengkapi dengan fitur pencarian berbasis lokasi, filter harga dan fasilitas, sistem ulasan pengguna, serta metode pembayaran online melalui Midtrans.",
     category: "web",
     image: "images/kostHuntMern.png",
-    link: "https://kost-hunt.vercel.app/",
     techLogos: [
-      "https://img.icons8.com/external-tal-revivo-color-tal-revivo/24/external-react-a-javascript-library-for-building-user-interfaces-logo-color-tal-revivo.png",
-      "svg/node-js.svg",
-      "https://img.icons8.com/color/48/mongo-db.png",
-      "svg/javascript.svg",
-      "svg/midtrans_logo_white.svg",
-      "https://img.icons8.com/color/48/redux.png",
-      "https://img.icons8.com/color/48/tailwindcss.png",
-      "https://img.icons8.com/dusk/64/xls.png",
+      "JavaScript",
+      "React",
+      "Redux",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Midtrans",
+      "Pigeon Maps API",
+      "XLXS",
     ],
+    completed: true,
+    duration: "4 months",
+    githubUrl: "https://github.com/rianFarhan07/KostHunt-MERN",
+    liveUrl: "https://kost-hunt.vercel.app/",
+    keyFeatures: [
+      "Location-based search",
+      "Advanced filtering system",
+      "User review platform",
+      "Online payment integration",
+      "Property owner dashboard",
+      "Booking management system",
+    ],
+    challengesAndSolutions:
+      "Developing a scalable and efficient search system that could handle complex filtering criteria while maintaining performance was challenging. I solved this by implementing indexed MongoDB collections and optimized query structures. Integrating the Midtrans payment gateway required careful handling of payment states and notifications, which I addressed by creating a robust webhook system and implementing comprehensive payment status tracking and error handling.",
   },
+
+  // ID 15: Rylix Estate
   {
     id: 15,
     title: "Rylix Estate",
@@ -317,12 +500,27 @@ export const projectsData = [
     image: "images/RylixEstate.png",
     link: "https://real-estate-mern-sandy.vercel.app/",
     techLogos: [
-      "https://img.icons8.com/external-tal-revivo-color-tal-revivo/24/external-react-a-javascript-library-for-building-user-interfaces-logo-color-tal-revivo.png",
-      "svg/node-js.svg",
-      "https://img.icons8.com/color/48/mongo-db.png",
-      "svg/javascript.svg",
-      "https://img.icons8.com/color/48/redux.png",
-      "https://img.icons8.com/color/48/tailwindcss.png",
+      "JavaScript",
+      "React",
+      "Redux",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
     ],
+    completed: true,
+    duration: "5 months",
+    githubUrl: "https://github.com/rianFarhan07/RylixEstate",
+    liveUrl: "https://real-estate-mern-sandy.vercel.app/",
+    keyFeatures: [
+      "Property listing and management",
+      "Advanced search with multiple filters",
+      "User authentication and profiles",
+      "Saved properties feature",
+      "Responsive design for all devices",
+      "Property owner dashboard",
+    ],
+    challengesAndSolutions:
+      "Creating a seamless and intuitive user experience for both property buyers and sellers on the same platform was challenging. I solved this by implementing role-based access control and custom user interfaces tailored to each user type. Managing high-quality property images while maintaining fast page load speeds required implementing a comprehensive image optimization pipeline with lazy loading and progressive image rendering techniques to enhance perceived performance.",
   },
 ];

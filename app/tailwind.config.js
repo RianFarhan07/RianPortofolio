@@ -7,6 +7,7 @@ export default {
         primary: "#00adb5",
         primaryInLight: "#14b8a6",
         bgDark: "#222831",
+        bgDarkSection: "#030712",
         bgLight: "#f5f5f5",
       },
       //buat warna nama ubah ubah

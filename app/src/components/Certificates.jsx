@@ -1,6 +1,3 @@
-// Certificates.jsx
-"use client";
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -16,490 +13,39 @@ import {
   ChevronDown,
   Download,
   Tag,
+  Shield,
+  Sparkles,
+  Bookmark,
+  XCircle,
 } from "lucide-react";
+import { CertificateCard } from "./CertificateCard";
+import { CertificateModal } from "./CertificateModal";
 import { useTheme } from "../context/ThemeContext";
+import { certificatesData } from "../data/certificates";
 
-// Expanded certificates data
-const certificatesData = [
-  {
-    id: 1,
-    title: "Advanced React & Redux",
-    issuer: "Udemy",
-    instructor: "Stephen Grider",
-    image: "/certificates/react-redux.jpg",
-    issueDate: "November 2023",
-    expirationDate: "No Expiration",
-    credentialId: "UC-12345678",
-    category: "frontend",
-    credentialUrl: "https://udemy.com/certificate/UC-12345678/",
-    skills: ["React", "Redux", "React Router", "Redux Thunk"],
-    description:
-      "This certification covers advanced React patterns, Redux architecture, middleware, authentication, and deployment best practices.",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "Full Stack Web Development",
-    issuer: "freeCodeCamp",
-    instructor: "freeCodeCamp",
-    image: "/certificates/fullstack.jpg",
-    issueDate: "August 2023",
-    expirationDate: "No Expiration",
-    credentialId: "FCC-98765432",
-    category: "fullstack",
-    credentialUrl: "https://freecodecamp.org/certification/user/fullstack",
-    skills: ["JavaScript", "Node.js", "MongoDB", "Express", "React"],
-    description:
-      "This comprehensive certification covers all aspects of full-stack web development, including front-end frameworks, back-end technologies, and database management.",
-    featured: true,
-  },
-  {
-    id: 3,
-    title: "AWS Certified Developer",
-    issuer: "Amazon Web Services",
-    instructor: "AWS Training",
-    image: "/certificates/aws-dev.jpg",
-    issueDate: "March 2024",
-    expirationDate: "March 2027",
-    credentialId: "AWS-DEV-1234567",
-    category: "cloud",
-    credentialUrl: "https://aws.amazon.com/verification",
-    skills: ["AWS Lambda", "S3", "DynamoDB", "CloudFormation", "IAM"],
-    description:
-      "This certification validates technical expertise in developing and maintaining applications on the AWS platform, focusing on core AWS services, architecture, and best practices.",
-    featured: true,
-  },
-  {
-    id: 4,
-    title: "UX/UI Design Fundamentals",
-    issuer: "Interaction Design Foundation",
-    instructor: "IDF Faculty",
-    image: "/certificates/uxui.jpg",
-    issueDate: "January 2024",
-    expirationDate: "No Expiration",
-    credentialId: "IDF-87654321",
-    category: "design",
-    credentialUrl: "https://www.interaction-design.org/certificates/87654321",
-    skills: [
-      "Wireframing",
-      "Prototyping",
-      "User Research",
-      "UI Design",
-      "Usability Testing",
-    ],
-    description:
-      "This certification covers principles of user experience design, including user research methodologies, wireframing techniques, and interaction design patterns.",
-    featured: true,
-  },
-  {
-    id: 5,
-    title: "Python for Data Science",
-    issuer: "DataCamp",
-    instructor: "Hugo Bowne-Anderson",
-    image: "/certificates/python-ds.jpg",
-    issueDate: "May 2023",
-    expirationDate: "No Expiration",
-    credentialId: "DC-34567890",
-    category: "data",
-    credentialUrl:
-      "https://www.datacamp.com/statement-of-accomplishment/34567890",
-    skills: ["Python", "Pandas", "NumPy", "Matplotlib", "Data Analysis"],
-    description:
-      "This certification demonstrates proficiency in using Python for data manipulation, visualization, and analysis, with a focus on key libraries for data science.",
-    featured: false,
-  },
-  {
-    id: 6,
-    title: "Kotlin for Android Development",
-    issuer: "Coursera",
-    instructor: "Doug Stevenson",
-    image: "/certificates/kotlin-android.jpg",
-    issueDate: "October 2023",
-    expirationDate: "No Expiration",
-    credentialId: "COURSERA-45678901",
-    category: "mobile",
-    credentialUrl: "https://www.coursera.org/verify/45678901",
-    skills: ["Kotlin", "Android SDK", "Mobile Development", "Material Design"],
-    description:
-      "This certification covers Kotlin programming for Android, including language fundamentals, Android architecture components, and modern app development practices.",
-    featured: false,
-  },
-  {
-    id: 7,
-    title: "Agile Project Management",
-    issuer: "Scrum.org",
-    instructor: "Professional Scrum Trainers",
-    image: "/certificates/agile-pm.jpg",
-    issueDate: "February 2023",
-    expirationDate: "No Expiration",
-    credentialId: "PSM-56789012",
-    category: "other",
-    credentialUrl: "https://www.scrum.org/certificates/56789012",
-    skills: [
-      "Scrum",
-      "Agile",
-      "Sprint Planning",
-      "Backlog Management",
-      "Team Leadership",
-    ],
-    description:
-      "This certification validates knowledge of Agile methodologies, with a focus on the Scrum framework, roles, events, and artifacts for effective project management.",
-    featured: false,
-  },
-  {
-    id: 8,
-    title: "Cybersecurity Fundamentals",
-    issuer: "CompTIA",
-    instructor: "CompTIA",
-    image: "/certificates/cybersecurity.jpg",
-    issueDate: "June 2023",
-    expirationDate: "June 2026",
-    credentialId: "COMPTIA-67890123",
-    category: "other",
-    credentialUrl: "https://www.comptia.org/certifications/verify/67890123",
-    skills: [
-      "Network Security",
-      "Cryptography",
-      "Security Protocols",
-      "Threat Analysis",
-    ],
-    description:
-      "This certification covers essentials of cybersecurity, including network security concepts, threat identification, security policies, and risk management strategies.",
-    featured: false,
-  },
-];
-
-// Define category options
+// Pilihan Categories
 const categories = [
-  { value: "all", label: "All Certificates" },
-  { value: "frontend", label: "Frontend Development" },
-  { value: "fullstack", label: "Full Stack Development" },
-  { value: "cloud", label: "Cloud Computing" },
-  { value: "design", label: "Design" },
-  { value: "data", label: "Data Science" },
-  { value: "mobile", label: "Mobile Development" },
-  { value: "other", label: "Other" },
+  { value: "all", label: "All Certificates", icon: <Shield size={18} /> },
+  {
+    value: "frontend",
+    label: "Frontend Development",
+    icon: <Award size={18} />,
+  },
+  {
+    value: "fullstack",
+    label: "Full Stack Development",
+    icon: <Sparkles size={18} />,
+  },
+  { value: "cloud", label: "Cloud Computing", icon: <Clock size={18} /> },
+  { value: "design", label: "Design", icon: <Tag size={18} /> },
+  { value: "data", label: "Data Science", icon: <Filter size={18} /> },
+  {
+    value: "mobile",
+    label: "Mobile Development",
+    icon: <Bookmark size={18} />,
+  },
+  { value: "other", label: "Other", icon: <CheckCircle size={18} /> },
 ];
-
-const CertificateCard = ({ certificate, isDark, onClick }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5 }}
-      className={`rounded-xl overflow-hidden shadow-lg ${
-        isDark ? "bg-gray-900" : "bg-white"
-      } hover:shadow-xl transition-all duration-300 cursor-pointer group`}
-      onClick={onClick}
-    >
-      {/* Certificate Image */}
-      <div className="relative aspect-[16/9] overflow-hidden">
-        <img
-          src={certificate.image || "/placeholder.svg"}
-          alt={certificate.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-
-        {/* Featured Badge */}
-        {certificate.featured && (
-          <div className="absolute top-3 right-3">
-            <span
-              className={`text-xs font-medium px-2 py-1 rounded-full ${
-                isDark
-                  ? "bg-primary/90 text-white"
-                  : "bg-primaryInLight/90 text-white"
-              } flex items-center gap-1`}
-            >
-              <Award size={12} />
-              Featured
-            </span>
-          </div>
-        )}
-
-        {/* Issuer Overlay */}
-        <div
-          className={`absolute bottom-0 left-0 right-0 py-2 px-4 ${
-            isDark ? "bg-gray-900/80" : "bg-white/80"
-          } backdrop-blur-sm`}
-        >
-          <div className="flex items-center justify-between">
-            <span
-              className={`text-sm font-bold ${
-                isDark ? "text-white" : "text-gray-800"
-              }`}
-            >
-              {certificate.issuer}
-            </span>
-            <span
-              className={`text-xs ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              {certificate.issueDate}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Certificate Content */}
-      <div className="p-4">
-        <h3
-          className={`text-lg font-bold mb-2 ${
-            isDark ? "text-white" : "text-gray-800"
-          }`}
-        >
-          {certificate.title}
-        </h3>
-
-        <p
-          className={`text-sm mb-3 line-clamp-2 ${
-            isDark ? "text-gray-400" : "text-gray-600"
-          }`}
-        >
-          {certificate.description}
-        </p>
-
-        {/* Skills */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {certificate.skills.slice(0, 3).map((skill, index) => (
-            <span
-              key={index}
-              className={`text-xs px-2 py-0.5 rounded-full ${
-                isDark
-                  ? "bg-gray-800 text-gray-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {skill}
-            </span>
-          ))}
-          {certificate.skills.length > 3 && (
-            <span
-              className={`text-xs px-2 py-0.5 ${
-                isDark ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
-              +{certificate.skills.length - 3} more
-            </span>
-          )}
-        </div>
-
-        {/* View Button */}
-        <div
-          className={`flex items-center justify-center gap-1.5 text-xs px-3 py-1.5 rounded-lg ${
-            isDark
-              ? "bg-gray-800 text-primary group-hover:bg-primary group-hover:text-white"
-              : "bg-gray-100 text-primaryInLight group-hover:bg-primaryInLight group-hover:text-white"
-          } transition-colors w-full`}
-        >
-          <ExternalLink size={12} />
-          View Certificate
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const CertificateModal = ({ certificate, isDark, onClose }) => {
-  if (!certificate) return null;
-
-  return (
-    <motion.div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className={`relative max-w-4xl w-full rounded-xl overflow-hidden ${
-          isDark ? "bg-gray-900" : "bg-white"
-        } shadow-2xl`}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          className={`absolute top-4 right-4 z-10 p-1 rounded-full ${
-            isDark
-              ? "bg-gray-800 text-white hover:bg-gray-700"
-              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-          }`}
-          onClick={onClose}
-          aria-label="Close modal"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-
-        <div className="flex flex-col md:flex-row">
-          {/* Certificate Image */}
-          <div className="md:w-1/2">
-            <div className="relative aspect-video md:aspect-square">
-              <img
-                src={certificate.image || "/placeholder.svg"}
-                alt={certificate.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Certificate Details */}
-          <div className="md:w-1/2 p-6 md:p-8 max-h-[80vh] overflow-y-auto">
-            <div
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium mb-4 ${
-                isDark
-                  ? "bg-primary/20 text-primary"
-                  : "bg-primaryInLight/20 text-primaryInLight"
-              }`}
-            >
-              <Award size={16} />
-              {categories.find((cat) => cat.value === certificate.category)
-                ?.label || certificate.category}
-            </div>
-
-            <h2
-              className={`text-xl md:text-2xl font-bold mb-3 ${
-                isDark ? "text-white" : "text-gray-800"
-              }`}
-            >
-              {certificate.title}
-            </h2>
-
-            <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              {certificate.description}
-            </p>
-
-            {/* Certificate Meta */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div
-                className={`flex items-center gap-2 ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                <Calendar size={16} />
-                <div>
-                  <p className="text-xs font-medium">Issue Date</p>
-                  <p className="text-sm">{certificate.issueDate}</p>
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center gap-2 ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                <Clock size={16} />
-                <div>
-                  <p className="text-xs font-medium">Expiration</p>
-                  <p className="text-sm">{certificate.expirationDate}</p>
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center gap-2 ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                <User size={16} />
-                <div>
-                  <p className="text-xs font-medium">Instructor</p>
-                  <p className="text-sm">{certificate.instructor}</p>
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center gap-2 ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                <Tag size={16} />
-                <div>
-                  <p className="text-xs font-medium">Credential ID</p>
-                  <p className="text-sm">{certificate.credentialId}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div className="mb-6">
-              <h3
-                className={`text-sm font-semibold mb-2 ${
-                  isDark ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Skills & Expertise
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {certificate.skills.map((skill, index) => (
-                  <div
-                    key={index}
-                    className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
-                      isDark
-                        ? "bg-gray-800 text-gray-300"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    <CheckCircle size={12} />
-                    {skill}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={certificate.credentialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg ${
-                  isDark
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "bg-primaryInLight text-white hover:bg-primaryInLight/90"
-                } transition-colors`}
-              >
-                <ExternalLink size={16} />
-                Verify Certificate
-              </a>
-
-              <button
-                className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg ${
-                  isDark
-                    ? "bg-gray-800 text-white hover:bg-gray-700"
-                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                } transition-colors`}
-              >
-                <Download size={16} />
-                Download PDF
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
 
 export default function Certificates() {
   const { theme } = useTheme();
@@ -516,7 +62,12 @@ export default function Certificates() {
     threshold: 0.1,
   });
 
-  // Filter certificates based on search term and category
+  const [cardRef, cardInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  // Filter certificates
   useEffect(() => {
     let filtered = certificatesData;
 
@@ -543,36 +94,43 @@ export default function Certificates() {
   // Handle certificate click
   const handleCertificateClick = (certificate) => {
     setSelectedCertificate(certificate);
-    // When modal is opened, prevent scrolling on body
+    // kalau modal open tidak boleh scroll
     document.body.style.overflow = "hidden";
   };
 
   // Handle modal close
   const handleCloseModal = () => {
     setSelectedCertificate(null);
-    // When modal is closed, allow scrolling on body
+    // Kalau modal close boleh scroll
     document.body.style.overflow = "auto";
   };
 
   return (
     <section
       id="certificates"
-      className={`py-16 md:py-24 ${
-        isDark ? "bg-bgDark" : "bg-bgLight"
+      className={`py-16 md:py-24 relative ${
+        isDark ? "bg-bgDarkSection" : "bg-gray-50"
       } min-h-screen`}
       ref={ref}
     >
-      {/* Background decor */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-5 -top-48 -left-48`}
+            isDark ? "bg-blue-900" : "bg-blue-200"
+          } opacity-10 -top-48 -left-48 animate-pulse`}
+          style={{ animationDuration: "15s" }}
         />
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-5 -bottom-48 -right-48`}
+            isDark ? "bg-purple-900" : "bg-purple-200"
+          } opacity-10 -bottom-48 -right-48 animate-pulse`}
+          style={{ animationDuration: "20s" }}
+        />
+        <div
+          className={`absolute w-64 h-64 rounded-full blur-3xl ${
+            isDark ? "bg-emerald-900" : "bg-emerald-200"
+          } opacity-5 top-1/4 right-1/4 animate-pulse`}
+          style={{ animationDuration: "25s" }}
         />
         <div
           className={`absolute inset-0 opacity-10 ${
@@ -582,12 +140,12 @@ export default function Certificates() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Page Header */}
+        {/* Page Header  */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 1.4 }}
         >
           <div className="flex items-center gap-2 mb-4 justify-center">
             <div
@@ -612,14 +170,14 @@ export default function Certificates() {
           <h1
             className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
               isDark ? "text-white" : "text-gray-800"
-            }`}
+            } drop-shadow-sm`}
           >
             Professional{" "}
             <span
               className={`text-transparent bg-clip-text bg-gradient-to-r ${
                 isDark
-                  ? "from-primary to-blue-400"
-                  : "from-primaryInLight to-blue-500"
+                  ? "from-primary via-blue-400 to-purple-400"
+                  : "from-primaryInLight via-blue-500 to-purple-500"
               }`}
             >
               Certifications
@@ -637,58 +195,73 @@ export default function Certificates() {
           </p>
         </motion.div>
 
-        {/* Filters */}
+        {/*  Filters */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 1.6 }}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Search Input */}
+            {/*  Search Input */}
             <div
               className={`flex items-center rounded-lg ${
                 isDark
-                  ? "bg-gray-900 border border-gray-800"
-                  : "bg-white border border-gray-200"
-              } px-3 py-2 shadow-sm`}
+                  ? "bg-gray-900/50 border border-gray-800 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/30"
+                  : "bg-white/70 border border-gray-200 focus-within:border-primaryInLight/50 focus-within:ring-1 focus-within:ring-primaryInLight/30"
+              } px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200`}
             >
               <Search
                 size={18}
-                className={isDark ? "text-gray-500" : "text-gray-400"}
+                className={`${isDark ? "text-gray-500" : "text-gray-400"} mr-2`}
               />
               <input
                 type="text"
                 placeholder="Search certificates, skills, issuers..."
-                className={`ml-2 flex-grow outline-none ${
+                className={`flex-grow outline-none ${
                   isDark
-                    ? "bg-gray-900 text-white placeholder:text-gray-500"
-                    : "bg-white text-gray-800 placeholder:text-gray-400"
+                    ? "bg-transparent text-white placeholder:text-gray-500"
+                    : "bg-transparent text-gray-800 placeholder:text-gray-400"
                 }`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className={`p-1 rounded-full ${
+                    isDark ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                  }`}
+                >
+                  <XCircle
+                    size={16}
+                    className={isDark ? "text-gray-500" : "text-gray-400"}
+                  />
+                </button>
+              )}
             </div>
 
-            {/* Category Filter */}
+            {/*  Category Filter */}
             <div className="relative">
               <div
                 className={`flex items-center justify-between rounded-lg ${
                   isDark
-                    ? "bg-gray-900 border border-gray-800"
-                    : "bg-white border border-gray-200"
-                } px-3 py-2 shadow-sm cursor-pointer`}
+                    ? "bg-gray-900/50 border border-gray-800 hover:border-gray-700"
+                    : "bg-white/70 border border-gray-200 hover:border-gray-300"
+                } px-3 py-2 shadow-sm backdrop-blur-sm cursor-pointer transition-all duration-200`}
                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
               >
-                <div className="flex items-center">
-                  <Filter
-                    size={18}
-                    className={isDark ? "text-gray-500" : "text-gray-400"}
-                  />
-                  <span
-                    className={`ml-2 ${
-                      isDark ? "text-white" : "text-gray-800"
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`p-1 rounded-full ${
+                      isDark ? "bg-gray-800" : "bg-gray-100"
                     }`}
+                  >
+                    {categories.find((cat) => cat.value === selectedCategory)
+                      ?.icon || <Filter size={18} />}
+                  </div>
+                  <span
+                    className={`${isDark ? "text-white" : "text-gray-800"}`}
                   >
                     {categories.find((cat) => cat.value === selectedCategory)
                       ?.label || "All Certificates"}
@@ -702,15 +275,15 @@ export default function Certificates() {
                 />
               </div>
 
-              {/* Dropdown */}
+              {/*  Dropdown */}
               <AnimatePresence>
                 {showCategoryDropdown && (
                   <motion.div
-                    className={`absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-10 ${
+                    className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl z-10 ${
                       isDark
-                        ? "bg-gray-900 border border-gray-800"
-                        : "bg-white border border-gray-200"
-                    } py-2`}
+                        ? "bg-gray-900/80 border border-gray-800 backdrop-blur-md"
+                        : "bg-white/90 border border-gray-200 backdrop-blur-md"
+                    } py-2 overflow-hidden`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -725,20 +298,26 @@ export default function Certificates() {
                               ? "bg-gray-800 text-primary"
                               : "bg-gray-100 text-primaryInLight"
                             : isDark
-                            ? "text-white hover:bg-gray-800"
-                            : "text-gray-800 hover:bg-gray-100"
+                            ? "text-white hover:bg-gray-800/70"
+                            : "text-gray-800 hover:bg-gray-100/70"
                         }`}
                         onClick={() => {
                           setSelectedCategory(category.value);
                           setShowCategoryDropdown(false);
                         }}
                       >
-                        {selectedCategory === category.value && (
-                          <CheckCircle size={16} className="mr-2" />
-                        )}
-                        {!selectedCategory !== category.value && (
-                          <div className="w-4 mr-2" />
-                        )}
+                        <div className="w-8 flex items-center justify-center mr-2">
+                          {selectedCategory === category.value ? (
+                            <CheckCircle
+                              size={16}
+                              className={
+                                isDark ? "text-primary" : "text-primaryInLight"
+                              }
+                            />
+                          ) : (
+                            category.icon
+                          )}
+                        </div>
                         {category.label}
                       </div>
                     ))}
@@ -749,69 +328,126 @@ export default function Certificates() {
           </div>
         </motion.div>
 
-        {/* Certificates Grid */}
+        {/* Certificates Grid  */}
         <div className="mb-8">
           {filteredCertificates.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredCertificates.map((certificate) => (
-                <CertificateCard
+              {filteredCertificates.map((certificate, index) => (
+                <motion.div
                   key={certificate.id}
-                  certificate={certificate}
-                  isDark={isDark}
-                  onClick={() => handleCertificateClick(certificate)}
-                />
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  <CertificateCard
+                    certificate={certificate}
+                    isDark={isDark}
+                    onClick={() => handleCertificateClick(certificate)}
+                    ref={cardRef}
+                    inView={cardInView}
+                  />
+                </motion.div>
               ))}
             </div>
           ) : (
-            <div
-              className={`text-center p-12 rounded-lg ${
-                isDark ? "bg-gray-900" : "bg-white"
-              } shadow-sm`}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className={`text-center p-12 rounded-2xl ${
+                isDark ? "bg-gray-900/70" : "bg-white/90"
+              } backdrop-blur-sm shadow-lg border ${
+                isDark ? "border-gray-800" : "border-gray-200"
+              }`}
             >
-              <div
-                className={`text-6xl mb-4 ${
-                  isDark ? "text-gray-700" : "text-gray-300"
-                }`}
-              >
-                🔍
+              <div className="flex flex-col items-center justify-center">
+                <div className="relative mb-6">
+                  <div
+                    className={`text-6xl ${
+                      isDark ? "text-gray-700" : "text-gray-300"
+                    }`}
+                  >
+                    🔍
+                  </div>
+                  <div
+                    className={`absolute -bottom-2 -right-2 p-2 rounded-full ${
+                      isDark ? "bg-gray-800" : "bg-gray-100"
+                    }`}
+                  >
+                    <XCircle
+                      size={24}
+                      className={isDark ? "text-gray-600" : "text-gray-400"}
+                    />
+                  </div>
+                </div>
+                <h3
+                  className={`text-xl font-bold mb-2 ${
+                    isDark ? "text-white" : "text-gray-800"
+                  }`}
+                >
+                  No certificates found
+                </h3>
+                <p
+                  className={`max-w-md mx-auto mb-6 ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  We couldn't find any certificates matching your search
+                  criteria. Try adjusting your filters or search terms.
+                </p>
+                <button
+                  className={`px-5 py-2.5 rounded-lg ${
+                    isDark
+                      ? "bg-gradient-to-r from-gray-800 to-gray-900 text-white hover:from-primary hover:to-blue-600 border border-gray-700"
+                      : "bg-gradient-to-r from-gray-100 to-gray-50 text-gray-800 hover:from-primaryInLight hover:to-blue-500 hover:text-white border border-gray-200"
+                  } transition-all duration-300 flex items-center gap-2`}
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("all");
+                  }}
+                >
+                  <Filter size={18} />
+                  Reset Filters
+                </button>
               </div>
-              <h3
-                className={`text-xl font-bold mb-2 ${
-                  isDark ? "text-white" : "text-gray-800"
-                }`}
-              >
-                No certificates found
-              </h3>
-              <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                Try adjusting your search or filter criteria.
-              </p>
-              <button
-                className={`mt-4 px-4 py-2 rounded-lg ${
-                  isDark
-                    ? "bg-gray-800 text-white hover:bg-gray-700"
-                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                } transition-colors`}
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategory("all");
-                }}
-              >
-                Reset Filters
-              </button>
-            </div>
+            </motion.div>
           )}
         </div>
 
-        {/* Results Info */}
+        {/*  Results Info */}
         {filteredCertificates.length > 0 && (
-          <div
-            className={`text-sm text-center ${
-              isDark ? "text-gray-400" : "text-gray-600"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className={`flex justify-center items-center gap-2 text-sm ${
+              isDark ? "text-gray-500" : "text-gray-500"
             }`}
           >
-            Displaying {filteredCertificates.length} of{" "}
-            {certificatesData.length} certificates
-          </div>
+            <span
+              className={`px-2 py-1 rounded-md ${
+                isDark ? "bg-gray-900" : "bg-gray-100"
+              }`}
+            >
+              {filteredCertificates.length}
+            </span>
+            <span>of {certificatesData.length} certificates</span>
+            {selectedCategory !== "all" && (
+              <span className="flex items-center gap-1">
+                • Filtered by
+                <span
+                  className={`font-medium ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {
+                    categories.find((cat) => cat.value === selectedCategory)
+                      ?.label
+                  }
+                </span>
+              </span>
+            )}
+          </motion.div>
         )}
       </div>
 

@@ -22,7 +22,7 @@ export const bestProjects = [
     link: "https://kost-hunt.vercel.app/",
     techStack: {
       frontend: ["JavaScript", "React", "Redux", "Tailwind CSS"],
-      backend: ["Node.js"],
+      backend: ["Express.js"],
       database: ["MongoDB"],
       utilities: ["Midtrans", "XLSX"],
     },

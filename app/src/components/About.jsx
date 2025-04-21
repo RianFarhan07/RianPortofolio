@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -17,6 +15,7 @@ import {
   Layout,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { Link } from "react-router-dom";
 import RotatingText from "./RotatingText";
 import Lanyard from "./Lanyard";
 import TechScroll from "./TechScroll";
@@ -246,7 +245,7 @@ export default function About() {
   const skills = [
     {
       icon: <Code size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
-      label: "Web Development",
+      label: "Frontend Development",
       description:
         "Creating responsive and interactive web applications using modern frameworks and technologies.",
       onClick: () => {},
@@ -363,7 +362,8 @@ export default function About() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 1.5,
+        staggerChildren: 0.3,
+        delayChildren: 1.5,
       },
     },
   };
@@ -415,6 +415,7 @@ export default function About() {
             variants={heroVariants}
             initial="hidden"
             animate={heroInView ? "visible" : "hidden"}
+            transsition={{ duration: 0.5, delay: 0.5 }}
           >
             {/* Lanyard container - modified for proper positioning */}
             <motion.div
@@ -1087,8 +1088,8 @@ export default function About() {
               I'm always open to discussing new projects, creative ideas or
               opportunities to be part of your vision.
             </p>
-            <a
-              href="#contact"
+            <Link
+              to={"/contact"}
               className={`inline-flex items-center gap-2 px-8 py-3 ${
                 isDark
                   ? "bg-gradient-to-r from-primary to-blue-500"
@@ -1096,7 +1097,7 @@ export default function About() {
               } text-white rounded-lg font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105`}
             >
               Let's Talk
-            </a>
+            </Link>
           </motion.div>
         </div>
       </section>

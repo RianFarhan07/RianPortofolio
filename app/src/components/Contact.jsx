@@ -179,12 +179,11 @@ export default function Contact() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Page Header */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 1.4 }}
         >
           <div className="flex items-center gap-2 mb-4 justify-center">
             <div
@@ -209,14 +208,14 @@ export default function Contact() {
           <h1
             className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
               isDark ? "text-white" : "text-gray-800"
-            }`}
+            } drop-shadow-sm`}
           >
             Let's{" "}
             <span
               className={`text-transparent bg-clip-text bg-gradient-to-r ${
                 isDark
-                  ? "from-primary to-blue-400"
-                  : "from-primaryInLight to-blue-500"
+                  ? "from-primary via-blue-400 to-purple-400"
+                  : "from-primaryInLight via-blue-500 to-purple-500"
               }`}
             >
               Connect
