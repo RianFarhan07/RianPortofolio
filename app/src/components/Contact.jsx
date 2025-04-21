@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import emailjs from "@emailjs/browser";
 import {
   Send,
   Phone,
@@ -59,7 +60,7 @@ export default function Contact() {
     {
       icon: <Handshake size={20} />,
       title: "Collaboration",
-      value: "Let’s build something great!",
+      value: "Let's build something great!",
       link: "mailto:rian.mallanti@gmail.com",
     },
     {
@@ -127,10 +128,24 @@ export default function Contact() {
 
     setFormStatus("submitting");
 
-    // Simulate API call
+    // EmailJS configuration
+    // Replace these with your actual EmailJS service ID, template ID, and public key
+    const serviceId = "service_gqzjzjd";
+    const templateId = "template_n3a7ndg";
+    const publicKey = "2G8xLwErCmOXqXE70";
+
+    const templateParams = {
+      from_name: formState.name,
+      from_email: formState.email,
+      subject: formState.subject,
+      message: formState.message,
+      to_name: "Rian Farhan", // Your name
+    };
+
     try {
-      // In a real app, you would send the form data to your backend
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Send email using EmailJS
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
       setFormStatus("success");
       setFormState({
         name: "",
@@ -138,13 +153,15 @@ export default function Contact() {
         subject: "",
         message: "",
       });
-      // Reset form after 3 seconds
+
+      // Reset form status after 3 seconds
       setTimeout(() => {
         setFormStatus(null);
       }, 3000);
     } catch (error) {
       console.error("Form submission error:", error);
       setFormStatus("error");
+
       setTimeout(() => {
         setFormStatus(null);
       }, 3000);
