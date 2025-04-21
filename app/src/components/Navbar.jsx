@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Sun, Moon, Home, User, FolderOpen, MessageSquare } from "lucide-react";
+import {
+  Sun,
+  Moon,
+  Home,
+  User,
+  FolderOpen,
+  MessageSquare,
+  ShieldCheck,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 
@@ -22,6 +30,7 @@ export default function Navbar() {
     { title: "Home", path: "/", icon: Home },
     { title: "About", path: "/about", icon: User },
     { title: "Projects", path: "/projects", icon: FolderOpen },
+    { title: "Certificates", path: "/certificates", icon: ShieldCheck },
     { title: "Contact", path: "/contact", icon: MessageSquare },
   ];
 

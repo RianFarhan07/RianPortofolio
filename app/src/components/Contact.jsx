@@ -1,6 +1,3 @@
-// Contact.jsx
-"use client";
-
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -15,6 +12,9 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
+  Instagram,
+  Clock,
+  Handshake,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
@@ -28,7 +28,7 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [formStatus, setFormStatus] = useState(null); // null, 'submitting', 'success', 'error'
+  const [formStatus, setFormStatus] = useState(null);
   const [errors, setErrors] = useState({});
 
   const [ref, inView] = useInView({
@@ -41,39 +41,51 @@ export default function Contact() {
     {
       icon: <Phone size={20} />,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      link: "tel:+15551234567",
+      value: "+62 822 8037 2670",
+      link: "https://wa.me/6282280372670?text=Hi%20Rian,%20I%20would%20like%20to%20discuss%20a%20job%20opportunity%20we%20have%20and%20see%20if%20you%20might%20be%20interested.",
     },
     {
       icon: <Mail size={20} />,
       title: "Email",
-      value: "contact@example.com",
-      link: "mailto:contact@example.com",
+      value: "rian.mallanti@gmail.com",
+      link: "#contact",
     },
     {
       icon: <MapPin size={20} />,
       title: "Location",
-      value: "San Francisco, CA",
-      link: "https://maps.google.com/?q=San+Francisco,+CA",
+      value: "Siddo, Kec. Soppeng Riaja, Kabupaten Barru, Sulawesi Selatan",
+      link: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z/data=!4m15!1m8!3m7!1s0x2d959037d3877ecf:0xfbffc78763dca0b3!2sSiddo,+Kec.+Soppeng+Riaja,+Kabupaten+Barru,+Sulawesi+Selatan!3b1!8m2!3d-4.2420418!4d119.6441212!16s%2Fg%2F121mkpx2!3m5!1s0x2d95906ab81869db:0xbdb867d18d33b203!8m2!3d-4.2377172!4d119.6253708!16s%2Fg%2F11qg28lb6m?entry=ttu&g_ep=EgoyMDI1MDQxNi4xIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D",
+    },
+    {
+      icon: <Handshake size={20} />,
+      title: "Collaboration",
+      value: "Let’s build something great!",
+      link: "mailto:rian.mallanti@gmail.com",
+    },
+    {
+      icon: <Clock size={20} />,
+      title: "Available For",
+      value: "Full-Time / Contract / Freelance",
+      link: "#about",
     },
   ];
 
   // Social media links
   const socialLinks = [
     {
-      icon: <Linkedin size={20} />,
+      icon: <Linkedin size={18} />,
       name: "LinkedIn",
-      url: "https://linkedin.com/in/username",
+      url: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/",
     },
     {
-      icon: <Github size={20} />,
+      icon: <Github size={18} />,
       name: "GitHub",
-      url: "https://github.com/username",
+      url: "https://github.com/RianFarhan07",
     },
     {
-      icon: <Twitter size={20} />,
-      name: "Twitter",
-      url: "https://twitter.com/username",
+      icon: <Instagram size={18} />,
+      name: "Instagram",
+      url: "https://www.instagram.com/rianfarhan/",
     },
   ];
 
@@ -342,7 +354,7 @@ export default function Contact() {
                   Monday - Friday: 9:00 AM - 6:00 PM
                 </p>
                 <p className={`${isDark ? "text-gray-300" : "text-gray-700"}`}>
-                  Saturday & Sunday: Closed
+                  Saturday & Sunday: 10:00 AM - 4:00 PM
                 </p>
               </div>
             </div>

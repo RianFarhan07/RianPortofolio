@@ -1,11 +1,10 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
   Code,
-  Coffee,
-  BookOpen,
-  Lightbulb,
   Briefcase,
   GraduationCap,
   Download,
@@ -18,57 +17,9 @@ import {
   Layout,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
-import aboutImage from "../assets/foto-nobg.png";
 import RotatingText from "./RotatingText";
 import Lanyard from "./Lanyard";
-
-const SkillCard = ({ icon, title, description, index, inView }) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  return (
-    <motion.div
-      className={`flex flex-col items-center p-6 rounded-xl shadow-lg ${
-        isDark
-          ? "bg-gray-800/80 border border-gray-700"
-          : "bg-white border border-gray-200"
-      }`}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{
-        y: -5,
-        boxShadow: isDark
-          ? "0 15px 30px rgba(0, 0, 0, 0.4)"
-          : "0 15px 30px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <div
-        className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${
-          isDark
-            ? "bg-gradient-to-br from-primary to-blue-500"
-            : "bg-gradient-to-br from-primaryInLight to-blue-500"
-        } text-white`}
-      >
-        {icon}
-      </div>
-      <h3
-        className={`text-lg font-bold mb-2 ${
-          isDark ? "text-white" : "text-gray-800"
-        }`}
-      >
-        {title}
-      </h3>
-      <p
-        className={`text-center text-sm ${
-          isDark ? "text-gray-400" : "text-gray-600"
-        }`}
-      >
-        {description}
-      </p>
-    </motion.div>
-  );
-};
+import TechScroll from "./TechScroll";
 
 const ExperienceItem = ({
   position,
@@ -192,6 +143,46 @@ const EducationItem = ({
   );
 };
 
+const SkillBar = ({ label, percentage, isDark }) => {
+  return (
+    <div className="w-full">
+      <div className="flex justify-between mb-1">
+        <span
+          className={`text-xs font-medium ${
+            isDark ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
+          {label}
+        </span>
+        <span
+          className={`text-xs font-medium ${
+            isDark ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
+          {percentage}%
+        </span>
+      </div>
+      <div
+        className={`w-full h-1.5 rounded-full ${
+          isDark ? "bg-gray-700" : "bg-gray-200"
+        }`}
+      >
+        <motion.div
+          className={`h-1.5 rounded-full ${
+            isDark
+              ? "bg-gradient-to-r from-primary to-blue-500"
+              : "bg-gradient-to-r from-primaryInLight to-blue-500"
+          }`}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${percentage}%` }}
+          viewport={{ once: false }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const TechBadge = ({ text, index, inView }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -219,6 +210,8 @@ export default function About() {
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const containerRef = useRef(null);
+  // First, add a new state to track which skill is being hovered
+  const [hoveredSkill, setHoveredSkill] = useState(null);
 
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
@@ -249,71 +242,81 @@ export default function About() {
     };
   }, []);
 
+  // Modified skills data with descriptions
   const skills = [
     {
-      icon: <Code size={24} />,
-      title: "Web Development",
+      icon: <Code size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
+      label: "Web Development",
       description:
         "Creating responsive and interactive web applications using modern frameworks and technologies.",
+      onClick: () => {},
+      className: isDark
+        ? "border-primary hover:border-primary/60"
+        : "border-primaryInLight hover:border-primaryInLight/60",
     },
     {
-      icon: <Smartphone size={24} />,
-      title: "Mobile Development",
+      icon: <Smartphone size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
+      label: "Mobile Development",
       description:
         "Building native and cross-platform mobile applications for Android and iOS.",
+      onClick: () => {},
+      className: isDark
+        ? "border-primary hover:border-primary/60"
+        : "border-primaryInLight hover:border-primaryInLight/60",
     },
     {
-      icon: <Layout size={24} />,
-      title: "UI/UX Design",
+      icon: <Layout size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
+      label: "UI/UX Design",
       description:
         "Designing intuitive user interfaces and experiences that are both functional and beautiful.",
+      onClick: () => {},
+      className: isDark
+        ? "border-primary hover:border-primary/60"
+        : "border-primaryInLight hover:border-primaryInLight/60",
     },
     {
-      icon: <Server size={24} />,
-      title: "Backend Development",
+      icon: <Server size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
+      label: "Backend Development",
       description:
         "Implementing robust server-side solutions, APIs, and database architectures.",
+      onClick: () => {},
+      className: isDark
+        ? "border-primary hover:border-primary/60"
+        : "border-primaryInLight hover:border-primaryInLight/60",
     },
   ];
 
   const experiences = [
     {
-      position: "Senior Frontend Developer",
-      company: "TechCorp Inc.",
-      period: "Jan 2023 - Present",
+      position: "IT Support",
+      company: "Department of Manpower, Makassar City",
+      period: "Des 2022 - Feb 2022",
       description:
-        "Leading the frontend development team in creating modern, responsive web applications using React and Next.js. Implementing best practices for performance optimization and accessibility.",
+        "Provided daily technical support to staff, managed office hardware and software, and assisted in maintaining internal networks and information systems.",
     },
     {
-      position: "Mobile Developer",
-      company: "App Solutions",
-      period: "Mar 2021 - Dec 2022",
+      position: "Freelance Android Developer",
+      company: "SMKN 4 Jeneponto",
+      period: "Okt 2023 - Dec 2023",
       description:
-        "Developed and maintained native Android applications using Kotlin. Collaborated with design and product teams to deliver high-quality user experiences.",
-    },
-    {
-      position: "Junior Web Developer",
-      company: "Digital Creations",
-      period: "Jun 2019 - Feb 2021",
-      description:
-        "Built responsive websites and web apps using HTML, CSS, JavaScript, and React. Worked in an agile team environment and participated in code reviews.",
+        "Developed and maintained Android applications for school needs using Kotlin, Collaborated with the school to ensure the app met functional requirements.",
     },
   ];
 
   const education = [
     {
-      degree: "BS in Computer Science",
-      institution: "University of Technology",
-      period: "2015 - 2019",
+      degree: "Bachelor's in Informatics and Computer Engineering Education",
+      institution: "Universitas Negeri Makassar",
+      period: "2020 - 2024",
       description:
-        "Focused on software engineering and web development. Graduated with honors and completed a thesis on efficient algorithms for mobile applications.",
+        "Focused on computer science education, software development, and IT fundamentals. Completed a final project related to educational technology and application development.",
     },
     {
-      degree: "Web Development Bootcamp",
-      institution: "CodeCamp Academy",
-      period: "2019",
+      degree: "Fullstack JavaScript Bootcamp",
+      institution: "Hacktiv8",
+      period: "Des 2024 - Apr 2025",
       description:
-        "Intensive 12-week program covering modern web development practices, frameworks and tools including React, Node.js, and database management.",
+        "An intensive bootcamp covering fullstack web development using JavaScript, including technologies like React, Node.js, Express, and MongoDB. Built several real-world projects and collaborated in team-based coding assignments.",
     },
   ];
 
@@ -327,17 +330,32 @@ export default function About() {
     "Tailwind CSS",
     "Kotlin",
     "Java",
+    "Android Studio",
+    "Jetpack Compose",
     "Node.js",
     "Express",
     "MongoDB",
     "PostgreSQL",
     "Redux",
     "Git",
+    "GitHub",
     "Firebase",
+    "Firestore",
+    "Firebase Authentication",
+    "Firebase Storage",
     "REST API",
     "GraphQL",
     "Jest",
     "CI/CD",
+    "Vercel",
+    "Netlify",
+    "Figma",
+    "Material UI",
+    "Bootstrap",
+    "Framer Motion",
+    "Glide",
+    "Picasso",
+    "Retrofit",
   ];
 
   const heroVariants = {
@@ -618,6 +636,10 @@ export default function About() {
           </motion.div>
         </div>
 
+        <div className={`${isMobile ? "pt-10" : ""}`}>
+          <TechScroll />
+        </div>
+
         {/* Desktop scroll indicator - only shown on desktop */}
         {!isMobile && (
           <motion.div
@@ -666,13 +688,23 @@ export default function About() {
           </motion.div>
         )}
       </section>
-      {/* Skills Section */}
+
+      {/* Skills Section with Dock */}
       <section
-        className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
+        className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"} relative`}
         ref={skillsRef}
         id="skills"
       >
-        <div className="container mx-auto px-4 sm:px-6">
+        {/* Add a subtle gradient background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className={`absolute w-96 h-96 rounded-full blur-3xl ${
+              isDark ? "bg-primary" : "bg-primaryInLight"
+            } opacity-5 top-1/3 -right-48`}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="text-center mb-12">
             <motion.h2
               className={`text-3xl md:text-4xl font-bold mb-4 ${
@@ -713,7 +745,7 @@ export default function About() {
             <motion.p
               className={`max-w-xl mx-auto ${
                 isDark ? "text-gray-400" : "text-gray-600"
-              }`}
+              } mb-10`}
               initial={{ opacity: 0 }}
               animate={skillsInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -723,20 +755,139 @@ export default function About() {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Enhanced skill cards with hover effect to show progress bars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
             {skills.map((skill, index) => (
-              <SkillCard
+              <motion.div
                 key={index}
-                icon={skill.icon}
-                title={skill.title}
-                description={skill.description}
-                index={index}
-                inView={skillsInView}
-              />
+                className={`p-6 rounded-xl ${
+                  isDark
+                    ? "bg-gray-800/50 border border-gray-700 hover:border-primary/50"
+                    : "bg-white/50 border border-gray-200 hover:border-primaryInLight/50"
+                } transition-all duration-300 hover:shadow-lg group relative overflow-hidden`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={
+                  skillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                }
+                transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
+                whileHover={{ y: -5 }}
+                onMouseEnter={() => setHoveredSkill(index)}
+                onMouseLeave={() => setHoveredSkill(null)}
+              >
+                <div className="flex flex-col items-center mb-4">
+                  <div
+                    className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+                      isDark
+                        ? "bg-gray-700 group-hover:bg-gray-700/80"
+                        : "bg-gray-100 group-hover:bg-gray-50"
+                    } transition-colors duration-300`}
+                  >
+                    {skill.icon}
+                  </div>
+                  <h3
+                    className={`text-xl font-bold mb-3 ${
+                      isDark ? "text-white" : "text-gray-800"
+                    } group-hover:${
+                      isDark ? "text-primary" : "text-primaryInLight"
+                    } transition-colors duration-300`}
+                  >
+                    {skill.label}
+                  </h3>
+                </div>
+
+                <p
+                  className={`text-center text-sm mb-4 ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {skill.description}
+                </p>
+
+                {/* Skill level indicators - only visible when hovered */}
+                <motion.div
+                  className="space-y-3"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{
+                    opacity: hoveredSkill === index ? 1 : 0,
+                    height: hoveredSkill === index ? "auto" : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {index === 0 && (
+                    <>
+                      <SkillBar
+                        label="React/Next.js"
+                        percentage={90}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="JavaScript/TypeScript"
+                        percentage={85}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="HTML/CSS"
+                        percentage={95}
+                        isDark={isDark}
+                      />
+                    </>
+                  )}
+                  {index === 1 && (
+                    <>
+                      <SkillBar
+                        label="React Native"
+                        percentage={80}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="Kotlin"
+                        percentage={75}
+                        isDark={isDark}
+                      />
+                      <SkillBar label="Swift" percentage={65} isDark={isDark} />
+                    </>
+                  )}
+                  {index === 2 && (
+                    <>
+                      <SkillBar label="Figma" percentage={85} isDark={isDark} />
+                      <SkillBar
+                        label="Tailwind CSS"
+                        percentage={90}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="UX Research"
+                        percentage={75}
+                        isDark={isDark}
+                      />
+                    </>
+                  )}
+                  {index === 3 && (
+                    <>
+                      <SkillBar
+                        label="Node.js"
+                        percentage={85}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="Databases"
+                        percentage={80}
+                        isDark={isDark}
+                      />
+                      <SkillBar
+                        label="API Design"
+                        percentage={90}
+                        isDark={isDark}
+                      />
+                    </>
+                  )}
+                </motion.div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
       {/* Experience & Education Section */}
       <section
         className={`py-16 relative ${
