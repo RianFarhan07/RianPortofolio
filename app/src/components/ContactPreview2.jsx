@@ -219,6 +219,26 @@ export default function ContactPreview() {
         </motion.div>
 
         <motion.div
+          className="mb-6 text-center lg:text-right"
+          variants={itemVariants}
+        >
+          <Link
+            to="/contact"
+            className={`inline-flex items-center gap-2 font-medium ${
+              isDark
+                ? "text-primary hover:text-primary/80"
+                : "text-primaryInLight hover:text-primaryInLight/80"
+            } transition-colors`}
+          >
+            <span>Email Me</span>
+            <ArrowRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </motion.div>
+
+        <motion.div
           className="grid grid-cols-1 lg:grid-cols-12 gap-8"
           variants={containerVariants}
           initial="hidden"
@@ -365,25 +385,6 @@ export default function ContactPreview() {
             </div>
 
             {/* Link to full contact page */}
-            <motion.div
-              className="mt-6 text-center lg:text-right"
-              variants={itemVariants}
-            >
-              <Link
-                to="/contact"
-                className={`inline-flex items-center gap-2 font-medium ${
-                  isDark
-                    ? "text-primary hover:text-primary/80"
-                    : "text-primaryInLight hover:text-primaryInLight/80"
-                } transition-colors`}
-              >
-                <span>Visit full contact page</span>
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-            </motion.div>
           </motion.div>
         </motion.div>
       </div>
