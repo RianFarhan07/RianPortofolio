@@ -1,6 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import {
   Globe,
   Search,
@@ -8,6 +9,8 @@ import {
   Laptop,
   Smartphone,
   PenTool,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { projectsData } from "../data/projects";
@@ -54,15 +57,13 @@ export default function Projects() {
   const isDark = theme === "dark";
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredItems, setFilteredItems] = useState(combinedData);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
-  const [ref, inView] = useInView({
-    triggerOnce: false,
-    threshold: 0.1,
-  });
-
+  // Filter items based on category and search query
   useEffect(() => {
     const filtered = combinedData.filter((item) => {
       // Filter bedasarkan kategori
@@ -87,7 +88,25 @@ export default function Projects() {
     });
 
     setFilteredItems(filtered);
+    // Reset to first page when filters change
+    setCurrentPage(1);
   }, [activeCategory, searchQuery]);
+
+  // Calculate pagination data
+  const totalItems = filteredItems.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentItems = filteredItems.slice(startIndex, endIndex);
+
+  // Pagination navigation handlers
+  const goToPage = (pageNumber) => {
+    setCurrentPage(Math.max(1, Math.min(pageNumber, totalPages)));
+    // Scroll to top of the section when changing page
+    document
+      .getElementById("projects")
+      .scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const handleOpenModal = (project) => {
     setSelectedProject(project);
@@ -104,13 +123,12 @@ export default function Projects() {
       className={`py-16 md:py-24 relative overflow-hidden ${
         isDark ? "bg-bgDarkSection" : "bg-bgLight"
       }`}
-      ref={ref}
     >
       {/* Background decor */}
       <motion.div
         className="absolute inset-0 overflow-hidden"
         initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : { opacity: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         <div
@@ -135,7 +153,7 @@ export default function Projects() {
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.7 }}
         >
           <div className="flex items-center gap-2 mb-4 justify-center">
@@ -190,7 +208,7 @@ export default function Projects() {
         <motion.div
           className="mb-10"
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.9 }}
         >
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -247,27 +265,119 @@ export default function Projects() {
           </div>
         </motion.div>
 
-        {/* Projects & Certificates Grid */}
+        {/* Projects Grid with Pagination */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2.2 }}
         >
           {filteredItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <AnimatePresence>
-                {filteredItems.map((item) => (
-                  <ProjectCard
-                    key={item.id}
-                    project={item}
-                    isDark={isDark}
-                    onOpenModal={handleOpenModal}
-                    variants={itemVariants}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <AnimatePresence>
+                  {currentItems.map((item) => (
+                    <ProjectCard
+                      key={item.id}
+                      project={item}
+                      isDark={isDark}
+                      onOpenModal={handleOpenModal}
+                      variants={itemVariants}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              {/* Pagination Navigation */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center mt-12 gap-2">
+                  <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`flex items-center justify-center w-10 h-10 rounded-lg ${
+                      currentPage === 1
+                        ? isDark
+                          ? "bg-gray-800 text-gray-600 cursor-not-allowed"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : isDark
+                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    } transition-colors`}
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+
+                  {/* Page buttons */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => {
+                      // Show only current page, first, last, and pages close to current
+                      if (
+                        page === 1 ||
+                        page === totalPages ||
+                        (page >= currentPage - 1 && page <= currentPage + 1)
+                      ) {
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => goToPage(page)}
+                            className={`flex items-center justify-center w-10 h-10 rounded-lg font-medium ${
+                              currentPage === page
+                                ? isDark
+                                  ? "bg-primary text-white"
+                                  : "bg-primaryInLight text-white"
+                                : isDark
+                                ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            } transition-colors`}
+                            aria-label={`Go to page ${page}`}
+                            aria-current={
+                              currentPage === page ? "page" : undefined
+                            }
+                          >
+                            {page}
+                          </button>
+                        );
+                      } else if (
+                        (page === currentPage - 2 && currentPage > 3) ||
+                        (page === currentPage + 2 &&
+                          currentPage < totalPages - 2)
+                      ) {
+                        // Ellipsis indicators
+                        return (
+                          <span
+                            key={page}
+                            className={`flex items-center justify-center w-10 h-10 ${
+                              isDark ? "text-gray-500" : "text-gray-400"
+                            }`}
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    }
+                  )}
+
+                  <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`flex items-center justify-center w-10 h-10 rounded-lg ${
+                      currentPage === totalPages
+                        ? isDark
+                          ? "bg-gray-800 text-gray-600 cursor-not-allowed"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : isDark
+                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    } transition-colors`}
+                    aria-label="Next page"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <motion.div
               className={`text-center py-16 ${
@@ -284,17 +394,19 @@ export default function Projects() {
           )}
         </motion.div>
 
-        {/* Jumlah Hasil */}
+        {/* Results Count */}
         {filteredItems.length > 0 && (
           <motion.div
-            className={`mt-8 text-center text-sm ${
+            className={`mt-6 text-center text-sm ${
               isDark ? "text-gray-500" : "text-gray-600"
             }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 2 }}
           >
-            Showing {filteredItems.length} of {combinedData.length} items
+            Showing {Math.min(endIndex, totalItems) - startIndex} of{" "}
+            {totalItems} items
+            {totalPages > 1 && ` • Page ${currentPage} of ${totalPages}`}
           </motion.div>
         )}
 
