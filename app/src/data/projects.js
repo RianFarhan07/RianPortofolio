@@ -631,9 +631,8 @@ export const projectsData = [
     description:
       "Ex adalah aplikasi media sosial mobile modern yang terinspirasi oleh Twitter/X, dirancang untuk membawa percakapan real-time dan berbagi konten dinamis ke ujung jari Anda. Apakah Anda ingin berbagi pemikiran, mengikuti tren, atau terhubung dengan orang lain, Ex memberikan pengalaman sosial yang lancar dan menarik—langsung dari ponsel Anda.",
     category: "mobile",
-    image: "images/Ex.png",
+    image: "images/ex/1.png",
     images: [
-      "",
       "images/ex/2.png",
       "images/ex/3.png",
       "images/ex/4.png",
@@ -660,7 +659,7 @@ export const projectsData = [
     description:
       "Recipedia adalah platform penemuan resep pintar yang membantu pengguna menemukan resep berdasarkan bahan yang tersedia, kebutuhan diet, dan preferensi pribadi. Dengan pengenalan gambar berbasis AI, Recipedia dapat menganalisis gambar makanan dan menghasilkan daftar bahan, membuat memasak lebih mudah dan dapat diakses.",
     category: "web",
-    image: "images/Recipedia.png",
+    image: "images/recipedia.png",
     link: "https://recipedia-e625b.web.app/",
     techLogos: [
       "React.js",
