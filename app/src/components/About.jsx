@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Smartphone,
   Layout,
+  Leaf,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -212,6 +213,19 @@ export default function About() {
   // First, add a new state to track which skill is being hovered
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.2,
@@ -299,6 +313,13 @@ export default function About() {
       period: "Okt 2023 - Dec 2023",
       description:
         "Developed and maintained Android applications for school needs using Kotlin, Collaborated with the school to ensure the app met functional requirements.",
+    },
+    {
+      position: "FullStack Developer Associate Manager",
+      company: "Carbonethics",
+      period: "Mei 2024 - Now",
+      description:
+        "Designing, developing, and deploying end-to-end web solutions aligned with sustainability initiatives. Collaborate with stakeholders to gather and translate business requirements into actionable tasks. Build and maintain applications, modern frontend frameworks and backend technologies. Integrate tools, and automate workflows. Responsible for maintaining documentation, testing, and optimizing software for scalability, usability, and reliability.",
     },
   ];
 
@@ -555,6 +576,34 @@ export default function About() {
                   />
                 </div>
               </motion.h1>
+
+              <motion.div
+                className="flex flex-wrap gap-2 justify-center md:justify-start mb-5"
+                variants={itemVariants}
+              >
+                <div
+                  className={`px-4 py-2 rounded-full ${
+                    isDark
+                      ? "bg-green-900/40 text-green-400"
+                      : "bg-green-100 text-green-700"
+                  } flex items-center gap-2`}
+                >
+                  <Leaf size={16} />
+                  {isMobile ? (
+                    <span className="font-medium">
+                      Currently @ Carbonethics
+                    </span>
+                  ) : (
+                    <span className="font-medium">
+                      Currently work as a{" "}
+                      <span className="font-semibold">
+                        Fullstack Developer Associate Manager
+                      </span>{" "}
+                      @ Carbonethics
+                    </span>
+                  )}
+                </div>
+              </motion.div>
 
               <motion.p
                 className={`${

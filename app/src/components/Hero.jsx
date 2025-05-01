@@ -432,7 +432,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Text content section */}
-          <div className="order-2 md:order-1 text-center md:text-left">
+          <div className="order-2 md:order-1 text-center md:text-left xl:ml-48">
             <motion.h1
               className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${
                 isDark ? "text-white" : "text-gray-800"

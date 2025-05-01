@@ -36,6 +36,15 @@ export default function AboutPreview() {
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isBlinking, setIsBlinking] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsBlinking((prev) => !prev);
+    }, 1600);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const [ref, inView] = useInView({
     triggerOnce: false,
@@ -370,7 +379,7 @@ export default function AboutPreview() {
                   isDark ? "border-gray-700" : "border-gray-200"
                 } shadow-sm`}
               >
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-3">
                   <Briefcase
                     size={18}
                     className={isDark ? "text-primary" : "text-primaryInLight"}
@@ -382,15 +391,31 @@ export default function AboutPreview() {
                   >
                     Available For
                   </h3>
+                  <div className="flex items-center ml-2">
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        isBlinking ? "bg-green-500" : "bg-green-500/30"
+                      } transition-opacity duration-300`}
+                    />
+                  </div>
                 </div>
                 <ul
                   className={`${
                     isDark ? "text-gray-300" : "text-gray-600"
                   } space-y-1`}
                 >
-                  <li>• Full-time Positions</li>
-                  <li>• Freelance Projects</li>
-                  <li>• Contract</li>
+                  <li className="line-through opacity-30">
+                    • Full-time Positions
+                  </li>
+                  <li className="flex items-center text-center justify-center sm:justify-start">
+                    • Freelance Projects
+                    <div
+                      className={`w-2 h-2 ml-2 rounded-full ${
+                        isBlinking ? "bg-green-500" : "bg-green-500/30"
+                      } transition-opacity duration-300`}
+                    />
+                  </li>
+                  <li className="line-through opacity-30">• Contract</li>
                 </ul>
               </div>
 
@@ -443,20 +468,36 @@ export default function AboutPreview() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Link
-                to="/about"
-                className={`inline-flex items-center gap-2 px-6 py-3 ${
-                  isDark
-                    ? "bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90"
-                    : "bg-gradient-to-r from-primaryInLight to-blue-600 hover:from-primaryInLight/90 hover:to-blue-600/90"
-                } text-white rounded-lg font-medium shadow-lg transition-all group`}
-              >
-                Read More About Me
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+              <div className="flex flex-col md:flex-row gap-5">
+                <Link
+                  to="/about"
+                  className={`inline-flex items-center gap-2 px-6 py-3 ${
+                    isDark
+                      ? "bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90"
+                      : "bg-gradient-to-r from-primaryInLight to-blue-600 hover:from-primaryInLight/90 hover:to-blue-600/90"
+                  } text-white rounded-lg font-medium shadow-lg transition-all group`}
+                >
+                  Read More About Me
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+                <Link
+                  to="/contact"
+                  className={`inline-flex items-center gap-2 px-6 py-3 ${
+                    isDark
+                      ? "bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90"
+                      : "bg-gradient-to-r from-primaryInLight to-blue-600 hover:from-primaryInLight/90 hover:to-blue-600/90"
+                  } text-white rounded-lg font-medium shadow-lg transition-all group`}
+                >
+                  Contact Me Now
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>

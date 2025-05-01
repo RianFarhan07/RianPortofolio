@@ -101,7 +101,7 @@ export default function ContactPreview() {
     {
       icon: <Clock size={20} />,
       title: "Available For",
-      value: "Full-Time / Contract / Freelance",
+      value: "Freelance",
       link: "#about",
     },
   ];
