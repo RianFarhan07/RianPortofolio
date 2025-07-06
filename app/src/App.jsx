@@ -17,6 +17,7 @@ import CertificatesPreview from "./components/CertificatesPreview";
 import MainLayout from "./layouts/mainLayout";
 import ContactPreview from "./components/ContactPreview2";
 import ProjectPreview from "./components/ProjectPreview";
+import Hero2 from "./components/Hero2";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -84,6 +85,7 @@ const AppContent = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/hero" element={<Hero2 />} />
         </Routes>
       </PageTransition>
       <Footer />
