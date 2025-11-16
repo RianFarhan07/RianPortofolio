@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
 import {
   ChevronDown,
@@ -14,667 +14,727 @@ import {
   Smartphone,
   Server,
   MessageCircle,
-  Play,
-  Coffee,
-  Heart,
 } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
+import fotoRian from "../assets/foto_rian.jpg";
+import GradientText from "./GradientText";
+import { Link } from "react-router-dom";
 
-// Mock theme context
-const useTheme = () => ({
-  theme: "dark",
-});
-
-const fotoRian =
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face";
-
-const GradientText = ({
-  children,
-  colors,
-  animationSpeed,
-  showBorder,
-  className,
-}) => (
-  <span
-    className={`bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent ${className}`}
-  >
-    {children}
-  </span>
-);
-
-const FloatingElement = ({
-  children,
-  delay = 0,
-  direction = "up",
-  className = "",
-}) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: direction === "up" ? 50 : -50 }}
-    animate={{
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay,
-        duration: 0.8,
-        type: "spring",
-        stiffness: 100,
-      },
-    }}
-    whileHover={{
-      y: -5,
-      transition: { duration: 0.2 },
-    }}
-  >
-    {children}
-  </motion.div>
-);
-
-const TechOrb = ({ icon, text, delay, position }) => {
+const TechBadge = ({ icon, text, delay, style }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   return (
     <motion.div
-      className={`absolute flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-lg ${
+      className={`absolute flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-md ${
         isDark
-          ? "bg-gray-900/70 text-cyan-400 border border-cyan-400/40"
-          : "bg-white/70 text-teal-600 border border-teal-400/40"
-      } shadow-2xl cursor-pointer`}
-      style={position}
-      initial={{ opacity: 0, scale: 0, rotate: -180 }}
+          ? "bg-gray-800/80 text-primary border border-primary/30"
+          : "bg-white/80 text-primaryInLight border border-primaryInLight/30"
+      } shadow-lg`}
+      initial={{ opacity: 0, scale: 0 }}
       animate={{
         opacity: 1,
         scale: 1,
-        rotate: 0,
-        transition: {
-          delay,
-          type: "spring",
-          stiffness: 200,
-          damping: 10,
-        },
+        transition: { delay, type: "spring", stiffness: 100 },
       }}
-      whileHover={{
-        scale: 1.1,
-        rotate: 5,
-        boxShadow: "0 20px 40px rgba(0, 255, 255, 0.3)",
-      }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.05 }}
+      style={style}
     >
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      >
-        {icon}
-      </motion.div>
-      <span className="hidden sm:inline">{text}</span>
-    </motion.div>
-  );
-};
-
-const StatCard = ({ icon, number, label, delay }) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  return (
-    <motion.div
-      className={`flex flex-col items-center p-4 rounded-xl backdrop-blur-md ${
-        isDark
-          ? "bg-gray-800/50 border border-gray-700/50"
-          : "bg-white/50 border border-gray-200/50"
-      } shadow-lg`}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.6 }}
-      whileHover={{ scale: 1.05, y: -5 }}
-    >
-      <motion.div
-        className={`p-3 rounded-full mb-2 ${
-          isDark ? "bg-cyan-500/20" : "bg-teal-500/20"
-        }`}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-      >
-        {icon}
-      </motion.div>
-      <span
-        className={`text-2xl font-bold ${
-          isDark ? "text-cyan-400" : "text-teal-600"
-        }`}
-      >
-        {number}
-      </span>
-      <span className={`text-xs ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-        {label}
-      </span>
+      {icon}
+      <span>{text}</span>
     </motion.div>
   );
 };
 
 export default function Hero2() {
   const containerRef = useRef(null);
+  const particlesRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [activeSection, setActiveSection] = useState(0);
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
 
+  // efek typewriter
   const [text] = useTypewriter({
     words: [
-      "Creative Problem Solver",
-      "Digital Craftsman",
-      "Code Architect",
-      "Innovation Driver",
-      "Tech Explorer",
-      "Solution Builder",
-      "Digital Alchemist",
+      "Android Developer",
+      "Web Developer",
+      "UI/UX Designer",
+      "Mobile Developer",
+      "Fullstack Developer",
+      "Frontend Developer",
+      "Backend Developer",
     ],
     loop: true,
     delaySpeed: 2000,
   });
 
+  // untuk inisialisasi particles.js
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    const loadTimer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 1000);
-
-    const sectionTimer = setInterval(() => {
-      setActiveSection((prev) => (prev + 1) % 3);
-    }, 3000);
+    // tambahkan sedikit delay untuk memastikan bahwa elemen telah dimuat
+    const timer = setTimeout(() => {
+      if (
+        typeof window !== "undefined" &&
+        window.particlesJS &&
+        document.getElementById("particles-js")
+      ) {
+        console.log("Initializing particles.js");
+        window.particlesJS("particles-js", {
+          particles: {
+            number: { value: 20, density: { enable: true, value_area: 800 } },
+            color: { value: isDark ? "#00adb5" : "#14b8a6" },
+            opacity: {
+              value: 0.4,
+              random: true, // agar opacitiynya random
+              anim: {
+                enable: true,
+                speed: 0.5,
+                opacity_min: 0.3,
+                sync: false,
+              },
+            },
+            size: {
+              value: 6,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 2,
+                size_min: 2,
+                sync: false,
+              },
+            },
+            line_linked: {
+              enable: false,
+            },
+            move: {
+              enable: true,
+              speed: 0.8,
+              direction: "none",
+              random: true,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+            },
+          },
+        });
+      } else {
+        console.error("Particles.js not available or element not found", {
+          particlesJS: !!window.particlesJS,
+          element: !!document.getElementById("particles-js"),
+        });
+      }
+    }, 1500); // delay agar muncul setelah transisi
 
     return () => {
-      clearInterval(timer);
-      clearTimeout(loadTimer);
-      clearInterval(sectionTimer);
+      clearTimeout(timer);
+      if (window.pJSDom && window.pJSDom.length) {
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+      }
     };
-  }, []);
+  }, [isDark]);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || isMobile) return;
       const { left, top, width, height } =
         containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - left - width / 2) / 30;
-      const y = (e.clientY - top - height / 2) / 30;
+      const x = (e.clientX - left - width / 2) / 25;
+      const y = (e.clientY - top - height / 2) / 25;
       setMousePosition({ x, y });
     };
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsSmallMobile(window.innerWidth < 480);
+    };
+
+    handleResize();
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    window.addEventListener("resize", handleResize);
+
+    const timer = setTimeout(() => setIsVisible(true), 500);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
+  }, [isMobile]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.5,
+        staggerChildren: 0.3,
+        delayChildren: 1.5,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { y: 20, opacity: 0 },
     visible: {
-      opacity: 1,
       y: 0,
-      transition: { duration: 0.8, type: "spring", stiffness: 100 },
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 },
     },
   };
 
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: isDark
+        ? "0 10px 25px rgba(0, 173, 181, 0.5)"
+        : "0 10px 25px rgba(20, 184, 166, 0.5)",
+    },
+    tap: { scale: 0.95 },
+  };
+
+  const getTechBadgePosition = (position) => {
+    if (isMobile) {
+      // kalau di mobile posisi badge diubah supaya lebih dekat
+      switch (position) {
+        case "topLeft":
+          return { top: "-10%", left: "10%" };
+        case "topRight":
+          return { top: "15%", right: "-10%" };
+        case "bottomRight":
+          return { bottom: "15%", right: "-5%" };
+        case "bottomLeft":
+          return { bottom: "-5%", left: "15%" };
+        default:
+          return position;
+      }
+    }
+
+    // kalau di desktop posisi badge tetap seperti biasa
+    switch (position) {
+      case "topLeft":
+        return { top: "-15%", left: "20%" };
+      case "topRight":
+        return { top: "20%", right: "-15%" };
+      case "bottomRight":
+        return { bottom: "10%", right: "0%" };
+      case "bottomLeft":
+        return { bottom: "-5%", left: "25%" };
+      default:
+        return position;
+    }
+  };
+
   return (
-    <div
+    <motion.div
       id="home"
-      className={`min-h-screen relative overflow-hidden ${
+      className={`min-h-screen flex items-center relative overflow-hidden ${
         isDark
-          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black"
-          : "bg-gradient-to-br from-gray-50 via-blue-50 to-white"
-      }`}
+          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
+          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
+      } py-16 md:py-0`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       ref={containerRef}
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        {/* Floating geometric shapes */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full opacity-20 blur-xl animate-pulse"></div>
+      {/* Particles.js container */}
+      <div
+        id="particles-js"
+        ref={particlesRef}
+        className="absolute inset-0 z-0"
+      ></div>
+
+      {/* Gradient background */}
+      <div className="absolute inset-0 z-0">
         <div
-          className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 blur-xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute bottom-40 left-20 w-24 h-24 bg-gradient-to-br from-green-400 to-teal-500 rounded-full opacity-20 blur-xl animate-pulse"
-          style={{ animationDelay: "2s" }}
+          className={`absolute inset-0 opacity-20 ${
+            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
+          }`}
         ></div>
 
-        {/* Grid pattern */}
+        {/* bola bola gradient */}
         <div
-          className={`absolute inset-0 opacity-5 ${
-            isDark ? "bg-white" : "bg-black"
-          }`}
+          className={`absolute w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl ${
+            isDark ? "bg-blue-500" : "bg-blue-300"
+          } opacity-10`}
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, ${
-              isDark ? "white" : "black"
-            } 1px, transparent 0)`,
-            backgroundSize: "20px 20px",
+            top: "10%",
+            right: "5%",
+            animation: "pulse 8s infinite ease-in-out",
           }}
-        ></div>
+        />
+
+        <div
+          className={`absolute w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl ${
+            isDark ? "bg-primary" : "bg-primaryInLight"
+          } opacity-10`}
+          style={{
+            bottom: "5%",
+            left: "10%",
+            animation: "pulse 8s infinite ease-in-out reverse",
+          }}
+        />
       </div>
 
-      {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Top Navigation Bar */}
+      <div className="container mx-auto px-4 sm:px-6 z-10">
         <motion.div
-          className="flex justify-between items-center p-6 backdrop-blur-md bg-black/10 border-b border-white/10"
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.8 }}
+          className="grid md:grid-cols-2 gap-8 md:gap-10 items-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          <div className="flex items-center gap-4">
-            <div
-              className={`w-3 h-3 rounded-full ${
-                isDark ? "bg-cyan-400" : "bg-teal-500"
-              } animate-pulse`}
-            ></div>
-            <span
-              className={`text-sm font-medium ${
-                isDark ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              {currentTime.toLocaleTimeString()}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className={`px-3 py-1 rounded-full text-xs font-medium ${
-                isDark
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-green-500/20 text-green-600"
-              }`}
-            >
-              Available for work
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Hero Content */}
-        <div className="flex-1 flex items-center justify-center px-6 py-12">
-          <div className="max-w-7xl w-full">
-            {/* Main Hero Grid */}
-            <div className="grid lg:grid-cols-12 gap-8 items-center">
-              {/* Left Content - Text Section */}
-              <motion.div
-                className="lg:col-span-7 order-2 lg:order-1"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                {/* Greeting Section */}
-                <motion.div className="mb-8" variants={itemVariants}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <motion.div
-                      className={`w-12 h-12 rounded-full ${
-                        isDark
-                          ? "bg-gradient-to-r from-cyan-400 to-blue-500"
-                          : "bg-gradient-to-r from-teal-400 to-blue-500"
-                      } flex items-center justify-center`}
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
-                      <Coffee className="w-6 h-6 text-white" />
-                    </motion.div>
-                    <div>
-                      <p
-                        className={`text-sm font-medium ${
-                          isDark ? "text-gray-400" : "text-gray-600"
-                        }`}
-                      >
-                        Hello World! I'm
-                      </p>
-                      <p
-                        className={`text-lg font-bold ${
-                          isDark ? "text-white" : "text-gray-800"
-                        }`}
-                      >
-                        Ready to create something amazing
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Name and Title */}
-                <motion.div variants={itemVariants}>
-                  <h1
-                    className={`text-5xl md:text-7xl font-black mb-6 ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    <GradientText>Rian</GradientText>
-                    <br />
-                    <span
-                      className={isDark ? "text-gray-300" : "text-gray-700"}
-                    >
-                      Farhan
-                    </span>
-                  </h1>
-
-                  <div className="flex items-center gap-4 mb-8">
-                    <div
-                      className={`h-1 w-20 ${
-                        isDark ? "bg-cyan-400" : "bg-teal-500"
-                      } rounded-full`}
-                    ></div>
-                    <div
-                      className={`text-xl md:text-2xl font-medium ${
-                        isDark ? "text-gray-300" : "text-gray-600"
-                      }`}
-                    >
-                      <span>{text}</span>
-                      <Cursor cursorColor={isDark ? "#00adb5" : "#14b8a6"} />
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Description */}
-                <motion.p
-                  className={`text-lg md:text-xl leading-relaxed mb-8 max-w-2xl ${
-                    isDark ? "text-gray-400" : "text-gray-600"
-                  }`}
-                  variants={itemVariants}
-                >
-                  Transforming complex problems into elegant solutions through
-                  innovative design and cutting-edge technology.
-                  <span
-                    className={`font-semibold ${
-                      isDark ? "text-cyan-400" : "text-teal-600"
-                    }`}
-                  >
-                    Let's build the future together.
-                  </span>
-                </motion.p>
-
-                {/* Stats Row */}
-                <motion.div
-                  className="grid grid-cols-3 gap-4 mb-8"
-                  variants={itemVariants}
-                >
-                  <StatCard
-                    icon={<Star className="w-5 h-5 text-yellow-400" />}
-                    number="4+"
-                    label="Years Exp"
-                    delay={0.5}
-                  />
-                  <StatCard
-                    icon={<Code className="w-5 h-5 text-blue-400" />}
-                    number="50+"
-                    label="Projects"
-                    delay={0.7}
-                  />
-                  <StatCard
-                    icon={<Heart className="w-5 h-5 text-red-400" />}
-                    number="∞"
-                    label="Coffee Cups"
-                    delay={0.9}
-                  />
-                </motion.div>
-
-                {/* Action Buttons */}
-                <motion.div
-                  className="flex flex-wrap gap-4 mb-8"
-                  variants={itemVariants}
-                >
-                  <motion.button
-                    className={`px-8 py-4 bg-gradient-to-r ${
-                      isDark
-                        ? "from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400"
-                        : "from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400"
-                    } text-white rounded-xl font-semibold flex items-center gap-3 shadow-lg group`}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    Watch My Work
-                  </motion.button>
-
-                  <motion.button
-                    className={`px-8 py-4 ${
-                      isDark
-                        ? "bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
-                        : "bg-white hover:bg-gray-50 text-gray-900 border border-gray-200"
-                    } rounded-xl font-semibold flex items-center gap-3 shadow-lg`}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Download className="w-5 h-5" />
-                    Download CV
-                  </motion.button>
-                </motion.div>
-
-                {/* Social Links */}
-                <motion.div className="flex gap-4" variants={itemVariants}>
-                  {[
-                    {
-                      icon: Github,
-                      href: "https://github.com",
-                      label: "GitHub",
-                    },
-                    {
-                      icon: Linkedin,
-                      href: "https://linkedin.com",
-                      label: "LinkedIn",
-                    },
-                    {
-                      icon: Mail,
-                      href: "mailto:contact@example.com",
-                      label: "Email",
-                    },
-                    {
-                      icon: MessageCircle,
-                      href: "https://wa.me/",
-                      label: "WhatsApp",
-                    },
-                  ].map((social, index) => (
-                    <motion.a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-12 h-12 rounded-full ${
-                        isDark
-                          ? "bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-cyan-400"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-teal-600"
-                      } flex items-center justify-center transition-all duration-300`}
-                      whileHover={{ scale: 1.1, y: -3 }}
-                      whileTap={{ scale: 0.9 }}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.2 + index * 0.1 }}
-                    >
-                      <social.icon className="w-5 h-5" />
-                    </motion.a>
-                  ))}
-                </motion.div>
-              </motion.div>
-
-              {/* Right Content - Image Section */}
-              <motion.div
-                className="lg:col-span-5 order-1 lg:order-2 relative"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
-              >
-                <div className="relative max-w-md mx-auto">
-                  {/* Floating Tech Orbs */}
-                  <AnimatePresence>
-                    {isLoaded && (
-                      <>
-                        <TechOrb
-                          icon={<Code className="w-5 h-5" />}
-                          text="React"
-                          delay={1.5}
-                          position={{ top: "10%", right: "-10%" }}
-                        />
-                        <TechOrb
-                          icon={<Layout className="w-5 h-5" />}
-                          text="Design"
-                          delay={1.8}
-                          position={{ top: "30%", left: "-15%" }}
-                        />
-                        <TechOrb
-                          icon={<Smartphone className="w-5 h-5" />}
-                          text="Mobile"
-                          delay={2.1}
-                          position={{ bottom: "25%", right: "-5%" }}
-                        />
-                        <TechOrb
-                          icon={<Server className="w-5 h-5" />}
-                          text="Backend"
-                          delay={2.4}
-                          position={{ bottom: "5%", left: "-10%" }}
-                        />
-                      </>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Main Image Container */}
-                  <motion.div
-                    className="relative"
-                    style={{
-                      transform: `rotateY(${
-                        mousePosition.x * 0.5
-                      }deg) rotateX(${mousePosition.y * 0.5}deg)`,
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    {/* Rotating Rings */}
-                    <div className="absolute inset-0 -z-10">
-                      <motion.div
-                        className={`absolute inset-0 rounded-full border-2 ${
-                          isDark ? "border-cyan-400/30" : "border-teal-400/30"
-                        }`}
-                        style={{
-                          width: "110%",
-                          height: "110%",
-                          top: "-5%",
-                          left: "-5%",
-                        }}
-                        animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 20,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                      <motion.div
-                        className={`absolute inset-0 rounded-full border-2 ${
-                          isDark ? "border-blue-400/20" : "border-blue-400/20"
-                        }`}
-                        style={{
-                          width: "130%",
-                          height: "130%",
-                          top: "-15%",
-                          left: "-15%",
-                        }}
-                        animate={{ rotate: -360 }}
-                        transition={{
-                          duration: 30,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                    </div>
-
-                    {/* Profile Image */}
-                    <div
-                      className={`relative w-80 h-80 rounded-full overflow-hidden ${
-                        isDark
-                          ? "bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500"
-                          : "bg-gradient-to-br from-teal-400 via-blue-500 to-purple-400"
-                      } p-2 shadow-2xl`}
-                    >
-                      <motion.div
-                        className="w-full h-full rounded-full overflow-hidden bg-gray-100"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <img
-                          src={fotoRian}
-                          alt="Rian Farhan"
-                          className="w-full h-full object-cover"
-                        />
-                      </motion.div>
-                    </div>
-
-                    {/* Experience Badge */}
-                    <motion.div
-                      className={`absolute -bottom-6 -right-6 px-6 py-4 rounded-2xl ${
-                        isDark
-                          ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                          : "bg-gradient-to-r from-teal-500 to-blue-500"
-                      } text-white shadow-xl`}
-                      initial={{ scale: 0, rotate: -10 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 2, type: "spring", stiffness: 200 }}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Star className="w-5 h-5 fill-yellow-300 text-yellow-300" />
-                        <div>
-                          <div className="text-xl font-bold">4+</div>
-                          <div className="text-sm opacity-90">Years</div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Scroll Indicator */}
-        <motion.div
-          className="flex justify-center pb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5 }}
-        >
+          {/* Profile image section - pindah ke atas kalau di mobile */}
           <motion.div
-            className="flex flex-col items-center cursor-pointer"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            whileHover={{ scale: 1.1 }}
+            className="order-1 md:order-2 flex justify-center"
+            variants={itemVariants}
+            style={{
+              perspective: 1000,
+            }}
           >
-            <span
-              className={`text-sm font-medium mb-2 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Explore More
-            </span>
             <motion.div
-              className={`w-6 h-10 border-2 ${
-                isDark ? "border-cyan-400" : "border-teal-500"
-              } rounded-full flex justify-center`}
+              className="relative w-60 h-60 sm:w-72 sm:h-72 md:w-96 md:h-96"
+              style={{
+                transformStyle: "preserve-3d",
+                transform: isMobile
+                  ? "none"
+                  : `rotateY(${
+                      mousePosition.x
+                    }deg) rotateX(${-mousePosition.y}deg)`,
+                willChange: "transform",
+              }}
             >
-              <motion.div
-                className={`w-1 h-3 ${
-                  isDark ? "bg-cyan-400" : "bg-teal-500"
-                } rounded-full mt-2`}
-                animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              {/* tech badges melayang  */}
+              {isVisible && (
+                <>
+                  <TechBadge
+                    icon={<Code size={16} />}
+                    text="React"
+                    delay={2}
+                    style={getTechBadgePosition("topLeft")}
+                  />
+                  <TechBadge
+                    icon={<Layout size={16} />}
+                    text="UI/UX"
+                    delay={2.5}
+                    style={getTechBadgePosition("topRight")}
+                  />
+                  <TechBadge
+                    icon={<Smartphone size={16} />}
+                    text="Mobile"
+                    delay={3.0}
+                    style={getTechBadgePosition("bottomRight")}
+                  />
+                  <TechBadge
+                    icon={<Server size={16} />}
+                    text="Backend"
+                    delay={3.5}
+                    style={getTechBadgePosition("bottomLeft")}
+                  />
+                </>
+              )}
+
+              {/* rings samping foto*/}
+              <div
+                className={`absolute rounded-full ${
+                  isDark ? "border-primary" : "border-primaryInLight"
+                } border-2 opacity-20`}
+                style={{
+                  width: "110%",
+                  height: "110%",
+                  top: "-5%",
+                  left: "-5%",
+                  transformStyle: "preserve-3d",
+                  transform: "translateZ(-10px)",
+                  animation: "spin 30s linear infinite",
+                }}
               />
+
+              <div
+                className={`absolute rounded-full ${
+                  isDark ? "border-blue-500" : "border-blue-400"
+                } border-2 opacity-20`}
+                style={{
+                  width: "120%",
+                  height: "120%",
+                  top: "-10%",
+                  left: "-10%",
+                  transformStyle: "preserve-3d",
+                  transform: "translateZ(-20px)",
+                  animation: "spin 35s linear infinite reverse",
+                }}
+              />
+
+              {/* foto profile*/}
+              <div
+                className={`absolute inset-0 rounded-full overflow-hidden ${
+                  isDark
+                    ? "bg-gradient-to-br from-primary via-blue-500 to-purple-500"
+                    : "bg-gradient-to-br from-primaryInLight via-blue-500 to-purple-400"
+                } p-1.5`}
+                style={{
+                  animation: "pulse-shadow 3s ease-in-out infinite",
+                }}
+              >
+                <div
+                  className={`w-full h-full rounded-full p-0.5 backdrop-blur-sm bg-gradient-to-br ${
+                    isDark
+                      ? "from-white/10 to-black/30"
+                      : "from-white/80 to-white/20"
+                  }`}
+                >
+                  <img
+                    src={fotoRian || "/placeholder.svg"}
+                    alt="Rian Farhan"
+                    className={`w-full h-full object-cover rounded-full transition-all duration-500 ${
+                      isDark
+                        ? "filter grayscale hover:grayscale-0"
+                        : "filter grayscale-0"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* badge pengalaman */}
+              <motion.div
+                className={`absolute ${
+                  isSmallMobile ? "-bottom-4 -right-3" : "-bottom-6 -right-6"
+                } ${
+                  isDark
+                    ? "bg-gradient-to-r from-primary to-blue-500"
+                    : "bg-gradient-to-r from-primaryInLight to-blue-500"
+                } text-white rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 shadow-xl`}
+                style={{
+                  transform: "translateZ(30px)",
+                  animation: "float-badge 4s ease-in-out infinite",
+                }}
+                initial={{ scale: 0, rotate: -10 }}
+                animate={{
+                  scale: 1,
+                  transition: {
+                    scale: { duration: 0.5, delay: 1 },
+                  },
+                }}
+              >
+                <span className="text-base sm:text-lg font-bold flex items-center gap-1">
+                  <Star
+                    size={isSmallMobile ? 14 : 16}
+                    className="fill-yellow-300 text-yellow-300"
+                  />
+                  4+ Years
+                </span>
+                <span className="text-xs sm:text-sm opacity-90">
+                  Experience
+                </span>
+              </motion.div>
             </motion.div>
           </motion.div>
+
+          {/* Text content section */}
+          <div className="order-2 md:order-1 text-center md:text-left xl:ml-48">
+            <motion.h1
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${
+                isDark ? "text-white" : "text-gray-800"
+              } mb-3 md:mb-4`}
+              variants={itemVariants}
+            >
+              Hello I'm
+              <br />
+              <GradientText
+                colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                animationSpeed={4}
+                showBorder={false}
+                className="md:text-left text-center"
+              >
+                Rian Farhan
+              </GradientText>
+            </motion.h1>
+
+            <motion.div
+              className={`text-lg sm:text-xl md:text-2xl ${
+                isDark ? "text-gray-300" : "text-gray-600"
+              } mb-4 md:mb-6 h-8 sm:h-12`}
+              variants={itemVariants}
+            >
+              <span>I am a </span>
+              <span
+                className={`font-medium ${
+                  isDark ? "text-primary" : "text-primaryInLight"
+                }`}
+              >
+                {text}
+              </span>
+              <Cursor cursorColor={isDark ? "#00adb5" : "#14b8a6"} />
+            </motion.div>
+
+            <motion.p
+              className={`${
+                isDark ? "text-gray-400" : "text-gray-500"
+              } mb-6 md:mb-8 max-w-lg mx-auto md:mx-0 text-base sm:text-lg`}
+              variants={itemVariants}
+            >
+              Passionate about turning ideas into reality through thoughtful
+              design and high-performance code.
+            </motion.p>
+
+            <motion.div
+              className="flex flex-wrap justify-center md:justify-start gap-3 sm:gap-4"
+              variants={itemVariants}
+            >
+              <motion.a
+                href="#projects"
+                className={`px-4 sm:px-6 py-2.5 sm:py-3 ${
+                  isDark
+                    ? "bg-gradient-to-r from-primary to-blue-500"
+                    : "bg-gradient-to-r from-primaryInLight to-blue-600"
+                } text-white rounded-lg font-medium flex items-center gap-2 group relative overflow-hidden shadow-lg text-sm sm:text-base`}
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  View My Work
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </span>
+                <motion.span
+                  className="absolute inset-0 w-0 bg-white/20"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+
+              <Link to="/contact">
+                <motion.div
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 border-2 ${
+                    isDark
+                      ? "border-primary text-primary hover:bg-primary/10"
+                      : "border-primaryInLight text-primaryInLight hover:bg-primaryInLight/10"
+                  } rounded-lg font-medium hover:text-white transition-colors relative overflow-hidden group text-sm sm:text-base`}
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <span className="relative z-10">Contact Me</span>
+                  <motion.span
+                    className={`absolute bottom-0 left-0 w-full h-0 ${
+                      isDark ? "bg-primary" : "bg-primaryInLight"
+                    } opacity-20 transition-all duration-300 group-hover:h-full`}
+                  />
+                </motion.div>
+              </Link>
+
+              <motion.a
+                href="rianCV.pdf"
+                download="Rian_Farhan_CV.pdf"
+                className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 ${
+                  isDark
+                    ? "bg-gray-800 text-primary hover:bg-gray-700"
+                    : "bg-gray-100 text-primaryInLight hover:bg-gray-200"
+                } rounded-lg font-medium transition-all relative overflow-hidden group shadow-md text-sm sm:text-base`}
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <Download
+                    size={isSmallMobile ? 16 : 20}
+                    className="animate-bounce"
+                  />
+                  <span className={isSmallMobile ? "hidden sm:inline" : ""}>
+                    Download
+                  </span>{" "}
+                  CV
+                </span>
+                <motion.span
+                  className={`absolute bottom-0 left-0 w-full h-0 ${
+                    isDark ? "bg-primary" : "bg-primaryInLight"
+                  } opacity-20 transition-all duration-300 group-hover:h-full`}
+                  style={{ zIndex: 1, opacity: 0.2 }}
+                />
+              </motion.a>
+            </motion.div>
+
+            <motion.div
+              className="flex gap-4 mt-6 md:mt-8 justify-center md:justify-start"
+              variants={itemVariants}
+            >
+              <motion.a
+                href="https://github.com/RianFarhan07"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
+                  isDark
+                    ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
+                    : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
+                } flex items-center justify-center transition-colors border-2 border-transparent`}
+                whileHover={{ scale: 1.1, y: -5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Github size={isSmallMobile ? 18 : 22} />
+              </motion.a>
+              <motion.a
+                href="https://www.linkedin.com/in/baso-rian-farhan-82bb73245/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
+                  isDark
+                    ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
+                    : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
+                } flex items-center justify-center transition-colors border-2 border-transparent`}
+                whileHover={{ scale: 1.1, y: -5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Linkedin size={isSmallMobile ? 18 : 22} />
+              </motion.a>
+              <Link to={"/contact"}>
+                <motion.div
+                  className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
+                    isDark
+                      ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
+                      : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
+                  } flex items-center justify-center transition-colors border-2 border-transparent`}
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Mail size={isSmallMobile ? 18 : 22} />
+                </motion.div>
+              </Link>
+              <motion.a
+                href="https://wa.me/6282280372670?text=Hi%20Rian,%20I%20would%20like%20to%20discuss%20a%20job%20opportunity%20we%20have%20and%20see%20if%20you%20might%20be%20interested."
+                target="_blank"
+                className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full ${
+                  isDark
+                    ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
+                    : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
+                } flex items-center justify-center transition-colors border-2 border-transparent`}
+                whileHover={{ scale: 1.1, y: -5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <MessageCircle size={isSmallMobile ? 18 : 22} />
+              </motion.a>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
-    </div>
+
+      {/* scroll ke bawah button */}
+      <motion.div
+        className={`absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 ${
+          isSmallMobile ? "hidden" : "block"
+        }`}
+        animate={{
+          y: [0, 10, 0],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+      >
+        <motion.a
+          href="#about"
+          className={`flex flex-col items-center ${
+            isDark
+              ? "text-gray-400 hover:text-primary"
+              : "text-gray-500 hover:text-primaryInLight"
+          } transition-colors`}
+          whileHover={{ scale: 1.1 }}
+        >
+          <span className="text-xs sm:text-sm font-medium mb-1">
+            Scroll Down
+          </span>
+          <motion.div
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${
+              isDark ? "border-gray-700" : "border-gray-300"
+            } border flex items-center justify-center`}
+            animate={{
+              boxShadow: [
+                "0 0 0 rgba(255, 255, 255, 0)",
+                "0 0 10px rgba(255, 255, 255, 0.3)",
+                "0 0 0 rgba(255, 255, 255, 0)",
+              ],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          >
+            <ChevronDown size={isSmallMobile ? 18 : 24} />
+          </motion.div>
+        </motion.a>
+      </motion.div>
+
+      {/* CSS Animations agar lebih hidup */}
+      <style jsx="" global="true">{`
+        /* Animasi pulse: memberikan efek denyut pada elemen */
+        @keyframes pulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.1;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.15;
+          }
+        }
+
+        /* Animasi spin: memberikan efek putar pada elemen */
+        @keyframes spin {
+          from {
+            transform: translateZ(-10px) rotate(0deg);
+          }
+          to {
+            transform: translateZ(-10px) rotate(360deg);
+          }
+        }
+
+        /* Animasi pulse-shadow: memberikan efek bayangan yang "berdenyut" */
+        @keyframes pulse-shadow {
+          0%,
+          100% {
+            box-shadow: 0 0 30px
+              ${isDark ? "rgba(0, 173, 181, 0.6)" : "rgba(20, 184, 166, 0.6)"};
+          }
+          50% {
+            box-shadow: 0 0 70px
+              ${isDark ? "rgba(0, 173, 181, 0.4)" : "rgba(20, 184, 166, 0.4)"};
+          }
+        }
+
+        /* Animasi float-badge: memberikan efek gerakan mengambang (floating) */
+        @keyframes float-badge {
+          0%,
+          100% {
+            transform: translateZ(30px) translateY(0px) rotate(-5deg);
+          }
+          50% {
+            transform: translateZ(30px) translateY(-8px) rotate(0deg);
+          }
+        }
+
+        /* Media query untuk perangkat dengan layar kecil (max-width: 640px) */
+        /* Mengurangi efek bayangan agar lebih ringan pada perangkat mobile */
+        @media (max-width: 640px) {
+          @keyframes pulse-shadow {
+            0%,
+            100% {
+              box-shadow: 0 0 20px
+                ${isDark ? "rgba(0, 173, 181, 0.5)" : "rgba(20, 184, 166, 0.5)"};
+            }
+            50% {
+              box-shadow: 0 0 40px
+                ${isDark ? "rgba(0, 173, 181, 0.3)" : "rgba(20, 184, 166, 0.3)"};
+            }
+          }
+        }
+      `}</style>
+    </motion.div>
   );
 }
