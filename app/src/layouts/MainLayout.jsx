@@ -80,7 +80,6 @@ const MainLayout = ({ children }) => {
     >
       {/* Particles.js container */}
       <div id="particles-js" className="absolute inset-0 z-0"></div>
-
       {/* Gradient background */}
       <div className="absolute inset-0 z-0">
         <div
@@ -111,11 +110,9 @@ const MainLayout = ({ children }) => {
             animation: "pulse 8s infinite ease-in-out reverse",
           }}
         />
-      </div>
-
+      </div>{" "}
       {/* Main content */}
       <div className="relative z-10">{children}</div>
-
       {/* CSS Animations */}
       <style jsx global>{`
         @keyframes pulse {

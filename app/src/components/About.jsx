@@ -466,50 +466,39 @@ export default function About() {
 
               {/* Mobile scroll indicator - only shown on mobile */}
               {isMobile && (
-                <motion.div
-                  className="absolute bottom-[600px] "
-                  animate={{
-                    y: [0, 10, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
+                <motion.a
+                  href="#skills"
+                  className="absolute bottom-[700px] "
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  whileHover={{ scale: 1.1 }}
+                  style={{
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 1000,
                   }}
                 >
-                  <motion.a
-                    href="#skills"
-                    className={`flex flex-col items-center ${
-                      isDark
-                        ? "text-gray-400 hover:text-primary"
-                        : "text-gray-500 hover:text-primaryInLight"
-                    } transition-colors`}
-                    whileHover={{ scale: 1.1 }}
+                  <span
+                    className={`text-xs font-medium mb-2 ${
+                      isDark ? "text-gray-400" : "text-gray-600"
+                    }`}
                   >
-                    <span className="text-3xl sm:text-sm font-medium mb-1">
-                      Scroll Down
-                    </span>
+                    Explore More
+                  </span>
+                  <motion.div
+                    className={`w-5 h-8 border-2 ${
+                      isDark ? "border-cyan-400" : "border-teal-500"
+                    } rounded-full flex justify-center`}
+                  >
                     <motion.div
-                      className={`w-28 h-28 sm:w-10 sm:h-10 rounded-full ${
-                        isDark ? "border-gray-700" : "border-gray-300"
-                      } border flex items-center justify-center`}
-                      animate={{
-                        boxShadow: [
-                          "0 0 0 rgba(255, 255, 255, 0)",
-                          "0 0 10px rgba(255, 255, 255, 0.3)",
-                          "0 0 0 rgba(255, 255, 255, 0)",
-                        ],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <ChevronDown size={isSmallMobile ? 24 : 42} />
-                    </motion.div>
-                  </motion.a>
-                </motion.div>
+                      className={`w-0.5 h-2 ${
+                        isDark ? "bg-cyan-400" : "bg-teal-500"
+                      } rounded-full mt-1.5`}
+                      animate={{ y: [0, 10, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                  </motion.div>
+                </motion.a>
               )}
             </motion.div>
 
