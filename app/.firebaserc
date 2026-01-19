@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "rianportofolio"
-  }
+  },
+  "targets": {
+    "rianportofolio": {
+      "hosting": {
+        "production": [
+          "rianportofolio"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

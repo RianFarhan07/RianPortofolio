@@ -48,23 +48,10 @@ class ErrorBoundary extends Component {
 // </ErrorBoundary>
 
 const AppContent = () => {
-  // const [selectedProject, setSelectedProject] = useState(null);
-  // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const location = useLocation();
 
-  // const openProjectDialog = (project) => {
-  //   setSelectedProject(project);
-  //   setIsDialogOpen(true);
-  //   document.body.style.overflow = "hidden";
-  // };
-
-  // const closeProjectDialog = () => {
-  //   setIsDialogOpen(false);
-  //   document.body.style.overflow = "auto";
-  // };
-
   return (
-    <>
+    <MainLayout>
       <Navbar />
       <ScrollToTop />
       <PageTransition>
@@ -85,20 +72,10 @@ const AppContent = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/hero" element={<Hero2 />} />
         </Routes>
       </PageTransition>
       <Footer />
-
-      {/* <AnimatePresence>
-        {isDialogOpen && (
-          <ProjectDialog
-            project={selectedProject}
-            onClose={closeProjectDialog}
-          />
-        )}
-      </AnimatePresence> */}
-    </>
+    </MainLayout>
   );
 };
 
