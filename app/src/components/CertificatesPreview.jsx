@@ -23,7 +23,7 @@ export default function CertificatesPreview() {
   const autoplayRef = useRef(null);
 
   const [ref, inView] = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.2,
   });
 
@@ -31,7 +31,7 @@ export default function CertificatesPreview() {
     if (autoplay) {
       autoplayRef.current = setInterval(() => {
         setActiveIndex((prev) =>
-          prev === certificates.length - 1 ? 0 : prev + 1
+          prev === certificates.length - 1 ? 0 : prev + 1,
         );
       }, 5000);
     }
@@ -72,15 +72,11 @@ export default function CertificatesPreview() {
   return (
     <section
       id="certificates"
-      className={`py-10 md:py-24 relative overflow-hidden ${
-        isDark
-          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
-          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      }`}
+      className="py-10 md:py-24 relative overflow-hidden"
       ref={ref}
     >
       {/* Background decor */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl ${
             isDark ? "bg-blue-500" : "bg-blue-300"
@@ -96,7 +92,7 @@ export default function CertificatesPreview() {
             isDark ? "bg-grid-white/5" : "bg-grid-black/5"
           }`}
         ></div>
-      </div>
+      </div> */}
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
@@ -159,8 +155,8 @@ export default function CertificatesPreview() {
                     ? "bg-gray-800 border-l-2 border-primary"
                     : "bg-gray-100 border-l-2 border-primaryInLight"
                   : isDark
-                  ? "bg-gray-900/50 border border-gray-800"
-                  : "bg-white/50 border border-gray-200"
+                    ? "bg-gray-900/50 border border-gray-800"
+                    : "bg-white/50 border border-gray-200"
               }`}
               onClick={() => handleCertificateClick(index)}
             >
@@ -172,8 +168,8 @@ export default function CertificatesPreview() {
                         ? "bg-primary/20 text-primary"
                         : "bg-primaryInLight/20 text-primaryInLight"
                       : isDark
-                      ? "bg-gray-800 text-gray-400"
-                      : "bg-gray-200 text-gray-600"
+                        ? "bg-gray-800 text-gray-400"
+                        : "bg-gray-200 text-gray-600"
                   }`}
                 >
                   <Award size={18} />
@@ -359,8 +355,8 @@ export default function CertificatesPreview() {
                           ? "bg-gray-800 border-l-4 border-primary"
                           : "bg-gray-100 border-l-4 border-primaryInLight"
                         : isDark
-                        ? "hover:bg-gray-800/50"
-                        : "hover:bg-gray-100/50"
+                          ? "hover:bg-gray-800/50"
+                          : "hover:bg-gray-100/50"
                     }`}
                     onClick={() => handleCertificateClick(index)}
                   >
@@ -371,8 +367,8 @@ export default function CertificatesPreview() {
                             ? "bg-primary/20 text-primary"
                             : "bg-primaryInLight/20 text-primaryInLight"
                           : isDark
-                          ? "bg-gray-800 text-gray-400"
-                          : "bg-gray-200 text-gray-600"
+                            ? "bg-gray-800 text-gray-400"
+                            : "bg-gray-200 text-gray-600"
                       }`}
                     >
                       <Award size={20} />

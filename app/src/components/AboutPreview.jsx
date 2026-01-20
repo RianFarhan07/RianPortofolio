@@ -47,8 +47,8 @@ export default function AboutPreview() {
   }, []);
 
   const [ref, inView] = useInView({
-    triggerOnce: false,
-    threshold: 0.2,
+    triggerOnce: true,
+    threshold: 0.4,
   });
 
   useEffect(() => {
@@ -106,32 +106,9 @@ export default function AboutPreview() {
   return (
     <section
       id="about"
-      className={`py-16 md:py-24 relative overflow-hidden ${
-        isDark
-          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
-          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      }`}
+      className="py-16 md:py-24 relative overflow-hidden"
       ref={containerRef}
     >
-      {/* warna background untuk dekorasi */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-5 -top-48 -left-48`}
-        />
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-5 -bottom-48 -right-48`}
-        />
-        <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 relative z-10" ref={ref}>
         <motion.div
           className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16"

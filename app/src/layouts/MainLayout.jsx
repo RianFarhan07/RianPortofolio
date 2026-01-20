@@ -5,9 +5,7 @@ const MainLayout = ({ children }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  // Add this useEffect to your Layout component
   useEffect(() => {
-    // Add a delay to ensure elements are loaded
     const timer = setTimeout(() => {
       if (
         typeof window !== "undefined" &&
@@ -53,11 +51,6 @@ const MainLayout = ({ children }) => {
             },
           },
         });
-      } else {
-        console.error("Particles.js not available or element not found", {
-          particlesJS: !!window.particlesJS,
-          element: !!document.getElementById("particles-js"),
-        });
       }
     }, 500);
 
@@ -79,11 +72,16 @@ const MainLayout = ({ children }) => {
       }`}
     >
       {/* Particles.js container */}
-      <div id="particles-js" className="absolute inset-0 z-0"></div>
-      {/* Gradient background */}
-      <div className="absolute inset-0 z-0">
+      <div
+        id="particles-js"
+        className="fixed inset-0 z-0 pointer-events-none"
+      ></div>
+
+      {/* Gradient background decorations */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {/* Grid pattern */}
         <div
-          className={`absolute inset-0 opacity-20 ${
+          className={`absolute inset-0 opacity-10 ${
             isDark ? "bg-grid-white/5" : "bg-grid-black/5"
           }`}
         ></div>
@@ -105,14 +103,29 @@ const MainLayout = ({ children }) => {
             isDark ? "bg-primary" : "bg-primaryInLight"
           } opacity-10`}
           style={{
-            bottom: "5%",
+            bottom: "20%",
             left: "10%",
             animation: "pulse 8s infinite ease-in-out reverse",
           }}
         />
-      </div>{" "}
+
+        {/* Additional blobs for more depth */}
+        <div
+          className={`absolute w-64 md:w-80 h-64 md:h-80 rounded-full blur-3xl ${
+            isDark ? "bg-purple-500" : "bg-purple-300"
+          } opacity-5`}
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            animation: "pulse 10s infinite ease-in-out",
+          }}
+        />
+      </div>
+
       {/* Main content */}
       <div className="relative z-10">{children}</div>
+
       {/* CSS Animations */}
       <style jsx global>{`
         @keyframes pulse {
@@ -125,6 +138,14 @@ const MainLayout = ({ children }) => {
             transform: scale(1.2);
             opacity: 0.15;
           }
+        }
+
+        #particles-js {
+          pointer-events: none !important;
+        }
+
+        #particles-js canvas {
+          pointer-events: none !important;
         }
       `}</style>
     </div>

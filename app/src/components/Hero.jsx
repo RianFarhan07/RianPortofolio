@@ -431,11 +431,7 @@ export default function Hero() {
   return (
     <motion.div
       id="home"
-      className={`min-h-screen flex flex-col relative overflow-hidden ${
-        isDark
-          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
-          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      }`}
+      className="min-h-screen flex flex-col relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -447,38 +443,6 @@ export default function Hero() {
         ref={particlesRef}
         className="absolute inset-0 z-0 pointer-events-none"
       ></div>
-
-      {/* Gradient background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div
-          className={`absolute inset-0 opacity-20 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-
-        {/* bola bola gradient */}
-        <div
-          className={`absolute w-48 md:w-64 h-48 md:h-64 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-10 pointer-events-none`}
-          style={{
-            top: "10%",
-            right: "5%",
-            animation: "pulse 8s infinite ease-in-out",
-          }}
-        />
-
-        <div
-          className={`absolute w-48 md:w-64 h-48 md:h-64 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-10 pointer-events-none`}
-          style={{
-            bottom: "5%",
-            left: "10%",
-            animation: "pulse 8s infinite ease-in-out reverse",
-          }}
-        />
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center px-6 py-8 relative z-10">

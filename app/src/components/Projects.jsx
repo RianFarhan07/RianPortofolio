@@ -236,8 +236,8 @@ export default function Projects() {
                         ? "bg-primary text-white"
                         : "bg-primaryInLight text-white"
                       : isDark
-                      ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                   }`}
                 >
                   {category.icon}
@@ -312,8 +312,8 @@ export default function Projects() {
                           ? "bg-gray-800 text-gray-600 cursor-not-allowed"
                           : "bg-gray-200 text-gray-400 cursor-not-allowed"
                         : isDark
-                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     } transition-colors`}
                     aria-label="Previous page"
                   >
@@ -339,8 +339,8 @@ export default function Projects() {
                                   ? "bg-primary text-white"
                                   : "bg-primaryInLight text-white"
                                 : isDark
-                                ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                  ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             } transition-colors`}
                             aria-label={`Go to page ${page}`}
                             aria-current={
@@ -368,7 +368,7 @@ export default function Projects() {
                         );
                       }
                       return null;
-                    }
+                    },
                   )}
 
                   <button
@@ -380,8 +380,8 @@ export default function Projects() {
                           ? "bg-gray-800 text-gray-600 cursor-not-allowed"
                           : "bg-gray-200 text-gray-400 cursor-not-allowed"
                         : isDark
-                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     } transition-colors`}
                     aria-label="Next page"
                   >

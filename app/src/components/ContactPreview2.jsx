@@ -144,17 +144,9 @@ export default function ContactPreview() {
   };
 
   return (
-    <section
-      id="contact"
-      className={`py-16 md:py-24 relative overflow-hidden ${
-        isDark
-          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
-          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      }`}
-      ref={ref}
-    >
+    <section className="py-16 md:py-24 relative overflow-hidden" ref={ref}>
       {/* Background decor */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl ${
             isDark ? "bg-blue-500" : "bg-blue-300"
@@ -170,7 +162,7 @@ export default function ContactPreview() {
             isDark ? "bg-grid-white/5" : "bg-grid-black/5"
           }`}
         ></div>
-      </div>
+      </div> */}
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}

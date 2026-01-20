@@ -18,6 +18,7 @@ import MainLayout from "./layouts/mainLayout";
 import ContactPreview from "./components/ContactPreview2";
 import ProjectPreview from "./components/ProjectPreview";
 import Hero2 from "./components/Hero2";
+import PageTransition5Tech from "./components/PageTransition5Tech";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ const AppContent = () => {
     <MainLayout>
       <Navbar />
       <ScrollToTop />
-      <PageTransition>
+      <PageTransition5Tech>
         <Routes location={location}>
           <Route
             path="/"
@@ -73,7 +74,7 @@ const AppContent = () => {
           <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-      </PageTransition>
+      </PageTransition5Tech>
       <Footer />
     </MainLayout>
   );
