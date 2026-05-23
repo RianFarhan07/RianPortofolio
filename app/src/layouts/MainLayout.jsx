@@ -5,147 +5,120 @@ const MainLayout = ({ children }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (
-        typeof window !== "undefined" &&
-        window.particlesJS &&
-        document.getElementById("particles-js")
-      ) {
-        console.log("Initializing particles.js");
-        window.particlesJS("particles-js", {
-          particles: {
-            number: { value: 20, density: { enable: true, value_area: 800 } },
-            color: { value: isDark ? "#00adb5" : "#14b8a6" },
-            opacity: {
-              value: 0.4,
-              random: true,
-              anim: {
-                enable: true,
-                speed: 0.5,
-                opacity_min: 0.3,
-                sync: false,
-              },
-            },
-            size: {
-              value: 6,
-              random: true,
-              anim: {
-                enable: true,
-                speed: 2,
-                size_min: 2,
-                sync: false,
-              },
-            },
-            line_linked: {
-              enable: false,
-            },
-            move: {
-              enable: true,
-              speed: 0.8,
-              direction: "none",
-              random: true,
-              straight: false,
-              out_mode: "out",
-              bounce: false,
-            },
-          },
-        });
-      }
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-      if (window.pJSDom && window.pJSDom.length) {
-        window.pJSDom[0].pJS.fn.vendors.destroypJS();
-        window.pJSDom = [];
-      }
-    };
-  }, [isDark]);
-
   return (
     <div
-      className={`min-h-screen relative overflow-hidden ${
-        isDark
-          ? "bg-gradient-to-br from-bgDark via-gray-800/50 to-bgDark"
-          : "bg-gradient-to-br from-bgLight via-blue-50/50 to-bgLight"
-      }`}
+      style={{
+        minHeight: "100vh",
+        position: "relative",
+        overflowX: "hidden",
+        fontFamily: "'DM Sans', sans-serif",
+        background: isDark
+          ? "radial-gradient(ellipse 80% 80% at 50% 30%, #0a1230 0%, #040810 70%)"
+          : "radial-gradient(ellipse 80% 80% at 50% 30%, #e8f4ff 0%, #f0f8ff 70%)",
+      }}
     >
-      {/* Particles.js container */}
+      {/* ── Grid overlay ── */}
       <div
-        id="particles-js"
-        className="fixed inset-0 z-0 pointer-events-none"
-      ></div>
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          backgroundImage: isDark
+            ? "linear-gradient(rgba(0,180,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,255,0.04) 1px, transparent 1px)"
+            : "linear-gradient(rgba(0,100,200,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,100,200,0.04) 1px, transparent 1px)",
+          backgroundSize: "70px 70px",
+        }}
+      />
 
-      {/* Gradient background decorations */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Grid pattern */}
+      {/* ── Ambient glow blobs ── */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        {/* Top-right blue blob */}
         <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-
-        {/* Gradient blobs */}
-        <div
-          className={`absolute w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-10`}
           style={{
+            position: "absolute",
             top: "10%",
             right: "5%",
-            animation: "pulse 8s infinite ease-in-out",
+            width: "clamp(200px, 25vw, 380px)",
+            height: "clamp(200px, 25vw, 380px)",
+            borderRadius: "50%",
+            background: isDark
+              ? "rgba(0,100,255,0.12)"
+              : "rgba(59,130,246,0.1)",
+            filter: "blur(80px)",
+            animation: "mlPulse 8s infinite ease-in-out",
           }}
         />
-
+        {/* Bottom-left cyan blob */}
         <div
-          className={`absolute w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-10`}
           style={{
+            position: "absolute",
             bottom: "20%",
             left: "10%",
-            animation: "pulse 8s infinite ease-in-out reverse",
+            width: "clamp(200px, 25vw, 380px)",
+            height: "clamp(200px, 25vw, 380px)",
+            borderRadius: "50%",
+            background: isDark
+              ? "rgba(0,212,255,0.08)"
+              : "rgba(20,184,166,0.08)",
+            filter: "blur(80px)",
+            animation: "mlPulse 8s infinite ease-in-out reverse",
           }}
         />
-
-        {/* Additional blobs for more depth */}
+        {/* Center purple blob */}
         <div
-          className={`absolute w-64 md:w-80 h-64 md:h-80 rounded-full blur-3xl ${
-            isDark ? "bg-purple-500" : "bg-purple-300"
-          } opacity-5`}
           style={{
+            position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            animation: "pulse 10s infinite ease-in-out",
+            width: "clamp(180px, 22vw, 320px)",
+            height: "clamp(180px, 22vw, 320px)",
+            borderRadius: "50%",
+            background: isDark
+              ? "rgba(120,40,255,0.05)"
+              : "rgba(168,85,247,0.05)",
+            filter: "blur(80px)",
+            animation: "mlPulse 10s infinite ease-in-out",
           }}
         />
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10">{children}</div>
+      {/* ── Scan line ── */}
+      <div
+        style={{
+          position: "fixed",
+          left: 0,
+          right: 0,
+          height: 1,
+          background:
+            "linear-gradient(90deg, transparent, rgba(0,180,255,0.25), transparent)",
+          zIndex: 1,
+          pointerEvents: "none",
+          animation: "mlScan 12s ease-in-out infinite",
+        }}
+      />
 
-      {/* CSS Animations */}
-      <style jsx global>{`
-        @keyframes pulse {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 0.1;
-          }
-          50% {
-            transform: scale(1.2);
-            opacity: 0.15;
-          }
+      {/* ── Main content ── */}
+      <div style={{ position: "relative", zIndex: 10 }}>{children}</div>
+
+      <style>{`
+        @keyframes mlPulse {
+          0%, 100% { transform: scale(1);   opacity: 0.8; }
+          50%       { transform: scale(1.15); opacity: 1;   }
         }
-
-        #particles-js {
-          pointer-events: none !important;
-        }
-
-        #particles-js canvas {
-          pointer-events: none !important;
+        @keyframes mlScan {
+          0%   { top: 0;    opacity: 0; }
+          5%   { opacity: 1; }
+          95%  { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
         }
       `}</style>
     </div>

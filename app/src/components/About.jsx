@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
   Code,
@@ -14,190 +14,298 @@ import {
   Smartphone,
   Layout,
   Leaf,
+  Sparkles,
+  Terminal,
+  Zap,
 } from "lucide-react";
+import rianAnimasi from "../assets/rian_animate.png";
 import { useTheme } from "../context/ThemeContext";
-import { Link } from "react-router-dom";
-import RotatingText from "./RotatingText";
-import Lanyard from "./Lanyard";
-import TechScroll from "./TechScroll";
 
-const ExperienceItem = ({
-  position,
-  company,
-  period,
-  description,
-  index,
-  inView,
-}) => {
+const RotatingText = ({ texts }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % texts.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [texts.length]);
+  return (
+    <motion.span
+      key={currentIndex}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className="font-mono"
+    >
+      {texts[currentIndex]}
+    </motion.span>
+  );
+};
+
+const Lanyard = () => (
+  <div className="w-64 h-64 rounded-2xl overflow-hidden">
+    <img
+      src={rianAnimasi}
+      alt="Rian Farhan"
+      className="w-full h-full object-cover"
+    />
+  </div>
+);
+
+const TechScroll = () => (
+  <div className="overflow-hidden py-4">
+    <motion.div
+      className="flex gap-8"
+      animate={{ x: [0, -1000] }}
+      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+    >
+      {["React", "TypeScript", "Node.js", "MongoDB", "Next.js", "Tailwind"].map(
+        (tech, i) => (
+          <span
+            key={i}
+            className="text-sm font-mono text-gray-500 whitespace-nowrap"
+          >
+            {tech}
+          </span>
+        ),
+      )}
+    </motion.div>
+  </div>
+);
+
+const ExperienceItem = ({ position, company, period, description, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
     <motion.div
-      className={`flex gap-4 md:gap-6 ${
-        isDark ? "text-gray-300" : "text-gray-600"
-      }`}
-      initial={{ opacity: 0, x: -30 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
+      ref={ref}
+      className="relative pl-8 pb-12 group"
+      initial={{ opacity: 0, x: -50 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.15 }}
     >
-      <div className="relative flex-none pt-1">
-        <div
-          className={`w-4 h-4 rounded-full ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } z-10 relative`}
-        ></div>
-        <div
-          className={`absolute top-5 bottom-0 left-1.5 w-0.5 ${
-            isDark ? "bg-gray-700" : "bg-gray-300"
-          }`}
-        ></div>
-      </div>
-      <div className="pb-10">
-        <h3
-          className={`text-xl font-bold mb-1 ${
-            isDark ? "text-white" : "text-gray-800"
-          }`}
+      <div className="absolute left-0 top-2">
+        <motion.div
+          className="w-3 h-3 rounded-full relative z-10"
+          style={{ backgroundColor: isDark ? "#00adb5" : "#14b8a6" }}
+          whileHover={{ scale: 1.5 }}
         >
-          {position}{" "}
-          <span
-            className={`text-lg ${
-              isDark ? "text-primary" : "text-primaryInLight"
-            }`}
+          <div
+            className="absolute inset-0 rounded-full blur-md opacity-50 animate-pulse"
+            style={{ backgroundColor: isDark ? "#00adb5" : "#14b8a6" }}
+          />
+        </motion.div>
+        <div
+          className="absolute top-3 left-1/2 -translate-x-1/2 w-0.5 h-full"
+          style={{
+            background: `linear-gradient(to bottom, ${isDark ? "rgba(0,173,181,0.5)" : "rgba(20,184,166,0.5)"}, transparent)`,
+          }}
+        />
+      </div>
+
+      <motion.div
+        className="p-6 rounded-xl backdrop-blur-xl border transition-all duration-300"
+        style={{
+          backgroundColor: isDark
+            ? "rgba(34,40,49,0.5)"
+            : "rgba(245,245,245,0.7)",
+          borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
+        }}
+        whileHover={{
+          y: -5,
+          scale: 1.02,
+          borderColor: isDark ? "rgba(0,173,181,0.5)" : "rgba(20,184,166,0.5)",
+        }}
+      >
+        <div className="flex items-start justify-between mb-2">
+          <h3
+            className="text-lg font-bold font-mono"
+            style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}
           >
-            @ {company}
-          </span>
-        </h3>
+            <span style={{ color: isDark ? "#00adb5" : "#14b8a6" }}>$ </span>
+            {position}
+          </h3>
+          <Terminal
+            size={18}
+            style={{ color: isDark ? "#00adb5" : "#14b8a6" }}
+          />
+        </div>
         <p
-          className={`text-sm mb-3 font-medium ${
-            isDark ? "text-gray-500" : "text-gray-500"
-          }`}
+          className="text-sm font-semibold mb-1"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.7)" : "rgba(10,18,48,0.7)",
+          }}
+        >
+          @ {company}
+        </p>
+        <p
+          className="text-xs font-mono mb-3"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.35)" : "rgba(10,18,48,0.4)",
+          }}
         >
           {period}
         </p>
-        <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
+        <p
+          className="text-sm leading-relaxed"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.55)" : "rgba(10,18,48,0.6)",
+          }}
+        >
           {description}
         </p>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
 
-const EducationItem = ({
-  degree,
-  institution,
-  period,
-  description,
-  index,
-  inView,
-}) => {
+const EducationItem = ({ degree, institution, period, description, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
     <motion.div
-      className={`flex gap-4 md:gap-6 ${
-        isDark ? "text-gray-300" : "text-gray-600"
-      }`}
-      initial={{ opacity: 0, x: 30 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
+      ref={ref}
+      className="relative pl-8 pb-12 group"
+      initial={{ opacity: 0, x: 50 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.15 }}
     >
-      <div className="relative flex-none pt-1">
-        <div
-          className={`w-4 h-4 rounded-full ${
-            isDark ? "bg-blue-500" : "bg-blue-500"
-          } z-10 relative`}
-        ></div>
-        <div
-          className={`absolute top-5 bottom-0 left-1.5 w-0.5 ${
-            isDark ? "bg-gray-700" : "bg-gray-300"
-          }`}
-        ></div>
-      </div>
-      <div className="pb-10">
-        <h3
-          className={`text-xl font-bold mb-1 ${
-            isDark ? "text-white" : "text-gray-800"
-          }`}
+      <div className="absolute left-0 top-2">
+        <motion.div
+          className="w-3 h-3 rounded-full bg-blue-500 relative z-10"
+          whileHover={{ scale: 1.5 }}
         >
-          {degree}{" "}
-          <span
-            className={`text-lg ${isDark ? "text-blue-400" : "text-blue-600"}`}
+          <div className="absolute inset-0 rounded-full bg-blue-500 blur-md opacity-50 animate-pulse" />
+        </motion.div>
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-blue-500/50 to-transparent" />
+      </div>
+
+      <motion.div
+        className="p-6 rounded-xl backdrop-blur-xl border transition-all duration-300"
+        style={{
+          backgroundColor: isDark
+            ? "rgba(34,40,49,0.5)"
+            : "rgba(245,245,245,0.7)",
+          borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
+        }}
+        whileHover={{
+          y: -5,
+          scale: 1.02,
+          borderColor: "rgba(59,130,246,0.5)",
+        }}
+      >
+        <div className="flex items-start justify-between mb-2">
+          <h3
+            className="text-lg font-bold font-mono"
+            style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}
           >
-            @ {institution}
-          </span>
-        </h3>
+            <span>📚 </span>
+            {degree}
+          </h3>
+          <GraduationCap size={18} className="text-blue-400" />
+        </div>
         <p
-          className={`text-sm mb-3 font-medium ${
-            isDark ? "text-gray-500" : "text-gray-500"
-          }`}
+          className="text-sm font-semibold mb-1"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.7)" : "rgba(10,18,48,0.7)",
+          }}
+        >
+          @ {institution}
+        </p>
+        <p
+          className="text-xs font-mono mb-3"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.35)" : "rgba(10,18,48,0.4)",
+          }}
         >
           {period}
         </p>
-        <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
+        <p
+          className="text-sm leading-relaxed"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.55)" : "rgba(10,18,48,0.6)",
+          }}
+        >
           {description}
         </p>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
 
 const SkillBar = ({ label, percentage, isDark }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
   return (
-    <div className="w-full">
-      <div className="flex justify-between mb-1">
+    <div className="w-full" ref={ref}>
+      <div className="flex justify-between mb-2">
         <span
-          className={`text-xs font-medium ${
-            isDark ? "text-gray-400" : "text-gray-500"
-          }`}
+          className="text-xs font-mono"
+          style={{
+            color: isDark ? "rgba(220,230,255,0.5)" : "rgba(10,18,48,0.55)",
+          }}
         >
           {label}
         </span>
         <span
-          className={`text-xs font-medium ${
-            isDark ? "text-gray-400" : "text-gray-500"
-          }`}
+          className="text-xs font-mono"
+          style={{ color: isDark ? "#00adb5" : "#14b8a6" }}
         >
           {percentage}%
         </span>
       </div>
       <div
-        className={`w-full h-1.5 rounded-full ${
-          isDark ? "bg-gray-700" : "bg-gray-200"
-        }`}
+        className="w-full h-2 rounded-full overflow-hidden"
+        style={{
+          backgroundColor: isDark
+            ? "rgba(255,255,255,0.06)"
+            : "rgba(0,0,0,0.08)",
+        }}
       >
         <motion.div
-          className={`h-1.5 rounded-full ${
-            isDark
-              ? "bg-gradient-to-r from-primary to-blue-500"
-              : "bg-gradient-to-r from-primaryInLight to-blue-500"
-          }`}
+          className="h-2 rounded-full"
+          style={{
+            background: isDark
+              ? "linear-gradient(to right, #00adb5, #3b82f6)"
+              : "linear-gradient(to right, #14b8a6, #3b82f6)",
+          }}
           initial={{ width: 0 }}
-          whileInView={{ width: `${percentage}%` }}
-          viewport={{ once: false }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          animate={inView ? { width: `${percentage}%` } : {}}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         />
       </div>
     </div>
   );
 };
 
-const TechBadge = ({ text, index, inView }) => {
+const TechBadge = ({ text, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
 
   return (
     <motion.span
-      className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-        isDark
-          ? "bg-gray-800 text-primary border border-primary/30"
-          : "bg-gray-100 text-primaryInLight border border-primaryInLight/30"
-      }`}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      whileHover={{ scale: 1.05 }}
+      ref={ref}
+      className="px-4 py-2 rounded-lg text-sm font-mono backdrop-blur-sm transition-all duration-300 cursor-default"
+      style={{
+        backgroundColor: isDark
+          ? "rgba(34,40,49,0.6)"
+          : "rgba(245,245,245,0.8)",
+        color: isDark ? "#00adb5" : "#14b8a6",
+        border: `1px solid ${isDark ? "rgba(0,173,181,0.25)" : "rgba(20,184,166,0.3)"}`,
+      }}
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, delay: index * 0.03 }}
+      whileHover={{
+        scale: 1.05,
+        y: -2,
+        borderColor: isDark ? "rgba(0,173,181,0.6)" : "rgba(20,184,166,0.6)",
+      }}
     >
       {text}
     </motion.span>
@@ -208,22 +316,17 @@ export default function About() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [isMobile, setIsMobile] = useState(false);
-  const [isSmallMobile, setIsSmallMobile] = useState(false);
-  const containerRef = useRef(null);
-  // First, add a new state to track which skill is being hovered
   const [hoveredSkill, setHoveredSkill] = useState(null);
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize(); // Set initial value
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const [heroRef, heroInView] = useInView({
@@ -231,71 +334,65 @@ export default function About() {
     threshold: 0.2,
   });
   const [skillsRef, skillsInView] = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.1,
   });
-  const [expRef, expInView] = useInView({ triggerOnce: false, threshold: 0.1 });
-  const [eduRef, eduInView] = useInView({ triggerOnce: false, threshold: 0.1 });
   const [techRef, techInView] = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.1,
   });
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      setIsSmallMobile(window.innerWidth < 480);
-    };
+  // Theme-aware color helpers
+  const accent = isDark ? "#00adb5" : "#14b8a6";
+  const bg = isDark ? "#222831" : "#f5f5f5";
+  const bgSection = isDark ? "#030712" : "#e8e8e8";
+  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
+  const textMuted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.55)";
+  const cardBg = isDark ? "rgba(34,40,49,0.5)" : "rgba(255,255,255,0.6)";
+  const cardBorder = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+  const gridLine = isDark ? "#1f2937" : "#dde0e6";
 
-    handleResize(); // Set initial value
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  // Modified skills data with descriptions
   const skills = [
     {
-      icon: <Code size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
-      label: "Frontend Development",
+      icon: <Code size={24} style={{ color: accent }} />,
+      label: "Frontend Dev",
       description:
-        "Creating responsive and interactive web applications using modern frameworks and technologies.",
-      onClick: () => {},
-      className: isDark
-        ? "border-primary hover:border-primary/60"
-        : "border-primaryInLight hover:border-primaryInLight/60",
+        "Building responsive, interactive web apps with modern frameworks",
+      skills: [
+        { name: "React/Next.js", level: 90 },
+        { name: "TypeScript", level: 85 },
+        { name: "HTML/CSS", level: 95 },
+      ],
     },
     {
-      icon: <Smartphone size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
-      label: "Mobile Development",
-      description:
-        "Building native and cross-platform mobile applications for Android and iOS.",
-      onClick: () => {},
-      className: isDark
-        ? "border-primary hover:border-primary/60"
-        : "border-primaryInLight hover:border-primaryInLight/60",
+      icon: <Smartphone size={24} style={{ color: accent }} />,
+      label: "Mobile Dev",
+      description: "Native & cross-platform mobile applications",
+      skills: [
+        { name: "React Native", level: 80 },
+        { name: "Kotlin", level: 75 },
+        { name: "Swift", level: 65 },
+      ],
     },
     {
-      icon: <Layout size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
+      icon: <Layout size={24} style={{ color: accent }} />,
       label: "UI/UX Design",
-      description:
-        "Designing intuitive user interfaces and experiences that are both functional and beautiful.",
-      onClick: () => {},
-      className: isDark
-        ? "border-primary hover:border-primary/60"
-        : "border-primaryInLight hover:border-primaryInLight/60",
+      description: "Crafting beautiful, intuitive user experiences",
+      skills: [
+        { name: "Figma", level: 85 },
+        { name: "Tailwind CSS", level: 90 },
+        { name: "UX Research", level: 75 },
+      ],
     },
     {
-      icon: <Server size={24} color={isDark ? "#00ADB5" : "#14B8A6"} />,
-      label: "Backend Development",
-      description:
-        "Implementing robust server-side solutions, APIs, and database architectures.",
-      onClick: () => {},
-      className: isDark
-        ? "border-primary hover:border-primary/60"
-        : "border-primaryInLight hover:border-primaryInLight/60",
+      icon: <Server size={24} style={{ color: accent }} />,
+      label: "Backend Dev",
+      description: "Robust APIs & database architectures",
+      skills: [
+        { name: "Node.js", level: 85 },
+        { name: "Databases", level: 80 },
+        { name: "API Design", level: 90 },
+      ],
     },
   ];
 
@@ -303,7 +400,7 @@ export default function About() {
     {
       position: "IT Support",
       company: "Department of Manpower, Makassar City",
-      period: "Des 2022 - Feb 2022",
+      period: "Des 2022 - Feb 2023",
       description:
         "Provided daily technical support to staff, managed office hardware and software, and assisted in maintaining internal networks and information systems.",
     },
@@ -319,13 +416,13 @@ export default function About() {
       company: "Carbonethics",
       period: "Mei 2024 - Now",
       description:
-        "Designing, developing, and deploying end-to-end web solutions aligned with sustainability initiatives. Collaborate with stakeholders to gather and translate business requirements into actionable tasks. Build and maintain applications, modern frontend frameworks and backend technologies. Integrate tools, and automate workflows. Responsible for maintaining documentation, testing, and optimizing software for scalability, usability, and reliability.",
+        "Designing, developing, and deploying end-to-end web solutions aligned with sustainability initiatives. Collaborate with stakeholders to gather and translate business requirements into actionable tasks.",
     },
   ];
 
   const education = [
     {
-      degree: "Bachelor's in Informatics and Computer Engineering Education",
+      degree: "Bachelor's in Informatics",
       institution: "Universitas Negeri Makassar",
       period: "2020 - 2024",
       description:
@@ -336,7 +433,7 @@ export default function About() {
       institution: "Hacktiv8",
       period: "Des 2024 - Apr 2025",
       description:
-        "An intensive bootcamp covering fullstack web development using JavaScript, including technologies like React, Node.js, Express, and MongoDB. Built several real-world projects and collaborated in team-based coding assignments.",
+        "An intensive bootcamp covering fullstack web development using JavaScript, including technologies like React, Node.js, Express, and MongoDB.",
     },
   ];
 
@@ -360,566 +457,341 @@ export default function About() {
     "Git",
     "GitHub",
     "Firebase",
-    "Firestore",
-    "Firebase Authentication",
-    "Firebase Storage",
     "REST API",
     "GraphQL",
     "Jest",
-    "CI/CD",
     "Vercel",
-    "Netlify",
     "Figma",
     "Material UI",
-    "Bootstrap",
     "Framer Motion",
-    "Glide",
-    "Picasso",
     "Retrofit",
   ];
 
-  const heroVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 1.5,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  };
-
   return (
-    <div
-      className={`min-h-screen ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
-      ref={containerRef}
-    >
+    <div style={{ minHeight: "100vh", backgroundColor: bg }} ref={containerRef}>
+      {/* ── HERO SECTION ── */}
       <section
-        className={`py-16 md:py-24 relative overflow-hidden ${
-          isDark
-            ? "bg-gradient-to-b from-gray-900 to-bgDark"
-            : "bg-gradient-to-b from-gray-100 to-bgLight"
-        }`}
+        style={{
+          minHeight: "100vh",
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: bg,
+        }}
         ref={heroRef}
       >
-        {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-primary" : "bg-primaryInLight"
-            } opacity-5 -top-48 -right-48`}
-          />
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-blue-500" : "bg-blue-300"
-            } opacity-5 -bottom-48 -left-48`}
-          />
-          <div
-            className={`absolute inset-0 opacity-10 ${
-              isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-            }`}
-          ></div>
-        </div>
+        {/* Grid background */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(to right, ${gridLine} 1px, transparent 1px), linear-gradient(to bottom, ${gridLine} 1px, transparent 1px)`,
+            backgroundSize: "4rem 4rem",
+            maskImage:
+              "radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%)",
+          }}
+        />
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <motion.div
-            className="flex flex-col md:flex-row gap-8 md:gap-12"
-            variants={heroVariants}
-            initial="hidden"
-            animate={heroInView ? "visible" : "hidden"}
-            transsition={{ duration: 0.5, delay: 0.5 }}
-          >
-            {/* Lanyard container - modified for proper positioning */}
+        {/* Glowing orbs */}
+        <motion.div
+          style={{
+            y,
+            position: "absolute",
+            width: 384,
+            height: 384,
+            borderRadius: "50%",
+            filter: "blur(80px)",
+            backgroundColor: isDark
+              ? "rgba(0,173,181,0.15)"
+              : "rgba(20,184,166,0.12)",
+            top: -192,
+            right: -192,
+          }}
+        />
+        <motion.div
+          style={{
+            position: "absolute",
+            width: 384,
+            height: 384,
+            borderRadius: "50%",
+            filter: "blur(80px)",
+            backgroundColor: isDark
+              ? "rgba(59,130,246,0.12)"
+              : "rgba(59,130,246,0.1)",
+            bottom: -192,
+            left: -192,
+          }}
+        />
+
+        <div className="container mx-auto px-6 relative z-10 flex items-center min-h-screen">
+          <div className="grid md:grid-cols-2 gap-12 items-center w-full">
+            {/* Content */}
             <motion.div
-              className="w-full md:w-1/3 flex flex-col items-center md:order-2 relative"
-              variants={itemVariants}
-            >
-              {/* Increased z-index and added relative positioning */}
-              <div className="relative z-30 w-full flex justify-center items-center">
-                {/* Decorative frame elements - adjusted to not overlap Lanyard */}
-                <div
-                  className={`absolute rounded-xl ${
-                    isDark ? "border-primary" : "border-primaryInLight"
-                  } border-2 opacity-20 w-4/5 h-4/5 top-8 -left-4 z-10`}
-                />
-
-                <div
-                  className={`absolute rounded-xl ${
-                    isDark ? "border-blue-500" : "border-blue-400"
-                  } border-2 opacity-20 w-4/5 h-4/5 -top-4 left-8 z-10`}
-                />
-
-                {/* We'll modify this part to add the delay */}
-                <div className="relative z-40 flex justify-center items-center w-full">
-                  <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
-                </div>
-              </div>
-
-              {/* Mobile scroll indicator - only shown on mobile */}
-              {isMobile && (
-                <motion.a
-                  href="#skills"
-                  className="absolute bottom-[700px] "
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  whileHover={{ scale: 1.1 }}
-                  style={{
-                    pointerEvents: "auto",
-                    position: "relative",
-                    zIndex: 1000,
-                  }}
-                >
-                  <span
-                    className={`text-xs font-medium mb-2 ${
-                      isDark ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    Explore More
-                  </span>
-                  <motion.div
-                    className={`w-5 h-8 border-2 ${
-                      isDark ? "border-cyan-400" : "border-teal-500"
-                    } rounded-full flex justify-center`}
-                  >
-                    <motion.div
-                      className={`w-0.5 h-2 ${
-                        isDark ? "bg-cyan-400" : "bg-teal-500"
-                      } rounded-full mt-1.5`}
-                      animate={{ y: [0, 10, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    />
-                  </motion.div>
-                </motion.a>
-              )}
-            </motion.div>
-
-            {/* Content section */}
-            <motion.div
-              className="w-full md:w-2/3 text-center md:text-left md:order-1"
-              variants={itemVariants}
+              initial={{ opacity: 0, x: -50 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
             >
               <motion.div
-                className="flex items-center gap-2 mb-4 justify-center md:justify-start"
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.2 }}
+                className="flex items-center gap-3"
               >
-                <div
-                  className={`h-1 w-12 ${
-                    isDark ? "bg-primary" : "bg-primaryInLight"
-                  } rounded-full`}
-                ></div>
-                <span
-                  className={`text-sm font-semibold uppercase tracking-wider ${
-                    isDark ? "text-primary" : "text-primaryInLight"
-                  }`}
-                >
-                  About Me
+                <Terminal size={20} style={{ color: accent }} />
+                <span className="font-mono text-sm" style={{ color: accent }}>
+                  console.log("Hello, World!")
                 </span>
               </motion.div>
 
               <motion.h1
-                className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-6 ${
-                  isDark ? "text-white" : "text-gray-800"
-                }`}
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.3 }}
+                className="text-5xl md:text-7xl font-bold"
+                style={{ color: textPrimary }}
               >
-                I'm
+                I'm{" "}
                 <span
-                  className={` text-transparent bg-clip-text bg-gradient-to-r ${
+                  className={
                     isDark
-                      ? "from-primary via-blue-400 to-cyan-400"
-                      : "from-primaryInLight via-teal-400 to-sky-500"
-                  }`}
+                      ? "bg-gradient-to-r from-[#00adb5] via-blue-500 to-purple-500 bg-clip-text text-transparent"
+                      : "bg-gradient-to-r from-[#14b8a6] via-blue-500 to-purple-500 bg-clip-text text-transparent"
+                  }
                 >
-                  {" "}
                   Rian Farhan
                 </span>
-                , <br />
-                <div className="inline-block">
-                  <RotatingText
-                    texts={[
-                      "Software Engineer",
-                      "Full Stack Developer",
-                      "UI/UX Enthusiast",
-                      "Mobile Developer",
-                      "Problem Solver",
-                      "Tech Enthusiast",
-                      "AI Prompter",
-                    ]}
-                    staggerFrom={"last"}
-                    initial={{ y: "100%" }}
-                    animate={{ y: 0 }}
-                    exit={{ y: "-120%" }}
-                    staggerDuration={0.025}
-                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                    rotationInterval={4000}
-                  />
-                </div>
               </motion.h1>
 
               <motion.div
-                className="flex flex-wrap gap-2 justify-center md:justify-start mb-5"
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 }}
+                className="text-2xl md:text-3xl font-mono"
+                style={{ color: textMuted }}
               >
-                <div
-                  className={`px-4 py-2 rounded-full ${
-                    isDark
-                      ? "bg-green-900/40 text-green-400"
-                      : "bg-green-100 text-green-700"
-                  } flex items-center gap-2`}
-                >
-                  <Leaf size={16} />
-                  {isMobile ? (
-                    <span className="font-medium">
-                      Currently @ Carbonethics
-                    </span>
-                  ) : (
-                    <span className="font-medium">
-                      Currently work as a{" "}
-                      <span className="font-semibold">
-                        Fullstack Developer Associate Manager
-                      </span>{" "}
-                      @ Carbonethics
-                    </span>
-                  )}
-                </div>
+                <RotatingText
+                  texts={[
+                    "Software Engineer",
+                    "Full Stack Developer",
+                    "UI/UX Enthusiast",
+                    "Mobile Developer",
+                    "Problem Solver",
+                  ]}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(0,173,181,0.08)"
+                    : "rgba(20,184,166,0.1)",
+                  border: `1px solid ${isDark ? "rgba(0,173,181,0.3)" : "rgba(20,184,166,0.35)"}`,
+                  color: isDark ? "#00adb5" : "#14b8a6",
+                }}
+              >
+                <Leaf size={16} />
+                <span className="font-mono text-sm">
+                  Fullstack Dev @ Carbonethics
+                </span>
               </motion.div>
 
               <motion.p
-                className={`${
-                  isDark ? "text-gray-300" : "text-gray-600"
-                } mb-6 text-lg leading-relaxed`}
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.6 }}
+                className="text-lg leading-relaxed"
+                style={{ color: textMuted }}
               >
-                With over 3 years of experience, I specialize in creating modern
-                web and mobile applications that combine clean code with
-                exceptional user experiences. My journey in tech began with a
-                passion for solving problems through code, and that passion
-                continues to drive my work today.
-              </motion.p>
-
-              <motion.p
-                className={`${isDark ? "text-gray-400" : "text-gray-600"} mb-8`}
-                variants={itemVariants}
-              >
-                I enjoy working on challenging projects that push my skills to
-                new heights. When I'm not coding, you'll find me exploring new
-                technologies, contributing to open-source projects, or sharing
-                my knowledge through technical writing.
+                Crafting elegant solutions to complex problems. Specialized in
+                building modern web and mobile applications with exceptional
+                user experiences.
               </motion.p>
 
               <motion.div
-                className="flex flex-wrap gap-4 justify-center md:justify-start"
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.7 }}
+                className="flex flex-wrap gap-4"
               >
                 <a
                   href="/rianCV.pdf"
-                  download="Rian_Farhan_CV.pdf"
-                  className={`flex items-center gap-2 px-6 py-3 ${
-                    isDark
-                      ? "bg-gradient-to-r from-primary to-blue-500"
-                      : "bg-gradient-to-r from-primaryInLight to-blue-600"
-                  } text-white rounded-lg font-medium shadow-lg transition-all group`}
+                  download
+                  className="group flex items-center gap-2 px-6 py-3 rounded-lg font-mono backdrop-blur-xl transition-all"
+                  style={{
+                    backgroundColor: isDark
+                      ? "rgba(0,173,181,0.08)"
+                      : "rgba(20,184,166,0.08)",
+                    border: `1px solid ${isDark ? "rgba(0,173,181,0.45)" : "rgba(20,184,166,0.45)"}`,
+                    color: accent,
+                  }}
                 >
                   <Download size={18} />
                   <span>Download CV</span>
                 </a>
 
-                <div className="flex gap-4">
-                  <a
-                    href="https://github.com/username"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`w-12 h-12 rounded-full ${
-                      isDark
-                        ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
-                        : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
-                    } flex items-center justify-center transition-colors border-2 border-transparent`}
-                  >
-                    <Github size={22} />
-                  </a>
-                  <a
-                    href="https://linkedin.com/in/username"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`w-12 h-12 rounded-full ${
-                      isDark
-                        ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
-                        : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
-                    } flex items-center justify-center transition-colors border-2 border-transparent`}
-                  >
-                    <Linkedin size={22} />
-                  </a>
-                  <a
-                    href="mailto:email@example.com"
-                    className={`w-12 h-12 rounded-full ${
-                      isDark
-                        ? "bg-gray-800 text-gray-400 hover:text-primary hover:border-primary"
-                        : "bg-gray-200 text-gray-600 hover:text-primaryInLight hover:border-primaryInLight"
-                    } flex items-center justify-center transition-colors border-2 border-transparent`}
-                  >
-                    <Mail size={22} />
-                  </a>
+                <div className="flex gap-3">
+                  {[
+                    { icon: Github, href: "https://github.com" },
+                    { icon: Linkedin, href: "https://linkedin.com" },
+                    { icon: Mail, href: "mailto:email@example.com" },
+                  ].map((social, i) => (
+                    <a
+                      key={i}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-lg backdrop-blur-xl flex items-center justify-center transition-all"
+                      style={{
+                        backgroundColor: cardBg,
+                        border: `1px solid ${cardBorder}`,
+                        color: isDark
+                          ? "rgba(220,230,255,0.6)"
+                          : "rgba(10,18,48,0.5)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = accent;
+                        e.currentTarget.style.color = accent;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = cardBorder;
+                        e.currentTarget.style.color = isDark
+                          ? "rgba(220,230,255,0.6)"
+                          : "rgba(10,18,48,0.5)";
+                      }}
+                    >
+                      <social.icon size={20} />
+                    </a>
+                  ))}
                 </div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
 
-        <div className={`${isMobile ? "pt-10" : ""}`}>
-          <TechScroll />
-        </div>
-
-        {/* Desktop scroll indicator - only shown on desktop */}
-        {!isMobile && (
-          <motion.div
-            className="absolute bottom-60 left-1/2 transform -translate-x-1/2"
-            animate={{
-              y: [0, 10, 0],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          >
-            <motion.a
-              href="#skills"
-              className={`flex flex-col items-center ${
-                isDark
-                  ? "text-gray-400 hover:text-primary"
-                  : "text-gray-500 hover:text-primaryInLight"
-              } transition-colors`}
-              whileHover={{ scale: 1.1 }}
+            {/* Avatar */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex justify-center"
             >
-              <span className="text-xs sm:text-sm font-medium mb-1">
-                Scroll Down
-              </span>
-              <motion.div
-                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${
-                  isDark ? "border-gray-700" : "border-gray-300"
-                } border flex items-center justify-center`}
-                animate={{
-                  boxShadow: [
-                    "0 0 0 rgba(255, 255, 255, 0)",
-                    "0 0 10px rgba(255, 255, 255, 0.3)",
-                    "0 0 0 rgba(255, 255, 255, 0)",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
-              >
-                <ChevronDown size={isSmallMobile ? 18 : 24} />
-              </motion.div>
-            </motion.a>
-          </motion.div>
-        )}
+              <Lanyard />
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <a
+            href="#skills"
+            className="flex flex-col items-center gap-2 transition-colors"
+            style={{ color: textMuted }}
+          >
+            <span className="text-xs font-mono">Scroll Down</span>
+            <ChevronDown size={20} />
+          </a>
+        </motion.div>
+
+        <TechScroll />
       </section>
 
-      {/* Skills Section with Dock */}
+      {/* ── SKILLS SECTION ── */}
       <section
-        className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"} relative`}
-        ref={skillsRef}
         id="skills"
+        className="py-24 relative"
+        style={{ backgroundColor: isDark ? "#030712" : "#ececec" }}
+        ref={skillsRef}
       >
-        {/* Add a subtle gradient background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-primary" : "bg-primaryInLight"
-            } opacity-5 top-1/3 -right-48`}
-          />
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="text-center mb-12">
-            <motion.h2
-              className={`text-3xl md:text-4xl font-bold mb-4 ${
-                isDark ? "text-white" : "text-gray-800"
-              }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                skillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.5 }}
-            >
-              My{" "}
-              <span
-                className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                  isDark
-                    ? "from-primary to-blue-400"
-                    : "from-primaryInLight to-blue-500"
-                }`}
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={skillsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Sparkles size={24} style={{ color: accent }} />
+              <h2
+                className="text-4xl md:text-5xl font-bold font-mono"
+                style={{ color: textPrimary }}
               >
-                Skills & Expertise
-              </span>
-            </motion.h2>
-            <motion.div
-              className="w-24 h-1 mx-auto rounded-full mb-6"
-              style={{
-                background: isDark
-                  ? "linear-gradient(to right, #00adb5, #3a86ff)"
-                  : "linear-gradient(to right, #14b8a6, #3a86ff)",
-              }}
-              initial={{ opacity: 0, width: 0 }}
-              animate={
-                skillsInView
-                  ? { opacity: 1, width: 96 }
-                  : { opacity: 0, width: 0 }
-              }
-              transition={{ duration: 0.5, delay: 0.2 }}
-            ></motion.div>
-            <motion.p
-              className={`max-w-xl mx-auto ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              } mb-10`}
-              initial={{ opacity: 0 }}
-              animate={skillsInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              I'm constantly expanding my toolkit to create better digital
-              experiences. Here are the areas where I specialize:
-            </motion.p>
-          </div>
+                <span style={{ color: accent }}>{"<"}</span>
+                Skills
+                <span style={{ color: accent }}>{" />"}</span>
+              </h2>
+            </div>
+            <p className="text-lg font-mono" style={{ color: textMuted }}>
+              My technical expertise & capabilities
+            </p>
+          </motion.div>
 
-          {/* Enhanced skill cards with hover effect to show progress bars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skills.map((skill, index) => (
               <motion.div
                 key={index}
-                className={`p-6 rounded-xl ${
-                  isDark
-                    ? "bg-gray-800/50 border border-gray-700 hover:border-primary/50"
-                    : "bg-white/50 border border-gray-200 hover:border-primaryInLight/50"
-                } transition-all duration-300 hover:shadow-lg group relative overflow-hidden`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  skillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
-                whileHover={{ y: -5 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={skillsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
                 onMouseEnter={() => setHoveredSkill(index)}
                 onMouseLeave={() => setHoveredSkill(null)}
+                className="p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300"
+                style={{
+                  backgroundColor: cardBg,
+                  borderColor:
+                    hoveredSkill === index
+                      ? isDark
+                        ? "rgba(0,173,181,0.5)"
+                        : "rgba(20,184,166,0.5)"
+                      : cardBorder,
+                }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
-                <div className="flex flex-col items-center mb-4">
-                  <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
-                      isDark
-                        ? "bg-gray-700 group-hover:bg-gray-700/80"
-                        : "bg-gray-100 group-hover:bg-gray-50"
-                    } transition-colors duration-300`}
-                  >
-                    {skill.icon}
-                  </div>
-                  <h3
-                    className={`text-xl font-bold mb-3 ${
-                      isDark ? "text-white" : "text-gray-800"
-                    } group-hover:${
-                      isDark ? "text-primary" : "text-primaryInLight"
-                    } transition-colors duration-300`}
-                  >
-                    {skill.label}
-                  </h3>
+                <div
+                  className="w-14 h-14 rounded-xl backdrop-blur-xl flex items-center justify-center mb-4"
+                  style={{
+                    backgroundColor: isDark
+                      ? "rgba(255,255,255,0.04)"
+                      : "rgba(0,0,0,0.04)",
+                    border: `1px solid ${cardBorder}`,
+                  }}
+                >
+                  {skill.icon}
                 </div>
 
-                <p
-                  className={`text-center text-sm mb-4 ${
-                    isDark ? "text-gray-400" : "text-gray-600"
-                  }`}
+                <h3
+                  className="text-xl font-bold font-mono mb-2"
+                  style={{ color: textPrimary }}
                 >
+                  {skill.label}
+                </h3>
+                <p className="text-sm mb-4" style={{ color: textMuted }}>
                   {skill.description}
                 </p>
 
-                {/* Skill level indicators - only visible when hovered */}
                 <motion.div
-                  className="space-y-3"
-                  initial={{ opacity: 0, height: 0 }}
+                  className="space-y-3 overflow-hidden"
+                  initial={{ height: 0, opacity: 0 }}
                   animate={{
-                    opacity: hoveredSkill === index ? 1 : 0,
                     height: hoveredSkill === index ? "auto" : 0,
+                    opacity: hoveredSkill === index ? 1 : 0,
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  {index === 0 && (
-                    <>
-                      <SkillBar
-                        label="React/Next.js"
-                        percentage={90}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="JavaScript/TypeScript"
-                        percentage={85}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="HTML/CSS"
-                        percentage={95}
-                        isDark={isDark}
-                      />
-                    </>
-                  )}
-                  {index === 1 && (
-                    <>
-                      <SkillBar
-                        label="React Native"
-                        percentage={80}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="Kotlin"
-                        percentage={75}
-                        isDark={isDark}
-                      />
-                      <SkillBar label="Swift" percentage={65} isDark={isDark} />
-                    </>
-                  )}
-                  {index === 2 && (
-                    <>
-                      <SkillBar label="Figma" percentage={85} isDark={isDark} />
-                      <SkillBar
-                        label="Tailwind CSS"
-                        percentage={90}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="UX Research"
-                        percentage={75}
-                        isDark={isDark}
-                      />
-                    </>
-                  )}
-                  {index === 3 && (
-                    <>
-                      <SkillBar
-                        label="Node.js"
-                        percentage={85}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="Databases"
-                        percentage={80}
-                        isDark={isDark}
-                      />
-                      <SkillBar
-                        label="API Design"
-                        percentage={90}
-                        isDark={isDark}
-                      />
-                    </>
-                  )}
+                  {skill.skills.map((s, i) => (
+                    <SkillBar
+                      key={i}
+                      label={s.name}
+                      percentage={s.level}
+                      isDark={isDark}
+                    />
+                  ))}
                 </motion.div>
               </motion.div>
             ))}
@@ -927,253 +799,158 @@ export default function About() {
         </div>
       </section>
 
-      {/* Experience & Education Section */}
-      <section
-        className={`py-16 relative ${
-          isDark ? "bg-gray-900/50" : "bg-gray-100/50"
-        }`}
-      >
-        {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-primary" : "bg-primaryInLight"
-            } opacity-5 top-1/4 -left-48`}
-          />
-          <div
-            className={`absolute inset-0 opacity-5 ${
-              isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-            }`}
-          ></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16">
+      {/* ── EXPERIENCE & EDUCATION ── */}
+      <section className="py-24" style={{ backgroundColor: bg }}>
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16">
             {/* Experience */}
-            <div ref={expRef}>
+            <div>
               <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 className="flex items-center gap-3 mb-8"
-                initial={{ opacity: 0, x: -20 }}
-                animate={
-                  expInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
-                }
-                transition={{ duration: 0.5 }}
               >
-                <Briefcase
-                  size={24}
-                  className={isDark ? "text-primary" : "text-primaryInLight"}
-                />
+                <Briefcase size={28} style={{ color: accent }} />
                 <h2
-                  className={`text-2xl md:text-3xl font-bold ${
-                    isDark ? "text-white" : "text-gray-800"
-                  }`}
+                  className="text-3xl font-bold font-mono"
+                  style={{ color: textPrimary }}
                 >
-                  Work Experience
+                  Experience
                 </h2>
               </motion.div>
-
-              <div className="pl-4">
+              <div className="space-y-2">
                 {experiences.map((exp, index) => (
-                  <ExperienceItem
-                    key={index}
-                    position={exp.position}
-                    company={exp.company}
-                    period={exp.period}
-                    description={exp.description}
-                    index={index}
-                    inView={expInView}
-                  />
+                  <ExperienceItem key={index} {...exp} index={index} />
                 ))}
               </div>
             </div>
 
             {/* Education */}
-            <div ref={eduRef}>
+            <div>
               <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 className="flex items-center gap-3 mb-8"
-                initial={{ opacity: 0, x: 20 }}
-                animate={
-                  eduInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }
-                }
-                transition={{ duration: 0.5 }}
               >
-                <GraduationCap
-                  size={24}
-                  className={isDark ? "text-blue-400" : "text-blue-600"}
-                />
+                <GraduationCap size={28} className="text-blue-400" />
                 <h2
-                  className={`text-2xl md:text-3xl font-bold ${
-                    isDark ? "text-white" : "text-gray-800"
-                  }`}
+                  className="text-3xl font-bold font-mono"
+                  style={{ color: textPrimary }}
                 >
                   Education
                 </h2>
               </motion.div>
-
-              <div className="pl-4">
+              <div className="space-y-2">
                 {education.map((edu, index) => (
-                  <EducationItem
-                    key={index}
-                    degree={edu.degree}
-                    institution={edu.institution}
-                    period={edu.period}
-                    description={edu.description}
-                    index={index}
-                    inView={eduInView}
-                  />
+                  <EducationItem key={index} {...edu} index={index} />
                 ))}
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* Technologies Section */}
+
+      {/* ── TECH STACK ── */}
       <section
-        className={`py-16 ${isDark ? "bg-bgDark" : "bg-bgLight"}`}
+        id="technologies"
+        className="py-24"
+        style={{ backgroundColor: isDark ? "#030712" : "#ececec" }}
         ref={techRef}
       >
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10">
-            <motion.h2
-              className={`text-3xl md:text-4xl font-bold mb-4 ${
-                isDark ? "text-white" : "text-gray-800"
-              }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                techInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.5 }}
-            >
-              Technologies
-              <span
-                className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                  isDark
-                    ? "from-primary to-blue-400"
-                    : "from-primaryInLight to-blue-500"
-                }`}
-              >
-                {" "}
-                I Work With
-              </span>
-            </motion.h2>
-            <motion.div
-              className="w-24 h-1 mx-auto rounded-full mb-6"
-              style={{
-                background: isDark
-                  ? "linear-gradient(to right, #00adb5, #3a86ff)"
-                  : "linear-gradient(to right, #14b8a6, #3a86ff)",
-              }}
-              initial={{ opacity: 0, width: 0 }}
-              animate={
-                techInView
-                  ? { opacity: 1, width: 96 }
-                  : { opacity: 0, width: 0 }
-              }
-              transition={{ duration: 0.5, delay: 0.2 }}
-            ></motion.div>
-          </div>
-
+        <div className="container mx-auto px-6">
           <motion.div
-            className="flex flex-wrap justify-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={techInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={techInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            {technologies.map((tech, index) => (
-              <TechBadge
-                key={index}
-                text={tech}
-                index={index}
-                inView={techInView}
-              />
-            ))}
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Zap size={24} style={{ color: accent }} />
+              <h2
+                className="text-4xl md:text-5xl font-bold font-mono"
+                style={{ color: textPrimary }}
+              >
+                Tech Stack
+              </h2>
+            </div>
+            <p className="text-lg font-mono" style={{ color: textMuted }}>
+              Tools & technologies I work with daily
+            </p>
           </motion.div>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            {technologies.map((tech, index) => (
+              <TechBadge key={index} text={tech} index={index} />
+            ))}
+          </div>
         </div>
       </section>
-      {/* Call to Action */}
-      <section
-        className={`py-16 ${
-          isDark ? "bg-gray-900" : "bg-gray-100"
-        } relative overflow-hidden`}
-      >
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-primary" : "bg-primaryInLight"
-            } opacity-5 -bottom-48 -right-48`}
-          />
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl ${
-              isDark ? "bg-blue-500" : "bg-blue-300"
-            } opacity-5 -top-48 -left-48`}
-          />
-        </div>
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      {/* ── CTA ── */}
+      <section
+        className="py-24 relative overflow-hidden"
+        style={{ backgroundColor: bg }}
+      >
+        {/* Background radial */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: isDark
+              ? "radial-gradient(circle at center, rgba(0,173,181,0.08) 0%, transparent 70%)"
+              : "radial-gradient(circle at center, rgba(20,184,166,0.08) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="container mx-auto px-6 relative z-10">
           <motion.div
-            className={`text-center max-w-3xl mx-auto ${
-              isDark ? "text-white" : "text-gray-800"
-            }`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Interested in working together?
+            <h2
+              className="text-4xl md:text-5xl font-bold font-mono mb-6"
+              style={{ color: textPrimary }}
+            >
+              Let's Build Something{" "}
+              <span
+                className={
+                  isDark
+                    ? "bg-gradient-to-r from-[#00adb5] to-blue-500 bg-clip-text text-transparent"
+                    : "bg-gradient-to-r from-[#14b8a6] to-blue-500 bg-clip-text text-transparent"
+                }
+              >
+                Amazing
+              </span>
             </h2>
-            <p className={`mb-8 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+
+            <p className="text-lg mb-8" style={{ color: textMuted }}>
               I'm always open to discussing new projects, creative ideas or
               opportunities to be part of your vision.
             </p>
-            <Link
-              to={"/contact"}
-              className={`inline-flex items-center gap-2 px-8 py-3 ${
-                isDark
-                  ? "bg-gradient-to-r from-primary to-blue-500"
-                  : "bg-gradient-to-r from-primaryInLight to-blue-600"
-              } text-white rounded-lg font-medium shadow-lg transition-all hover:shadow-xl hover:scale-105`}
+
+            <motion.a
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-lg font-mono backdrop-blur-xl transition-all"
+              style={{
+                backgroundColor: isDark
+                  ? "rgba(0,173,181,0.08)"
+                  : "rgba(20,184,166,0.08)",
+                border: `1px solid ${isDark ? "rgba(0,173,181,0.45)" : "rgba(20,184,166,0.45)"}`,
+                color: accent,
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Let's Talk
-            </Link>
+              <Terminal size={20} />
+              <span>Start a Conversation</span>
+            </motion.a>
           </motion.div>
         </div>
       </section>
-      <style jsx="true" global="true">{`
-        @keyframes pulse {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 0.1;
-          }
-          50% {
-            transform: scale(1.2);
-            opacity: 0.15;
-          }
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @keyframes pulse-shadow {
-          0%,
-          100% {
-            box-shadow: 0 0 30px
-              ${isDark ? "rgba(0, 173, 181, 0.6)" : "rgba(20, 184, 166, 0.6)"};
-          }
-          50% {
-            box-shadow: 0 0 70px
-              ${isDark ? "rgba(0, 173, 181, 0.4)" : "rgba(20, 184, 166, 0.4)"};
-          }
-        }
-      `}</style>
     </div>
   );
 }

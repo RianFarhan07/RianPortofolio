@@ -19,6 +19,7 @@ import ContactPreview from "./components/ContactPreview2";
 import ProjectPreview from "./components/ProjectPreview";
 import Hero2 from "./components/Hero2";
 import PageTransition5Tech from "./components/PageTransition5Tech";
+import Hero3 from "./components/Hero3";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -61,7 +62,9 @@ const AppContent = () => {
             path="/"
             element={
               <div className="mt-5">
-                <Hero />
+                {/* <Hero /> */}
+                {/* <Hero2 /> */}
+                <Hero3 />
                 <AboutPreview />
                 <ProjectPreview />
                 <CertificatesPreview />
