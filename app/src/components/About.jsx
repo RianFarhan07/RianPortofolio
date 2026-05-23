@@ -43,33 +43,57 @@ const RotatingText = ({ texts }) => {
   );
 };
 
-const Lanyard = () => (
-  <div className="w-64 h-64 rounded-2xl overflow-hidden">
+const Lanyard = ({ isMobile }) => (
+  <div
+    style={{
+      width: isMobile ? 180 : 256,
+      height: isMobile ? 180 : 256,
+      borderRadius: 16,
+      overflow: "hidden",
+      margin: "0 auto",
+    }}
+  >
     <img
       src={rianAnimasi}
       alt="Rian Farhan"
-      className="w-full h-full object-cover"
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
     />
   </div>
 );
 
 const TechScroll = () => (
-  <div className="overflow-hidden py-4">
+  <div style={{ overflow: "hidden", padding: "16px 0" }}>
     <motion.div
-      className="flex gap-8"
+      style={{ display: "flex", gap: 32 }}
       animate={{ x: [0, -1000] }}
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
     >
-      {["React", "TypeScript", "Node.js", "MongoDB", "Next.js", "Tailwind"].map(
-        (tech, i) => (
-          <span
-            key={i}
-            className="text-sm font-mono text-gray-500 whitespace-nowrap"
-          >
-            {tech}
-          </span>
-        ),
-      )}
+      {[
+        "React",
+        "TypeScript",
+        "Node.js",
+        "MongoDB",
+        "Next.js",
+        "Tailwind",
+        "React",
+        "TypeScript",
+        "Node.js",
+        "MongoDB",
+        "Next.js",
+        "Tailwind",
+      ].map((tech, i) => (
+        <span
+          key={i}
+          style={{
+            fontSize: "0.75rem",
+            fontFamily: "monospace",
+            color: "#6b7280",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {tech}
+        </span>
+      ))}
     </motion.div>
   </div>
 );
@@ -77,81 +101,113 @@ const TechScroll = () => (
 const ExperienceItem = ({ position, company, period, description, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const accent = isDark ? "#00adb5" : "#14b8a6";
 
   return (
     <motion.div
       ref={ref}
-      className="relative pl-8 pb-12 group"
-      initial={{ opacity: 0, x: -50 }}
+      style={{ position: "relative", paddingLeft: 28, paddingBottom: 32 }}
+      initial={{ opacity: 0, x: -30 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.15 }}
     >
-      <div className="absolute left-0 top-2">
+      <div style={{ position: "absolute", left: 0, top: 8 }}>
         <motion.div
-          className="w-3 h-3 rounded-full relative z-10"
-          style={{ backgroundColor: isDark ? "#00adb5" : "#14b8a6" }}
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            backgroundColor: accent,
+            position: "relative",
+            zIndex: 1,
+          }}
           whileHover={{ scale: 1.5 }}
         >
           <div
-            className="absolute inset-0 rounded-full blur-md opacity-50 animate-pulse"
-            style={{ backgroundColor: isDark ? "#00adb5" : "#14b8a6" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              backgroundColor: accent,
+              filter: "blur(4px)",
+              opacity: 0.5,
+            }}
           />
         </motion.div>
         <div
-          className="absolute top-3 left-1/2 -translate-x-1/2 w-0.5 h-full"
           style={{
+            position: "absolute",
+            top: 12,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 1,
+            height: "100%",
             background: `linear-gradient(to bottom, ${isDark ? "rgba(0,173,181,0.5)" : "rgba(20,184,166,0.5)"}, transparent)`,
           }}
         />
       </div>
 
       <motion.div
-        className="p-6 rounded-xl backdrop-blur-xl border transition-all duration-300"
         style={{
+          padding: "16px 20px",
+          borderRadius: 12,
+          backdropFilter: "blur(12px)",
+          border: `1px solid ${isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)"}`,
           backgroundColor: isDark
             ? "rgba(34,40,49,0.5)"
             : "rgba(245,245,245,0.7)",
-          borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
         }}
-        whileHover={{
-          y: -5,
-          scale: 1.02,
-          borderColor: isDark ? "rgba(0,173,181,0.5)" : "rgba(20,184,166,0.5)",
-        }}
+        whileHover={{ y: -4, scale: 1.01 }}
       >
-        <div className="flex items-start justify-between mb-2">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            marginBottom: 6,
+            gap: 8,
+          }}
+        >
           <h3
-            className="text-lg font-bold font-mono"
-            style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}
+            style={{
+              fontSize: "1rem",
+              fontWeight: 700,
+              fontFamily: "monospace",
+              color: isDark ? "#f0f4ff" : "#0a1230",
+              margin: 0,
+            }}
           >
-            <span style={{ color: isDark ? "#00adb5" : "#14b8a6" }}>$ </span>
+            <span style={{ color: accent }}>$ </span>
             {position}
           </h3>
-          <Terminal
-            size={18}
-            style={{ color: isDark ? "#00adb5" : "#14b8a6" }}
-          />
+          <Terminal size={16} style={{ color: accent, flexShrink: 0 }} />
         </div>
         <p
-          className="text-sm font-semibold mb-1"
           style={{
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            marginBottom: 4,
             color: isDark ? "rgba(220,230,255,0.7)" : "rgba(10,18,48,0.7)",
           }}
         >
           @ {company}
         </p>
         <p
-          className="text-xs font-mono mb-3"
           style={{
+            fontSize: "0.72rem",
+            fontFamily: "monospace",
+            marginBottom: 10,
             color: isDark ? "rgba(220,230,255,0.35)" : "rgba(10,18,48,0.4)",
           }}
         >
           {period}
         </p>
         <p
-          className="text-sm leading-relaxed"
           style={{
+            fontSize: "0.82rem",
+            lineHeight: 1.6,
+            margin: 0,
             color: isDark ? "rgba(220,230,255,0.55)" : "rgba(10,18,48,0.6)",
           }}
         >
@@ -165,69 +221,115 @@ const ExperienceItem = ({ position, company, period, description, index }) => {
 const EducationItem = ({ degree, institution, period, description, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   return (
     <motion.div
       ref={ref}
-      className="relative pl-8 pb-12 group"
-      initial={{ opacity: 0, x: 50 }}
+      style={{ position: "relative", paddingLeft: 28, paddingBottom: 32 }}
+      initial={{ opacity: 0, x: 30 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.15 }}
     >
-      <div className="absolute left-0 top-2">
+      <div style={{ position: "absolute", left: 0, top: 8 }}>
         <motion.div
-          className="w-3 h-3 rounded-full bg-blue-500 relative z-10"
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            backgroundColor: "#3b82f6",
+            position: "relative",
+            zIndex: 1,
+          }}
           whileHover={{ scale: 1.5 }}
         >
-          <div className="absolute inset-0 rounded-full bg-blue-500 blur-md opacity-50 animate-pulse" />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              backgroundColor: "#3b82f6",
+              filter: "blur(4px)",
+              opacity: 0.5,
+            }}
+          />
         </motion.div>
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-blue-500/50 to-transparent" />
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 1,
+            height: "100%",
+            background:
+              "linear-gradient(to bottom, rgba(59,130,246,0.5), transparent)",
+          }}
+        />
       </div>
 
       <motion.div
-        className="p-6 rounded-xl backdrop-blur-xl border transition-all duration-300"
         style={{
+          padding: "16px 20px",
+          borderRadius: 12,
+          backdropFilter: "blur(12px)",
+          border: `1px solid ${isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)"}`,
           backgroundColor: isDark
             ? "rgba(34,40,49,0.5)"
             : "rgba(245,245,245,0.7)",
-          borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
         }}
-        whileHover={{
-          y: -5,
-          scale: 1.02,
-          borderColor: "rgba(59,130,246,0.5)",
-        }}
+        whileHover={{ y: -4, scale: 1.01 }}
       >
-        <div className="flex items-start justify-between mb-2">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            marginBottom: 6,
+            gap: 8,
+          }}
+        >
           <h3
-            className="text-lg font-bold font-mono"
-            style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}
+            style={{
+              fontSize: "1rem",
+              fontWeight: 700,
+              fontFamily: "monospace",
+              color: isDark ? "#f0f4ff" : "#0a1230",
+              margin: 0,
+            }}
           >
-            <span>📚 </span>
-            {degree}
+            📚 {degree}
           </h3>
-          <GraduationCap size={18} className="text-blue-400" />
+          <GraduationCap
+            size={16}
+            style={{ color: "#60a5fa", flexShrink: 0 }}
+          />
         </div>
         <p
-          className="text-sm font-semibold mb-1"
           style={{
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            marginBottom: 4,
             color: isDark ? "rgba(220,230,255,0.7)" : "rgba(10,18,48,0.7)",
           }}
         >
           @ {institution}
         </p>
         <p
-          className="text-xs font-mono mb-3"
           style={{
+            fontSize: "0.72rem",
+            fontFamily: "monospace",
+            marginBottom: 10,
             color: isDark ? "rgba(220,230,255,0.35)" : "rgba(10,18,48,0.4)",
           }}
         >
           {period}
         </p>
         <p
-          className="text-sm leading-relaxed"
           style={{
+            fontSize: "0.82rem",
+            lineHeight: 1.6,
+            margin: 0,
             color: isDark ? "rgba(220,230,255,0.55)" : "rgba(10,18,48,0.6)",
           }}
         >
@@ -240,35 +342,50 @@ const EducationItem = ({ degree, institution, period, description, index }) => {
 
 const SkillBar = ({ label, percentage, isDark }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
+  const accent = isDark ? "#00adb5" : "#14b8a6";
   return (
-    <div className="w-full" ref={ref}>
-      <div className="flex justify-between mb-2">
+    <div style={{ width: "100%" }} ref={ref}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 6,
+        }}
+      >
         <span
-          className="text-xs font-mono"
           style={{
+            fontSize: "0.72rem",
+            fontFamily: "monospace",
             color: isDark ? "rgba(220,230,255,0.5)" : "rgba(10,18,48,0.55)",
           }}
         >
           {label}
         </span>
         <span
-          className="text-xs font-mono"
-          style={{ color: isDark ? "#00adb5" : "#14b8a6" }}
+          style={{
+            fontSize: "0.72rem",
+            fontFamily: "monospace",
+            color: accent,
+          }}
         >
           {percentage}%
         </span>
       </div>
       <div
-        className="w-full h-2 rounded-full overflow-hidden"
         style={{
+          width: "100%",
+          height: 8,
+          borderRadius: 4,
+          overflow: "hidden",
           backgroundColor: isDark
             ? "rgba(255,255,255,0.06)"
             : "rgba(0,0,0,0.08)",
         }}
       >
         <motion.div
-          className="h-2 rounded-full"
           style={{
+            height: 8,
+            borderRadius: 4,
             background: isDark
               ? "linear-gradient(to right, #00adb5, #3b82f6)"
               : "linear-gradient(to right, #14b8a6, #3b82f6)",
@@ -285,27 +402,30 @@ const SkillBar = ({ label, percentage, isDark }) => {
 const TechBadge = ({ text, index }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const accent = isDark ? "#00adb5" : "#14b8a6";
 
   return (
     <motion.span
       ref={ref}
-      className="px-4 py-2 rounded-lg text-sm font-mono backdrop-blur-sm transition-all duration-300 cursor-default"
       style={{
+        padding: "8px 14px",
+        borderRadius: 8,
+        fontSize: "0.8rem",
+        fontFamily: "monospace",
+        backdropFilter: "blur(8px)",
         backgroundColor: isDark
           ? "rgba(34,40,49,0.6)"
           : "rgba(245,245,245,0.8)",
-        color: isDark ? "#00adb5" : "#14b8a6",
+        color: accent,
         border: `1px solid ${isDark ? "rgba(0,173,181,0.25)" : "rgba(20,184,166,0.3)"}`,
+        cursor: "default",
+        display: "inline-block",
       }}
       initial={{ opacity: 0, scale: 0.8, y: 20 }}
       animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: index * 0.03 }}
-      whileHover={{
-        scale: 1.05,
-        y: -2,
-        borderColor: isDark ? "rgba(0,173,181,0.6)" : "rgba(20,184,166,0.6)",
-      }}
+      whileHover={{ scale: 1.05, y: -2 }}
     >
       {text}
     </motion.span>
@@ -331,7 +451,7 @@ export default function About() {
 
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
-    threshold: 0.2,
+    threshold: 0.1,
   });
   const [skillsRef, skillsInView] = useInView({
     triggerOnce: true,
@@ -342,10 +462,8 @@ export default function About() {
     threshold: 0.1,
   });
 
-  // Theme-aware color helpers
   const accent = isDark ? "#00adb5" : "#14b8a6";
   const bg = isDark ? "#222831" : "#f5f5f5";
-  const bgSection = isDark ? "#030712" : "#e8e8e8";
   const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
   const textMuted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.55)";
   const cardBg = isDark ? "rgba(34,40,49,0.5)" : "rgba(255,255,255,0.6)";
@@ -481,8 +599,9 @@ export default function About() {
       >
         {/* Grid background */}
         <div
-          className="absolute inset-0"
           style={{
+            position: "absolute",
+            inset: 0,
             backgroundImage: `linear-gradient(to right, ${gridLine} 1px, transparent 1px), linear-gradient(to bottom, ${gridLine} 1px, transparent 1px)`,
             backgroundSize: "4rem 4rem",
             maskImage:
@@ -523,23 +642,60 @@ export default function About() {
           }}
         />
 
-        <div className="container mx-auto px-6 relative z-10 flex items-center min-h-screen">
-          <div className="grid md:grid-cols-2 gap-12 items-center w-full">
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: isMobile ? "80px 20px 40px" : "0 24px",
+            position: "relative",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            minHeight: "100vh",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: isMobile ? 32 : 48,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {/* Avatar — mobile: tampil duluan di atas */}
+            {isMobile && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <Lanyard isMobile={isMobile} />
+              </motion.div>
+            )}
+
             {/* Content */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
               animate={heroInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8 }}
-              className="space-y-6"
+              style={{ display: "flex", flexDirection: "column", gap: 20 }}
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2 }}
-                className="flex items-center gap-3"
+                style={{ display: "flex", alignItems: "center", gap: 10 }}
               >
-                <Terminal size={20} style={{ color: accent }} />
-                <span className="font-mono text-sm" style={{ color: accent }}>
+                <Terminal size={18} style={{ color: accent }} />
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: "0.82rem",
+                    color: accent,
+                  }}
+                >
                   console.log("Hello, World!")
                 </span>
               </motion.div>
@@ -548,16 +704,24 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.3 }}
-                className="text-5xl md:text-7xl font-bold"
-                style={{ color: textPrimary }}
+                style={{
+                  fontSize: isMobile ? "2.4rem" : "clamp(3rem, 6vw, 4.5rem)",
+                  fontWeight: 700,
+                  color: textPrimary,
+                  margin: 0,
+                  lineHeight: 1.1,
+                }}
               >
                 I'm{" "}
                 <span
-                  className={
-                    isDark
-                      ? "bg-gradient-to-r from-[#00adb5] via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                      : "bg-gradient-to-r from-[#14b8a6] via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                  }
+                  style={{
+                    background: isDark
+                      ? "linear-gradient(to right, #00adb5, #3b82f6, #a855f7)"
+                      : "linear-gradient(to right, #14b8a6, #3b82f6, #a855f7)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
                 >
                   Rian Farhan
                 </span>
@@ -567,8 +731,13 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.4 }}
-                className="text-2xl md:text-3xl font-mono"
-                style={{ color: textMuted }}
+                style={{
+                  fontSize: isMobile
+                    ? "1.1rem"
+                    : "clamp(1.2rem, 2.5vw, 1.8rem)",
+                  fontFamily: "monospace",
+                  color: textMuted,
+                }}
               >
                 <RotatingText
                   texts={[
@@ -585,17 +754,23 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "8px 16px",
+                  borderRadius: 100,
                   backgroundColor: isDark
                     ? "rgba(0,173,181,0.08)"
                     : "rgba(20,184,166,0.1)",
                   border: `1px solid ${isDark ? "rgba(0,173,181,0.3)" : "rgba(20,184,166,0.35)"}`,
-                  color: isDark ? "#00adb5" : "#14b8a6",
+                  color: accent,
+                  width: "fit-content",
+                  fontSize: "0.8rem",
                 }}
               >
-                <Leaf size={16} />
-                <span className="font-mono text-sm">
+                <Leaf size={14} />
+                <span style={{ fontFamily: "monospace" }}>
                   Fullstack Dev @ Carbonethics
                 </span>
               </motion.div>
@@ -604,8 +779,12 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6 }}
-                className="text-lg leading-relaxed"
-                style={{ color: textMuted }}
+                style={{
+                  fontSize: isMobile ? "0.9rem" : "1.05rem",
+                  lineHeight: 1.7,
+                  color: textMuted,
+                  margin: 0,
+                }}
               >
                 Crafting elegant solutions to complex problems. Specialized in
                 building modern web and mobile applications with exceptional
@@ -616,25 +795,38 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.7 }}
-                className="flex flex-wrap gap-4"
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 12,
+                  alignItems: "center",
+                }}
               >
                 <a
                   href="/rianCV.pdf"
                   download
-                  className="group flex items-center gap-2 px-6 py-3 rounded-lg font-mono backdrop-blur-xl transition-all"
                   style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 20px",
+                    borderRadius: 8,
+                    fontFamily: "monospace",
+                    fontSize: "0.82rem",
+                    backdropFilter: "blur(12px)",
                     backgroundColor: isDark
                       ? "rgba(0,173,181,0.08)"
                       : "rgba(20,184,166,0.08)",
                     border: `1px solid ${isDark ? "rgba(0,173,181,0.45)" : "rgba(20,184,166,0.45)"}`,
                     color: accent,
+                    textDecoration: "none",
                   }}
                 >
-                  <Download size={18} />
+                  <Download size={16} />
                   <span>Download CV</span>
                 </a>
 
-                <div className="flex gap-3">
+                <div style={{ display: "flex", gap: 10 }}>
                   {[
                     { icon: Github, href: "https://github.com" },
                     { icon: Linkedin, href: "https://linkedin.com" },
@@ -645,13 +837,21 @@ export default function About() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-lg backdrop-blur-xl flex items-center justify-center transition-all"
                       style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: 8,
+                        backdropFilter: "blur(12px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         backgroundColor: cardBg,
                         border: `1px solid ${cardBorder}`,
                         color: isDark
                           ? "rgba(220,230,255,0.6)"
                           : "rgba(10,18,48,0.5)",
+                        textDecoration: "none",
+                        transition: "all 0.2s",
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = accent;
@@ -664,38 +864,53 @@ export default function About() {
                           : "rgba(10,18,48,0.5)";
                       }}
                     >
-                      <social.icon size={20} />
+                      <social.icon size={18} />
                     </a>
                   ))}
                 </div>
               </motion.div>
             </motion.div>
 
-            {/* Avatar */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex justify-center"
-            >
-              <Lanyard />
-            </motion.div>
+            {/* Avatar — desktop: di kanan */}
+            {!isMobile && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <Lanyard isMobile={false} />
+              </motion.div>
+            )}
           </div>
         </div>
 
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          style={{
+            position: "absolute",
+            bottom: 32,
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
           <a
             href="#skills"
-            className="flex flex-col items-center gap-2 transition-colors"
-            style={{ color: textMuted }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 6,
+              color: textMuted,
+              textDecoration: "none",
+            }}
           >
-            <span className="text-xs font-mono">Scroll Down</span>
-            <ChevronDown size={20} />
+            <span style={{ fontSize: "0.72rem", fontFamily: "monospace" }}>
+              Scroll Down
+            </span>
+            <ChevronDown size={18} />
           </a>
         </motion.div>
 
@@ -705,34 +920,63 @@ export default function About() {
       {/* ── SKILLS SECTION ── */}
       <section
         id="skills"
-        className="py-24 relative"
-        style={{ backgroundColor: isDark ? "#030712" : "#ececec" }}
+        style={{
+          padding: isMobile ? "60px 0" : "96px 0",
+          position: "relative",
+          backgroundColor: isDark ? "#030712" : "#ececec",
+        }}
         ref={skillsRef}
       >
-        <div className="container mx-auto px-6">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={skillsInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            style={{ textAlign: "center", marginBottom: isMobile ? 32 : 64 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Sparkles size={24} style={{ color: accent }} />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                marginBottom: 12,
+              }}
+            >
+              <Sparkles size={22} style={{ color: accent }} />
               <h2
-                className="text-4xl md:text-5xl font-bold font-mono"
-                style={{ color: textPrimary }}
+                style={{
+                  fontSize: isMobile ? "1.8rem" : "clamp(2rem, 4vw, 3rem)",
+                  fontWeight: 700,
+                  fontFamily: "monospace",
+                  color: textPrimary,
+                  margin: 0,
+                }}
               >
                 <span style={{ color: accent }}>{"<"}</span>
                 Skills
                 <span style={{ color: accent }}>{" />"}</span>
               </h2>
             </div>
-            <p className="text-lg font-mono" style={{ color: textMuted }}>
+            <p
+              style={{
+                fontSize: "0.95rem",
+                fontFamily: "monospace",
+                color: textMuted,
+                margin: 0,
+              }}
+            >
               My technical expertise & capabilities
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+              gap: isMobile ? 12 : 24,
+            }}
+          >
             {skills.map((skill, index) => (
               <motion.div
                 key={index}
@@ -741,21 +985,33 @@ export default function About() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onMouseEnter={() => setHoveredSkill(index)}
                 onMouseLeave={() => setHoveredSkill(null)}
-                className="p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300"
                 style={{
-                  backgroundColor: cardBg,
-                  borderColor:
+                  padding: isMobile ? "16px 14px" : 24,
+                  borderRadius: 16,
+                  backdropFilter: "blur(12px)",
+                  border: `1px solid ${
                     hoveredSkill === index
                       ? isDark
                         ? "rgba(0,173,181,0.5)"
                         : "rgba(20,184,166,0.5)"
-                      : cardBorder,
+                      : cardBorder
+                  }`,
+                  backgroundColor: cardBg,
+                  transition: "all 0.3s",
+                  cursor: "default",
                 }}
-                whileHover={{ y: -8, scale: 1.02 }}
+                whileHover={{ y: -6, scale: 1.02 }}
               >
                 <div
-                  className="w-14 h-14 rounded-xl backdrop-blur-xl flex items-center justify-center mb-4"
                   style={{
+                    width: isMobile ? 40 : 56,
+                    height: isMobile ? 40 : 56,
+                    borderRadius: 12,
+                    backdropFilter: "blur(12px)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: isMobile ? 10 : 16,
                     backgroundColor: isDark
                       ? "rgba(255,255,255,0.04)"
                       : "rgba(0,0,0,0.04)",
@@ -766,17 +1022,34 @@ export default function About() {
                 </div>
 
                 <h3
-                  className="text-xl font-bold font-mono mb-2"
-                  style={{ color: textPrimary }}
+                  style={{
+                    fontSize: isMobile ? "0.85rem" : "1.1rem",
+                    fontWeight: 700,
+                    fontFamily: "monospace",
+                    color: textPrimary,
+                    marginBottom: 6,
+                  }}
                 >
                   {skill.label}
                 </h3>
-                <p className="text-sm mb-4" style={{ color: textMuted }}>
+                <p
+                  style={{
+                    fontSize: isMobile ? "0.72rem" : "0.85rem",
+                    color: textMuted,
+                    marginBottom: isMobile ? 8 : 16,
+                    lineHeight: 1.5,
+                  }}
+                >
                   {skill.description}
                 </p>
 
                 <motion.div
-                  className="space-y-3 overflow-hidden"
+                  style={{
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{
                     height: hoveredSkill === index ? "auto" : 0,
@@ -800,26 +1073,47 @@ export default function About() {
       </section>
 
       {/* ── EXPERIENCE & EDUCATION ── */}
-      <section className="py-24" style={{ backgroundColor: bg }}>
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16">
+      <section
+        style={{
+          padding: isMobile ? "60px 0" : "96px 0",
+          backgroundColor: bg,
+        }}
+      >
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: isMobile ? 40 : 64,
+            }}
+          >
             {/* Experience */}
             <div>
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-3 mb-8"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  marginBottom: 28,
+                }}
               >
-                <Briefcase size={28} style={{ color: accent }} />
+                <Briefcase size={24} style={{ color: accent }} />
                 <h2
-                  className="text-3xl font-bold font-mono"
-                  style={{ color: textPrimary }}
+                  style={{
+                    fontSize: isMobile ? "1.4rem" : "1.8rem",
+                    fontWeight: 700,
+                    fontFamily: "monospace",
+                    color: textPrimary,
+                    margin: 0,
+                  }}
                 >
                   Experience
                 </h2>
               </motion.div>
-              <div className="space-y-2">
+              <div>
                 {experiences.map((exp, index) => (
                   <ExperienceItem key={index} {...exp} index={index} />
                 ))}
@@ -829,20 +1123,30 @@ export default function About() {
             {/* Education */}
             <div>
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: isMobile ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-3 mb-8"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  marginBottom: 28,
+                }}
               >
-                <GraduationCap size={28} className="text-blue-400" />
+                <GraduationCap size={24} style={{ color: "#60a5fa" }} />
                 <h2
-                  className="text-3xl font-bold font-mono"
-                  style={{ color: textPrimary }}
+                  style={{
+                    fontSize: isMobile ? "1.4rem" : "1.8rem",
+                    fontWeight: 700,
+                    fontFamily: "monospace",
+                    color: textPrimary,
+                    margin: 0,
+                  }}
                 >
                   Education
                 </h2>
               </motion.div>
-              <div className="space-y-2">
+              <div>
                 {education.map((edu, index) => (
                   <EducationItem key={index} {...edu} index={index} />
                 ))}
@@ -855,32 +1159,61 @@ export default function About() {
       {/* ── TECH STACK ── */}
       <section
         id="technologies"
-        className="py-24"
-        style={{ backgroundColor: isDark ? "#030712" : "#ececec" }}
+        style={{
+          padding: isMobile ? "60px 0" : "96px 0",
+          backgroundColor: isDark ? "#030712" : "#ececec",
+        }}
         ref={techRef}
       >
-        <div className="container mx-auto px-6">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={techInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            style={{ textAlign: "center", marginBottom: isMobile ? 28 : 64 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Zap size={24} style={{ color: accent }} />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                marginBottom: 12,
+              }}
+            >
+              <Zap size={22} style={{ color: accent }} />
               <h2
-                className="text-4xl md:text-5xl font-bold font-mono"
-                style={{ color: textPrimary }}
+                style={{
+                  fontSize: isMobile ? "1.8rem" : "clamp(2rem, 4vw, 3rem)",
+                  fontWeight: 700,
+                  fontFamily: "monospace",
+                  color: textPrimary,
+                  margin: 0,
+                }}
               >
                 Tech Stack
               </h2>
             </div>
-            <p className="text-lg font-mono" style={{ color: textMuted }}>
+            <p
+              style={{
+                fontSize: "0.95rem",
+                fontFamily: "monospace",
+                color: textMuted,
+                margin: 0,
+              }}
+            >
               Tools & technologies I work with daily
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: isMobile ? 8 : 12,
+            }}
+          >
             {technologies.map((tech, index) => (
               <TechBadge key={index} text={tech} index={index} />
             ))}
@@ -890,62 +1223,98 @@ export default function About() {
 
       {/* ── CTA ── */}
       <section
-        className="py-24 relative overflow-hidden"
-        style={{ backgroundColor: bg }}
+        style={{
+          padding: isMobile ? "60px 0" : "96px 0",
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: bg,
+        }}
       >
-        {/* Background radial */}
         <div
-          className="absolute inset-0"
           style={{
+            position: "absolute",
+            inset: 0,
             background: isDark
               ? "radial-gradient(circle at center, rgba(0,173,181,0.08) 0%, transparent 70%)"
               : "radial-gradient(circle at center, rgba(20,184,166,0.08) 0%, transparent 70%)",
           }}
         />
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 20px",
+            position: "relative",
+            zIndex: 10,
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
+            style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}
           >
             <h2
-              className="text-4xl md:text-5xl font-bold font-mono mb-6"
-              style={{ color: textPrimary }}
+              style={{
+                fontSize: isMobile ? "1.8rem" : "clamp(2rem, 4vw, 3rem)",
+                fontWeight: 700,
+                fontFamily: "monospace",
+                color: textPrimary,
+                marginBottom: 20,
+                lineHeight: 1.3,
+              }}
             >
               Let's Build Something{" "}
               <span
-                className={
-                  isDark
-                    ? "bg-gradient-to-r from-[#00adb5] to-blue-500 bg-clip-text text-transparent"
-                    : "bg-gradient-to-r from-[#14b8a6] to-blue-500 bg-clip-text text-transparent"
-                }
+                style={{
+                  background: isDark
+                    ? "linear-gradient(to right, #00adb5, #3b82f6)"
+                    : "linear-gradient(to right, #14b8a6, #3b82f6)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
               >
                 Amazing
               </span>
             </h2>
 
-            <p className="text-lg mb-8" style={{ color: textMuted }}>
+            <p
+              style={{
+                fontSize: isMobile ? "0.9rem" : "1.05rem",
+                marginBottom: 32,
+                color: textMuted,
+                lineHeight: 1.7,
+              }}
+            >
               I'm always open to discussing new projects, creative ideas or
               opportunities to be part of your vision.
             </p>
 
             <motion.a
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-lg font-mono backdrop-blur-xl transition-all"
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: isMobile ? "12px 28px" : "14px 32px",
+                borderRadius: 8,
+                fontFamily: "monospace",
+                fontSize: isMobile ? "0.85rem" : "0.95rem",
+                backdropFilter: "blur(12px)",
                 backgroundColor: isDark
                   ? "rgba(0,173,181,0.08)"
                   : "rgba(20,184,166,0.08)",
                 border: `1px solid ${isDark ? "rgba(0,173,181,0.45)" : "rgba(20,184,166,0.45)"}`,
                 color: accent,
+                textDecoration: "none",
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Terminal size={20} />
+              <Terminal size={18} />
               <span>Start a Conversation</span>
             </motion.a>
           </motion.div>

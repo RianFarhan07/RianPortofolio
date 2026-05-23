@@ -385,8 +385,7 @@ export default function Hero3() {
                 maxWidth: 280,
               }}
             >
-              Membangun solusi digital yang indah dan bermakna — desain bertemu
-              teknologi.
+              Passionate about building products people love to use
             </p>
 
             {/* Stats row */}
@@ -445,7 +444,7 @@ export default function Hero3() {
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
                 <path d="M1 1l22 22" />
               </svg>
-              Hubungi Saya
+              Contact Me
             </Link>
 
             {/* Scroll hint */}
@@ -828,8 +827,7 @@ export default function Hero3() {
                 margin: 0,
               }}
             >
-              Membangun solusi digital yang indah dan bermakna — desain bertemu
-              teknologi.
+              Passionate about building products people love to use
             </p>
             <Link
               to="/contact"

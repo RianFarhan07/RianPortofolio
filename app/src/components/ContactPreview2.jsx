@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   Phone,
@@ -11,7 +10,10 @@ import {
   ArrowRight,
   MessageSquare,
   Handshake,
-  Clock,
+  Send,
+  Star,
+  BarChart2,
+  Info,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -22,364 +24,578 @@ export default function ContactPreview() {
 
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.2,
+    threshold: 0.15,
   });
 
-  // Load Giscus
+  /* ── Giscus ── */
   useEffect(() => {
-    const loadGiscus = () => {
-      // hilangkan script jika sudah ada
-      const existingScript = document.getElementById("giscus-script");
-      if (existingScript) {
-        existingScript.remove();
-      }
+    if (!inView) return;
 
-      // buat dan konfigurasi giscus
-      const script = document.createElement("script");
-      script.src = "https://giscus.app/client.js";
-      script.id = "giscus-script";
-      script.setAttribute("data-repo", "RianFarhan07/RianPortofolio");
-      script.setAttribute("data-repo-id", "R_kgDOObW8sg");
-      script.setAttribute("data-category", "General");
-      script.setAttribute("data-category-id", "DIC_kwDOObW8ss4CpSL1");
-      script.setAttribute("data-mapping", "pathname");
-      script.setAttribute("data-strict", "0");
-      script.setAttribute("data-reactions-enabled", "1");
-      script.setAttribute("data-emit-metadata", "0");
-      script.setAttribute("data-input-position", "top");
-      script.setAttribute("data-theme", isDark ? "dark" : "light");
-      script.setAttribute("data-lang", "en");
-      script.setAttribute("crossorigin", "anonymous");
-      script.async = true;
+    const existing = document.getElementById("giscus-script");
+    if (existing) existing.remove();
 
-      //tambahkan script ke halaman
-      const giscusContainer = document.getElementById("giscus-container");
-      if (giscusContainer) {
-        giscusContainer.appendChild(script);
-      }
-    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.id = "giscus-script";
+    script.setAttribute("data-repo", "RianFarhan07/RianPortofolio");
+    script.setAttribute("data-repo-id", "R_kgDOObW8sg");
+    script.setAttribute("data-category", "General");
+    script.setAttribute("data-category-id", "DIC_kwDOObW8ss4CpSL1");
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "top");
+    script.setAttribute("data-theme", isDark ? "dark" : "light");
+    script.setAttribute("data-lang", "en");
+    script.setAttribute("crossorigin", "anonymous");
+    script.async = true;
 
-    // untuk performance load giscus saat komponen inView
-    if (inView) {
-      loadGiscus();
-    }
+    const container = document.getElementById("giscus-container");
+    if (container) container.appendChild(script);
 
     return () => {
-      // kalau unmount bersihkan script
-      const giscusScript = document.getElementById("giscus-script");
-      if (giscusScript) {
-        giscusScript.remove();
-      }
+      const s = document.getElementById("giscus-script");
+      if (s) s.remove();
     };
   }, [inView, isDark]);
 
-  const contactInfo = [
+  /* ── Data ── */
+  const contactCards = [
     {
-      icon: <Phone size={20} />,
-      title: "Phone",
+      icon: <Phone size={16} />,
+      label: "WhatsApp",
       value: "+62 822 8037 2670",
-      link: "https://wa.me/6282280372670?text=Hi%20Rian,%20I%20would%20like%20to%20discuss%20a%20job%20opportunity%20we%20have%20and%20see%20if%20you%20might%20be%20interested.",
+      href: "https://wa.me/6282280372670?text=Hi%20Rian,%20I%20would%20like%20to%20discuss%20a%20job%20opportunity.",
+      external: true,
     },
     {
-      icon: <Mail size={20} />,
-      title: "Email",
+      icon: <Mail size={16} />,
+      label: "Email",
       value: "rian.mallanti@gmail.com",
-      link: "#contact",
+      href: "mailto:rian.mallanti@gmail.com",
+      external: false,
     },
     {
-      icon: <MapPin size={20} />,
-      title: "Location",
-      value: "Siddo, Kec. Soppeng Riaja, Kabupaten Barru, Sulawesi Selatan",
-      link: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z/data=!4m15!1m8!3m7!1s0x2d959037d3877ecf:0xfbffc78763dca0b3!2sSiddo,+Kec.+Soppeng+Riaja,+Kabupaten+Barru,+Sulawesi+Selatan!3b1!8m2!3d-4.2420418!4d119.6441212!16s%2Fg%2F121mkpx2!3m5!1s0x2d95906ab81869db:0xbdb867d18d33b203!8m2!3d-4.2377172!4d119.6253708!16s%2Fg%2F11qg28lb6m?entry=ttu&g_ep=EgoyMDI1MDQxNi4xIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D",
+      icon: <MapPin size={16} />,
+      label: "Location",
+      value: "Sulawesi Selatan, ID",
+      href: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z",
+      external: true,
     },
     {
-      icon: <Handshake size={20} />,
-      title: "Collaboration",
-      value: "Let’s build something great!",
-      link: "mailto:rian.mallanti@gmail.com",
-    },
-    {
-      icon: <Clock size={20} />,
-      title: "Available For",
-      value: "Freelance",
-      link: "#about",
+      icon: <Handshake size={16} />,
+      label: "Collaboration",
+      value: "Let's build something!",
+      href: "mailto:rian.mallanti@gmail.com",
+      external: false,
     },
   ];
 
   const socialLinks = [
     {
-      icon: <Linkedin size={18} />,
+      icon: <Linkedin size={15} />,
       name: "LinkedIn",
       url: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/",
     },
     {
-      icon: <Github size={18} />,
+      icon: <Github size={15} />,
       name: "GitHub",
       url: "https://github.com/RianFarhan07",
     },
     {
-      icon: <Instagram size={18} />,
+      icon: <Instagram size={15} />,
       name: "Instagram",
       url: "https://www.instagram.com/rianfarhan/",
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  const stats = [
+    { label: "Projects Done", value: "50+", pct: 85 },
+    { label: "Response Rate", value: "~24h", pct: 92 },
+    { label: "Client Satisfaction", value: "99%", pct: 99 },
+  ];
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  };
+  /* ── Shared tokens ── */
+  const accent = "#00d4ff";
+  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
+  const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
+  const textFaint = isDark ? "rgba(220,230,255,.28)" : "rgba(10,18,48,.28)";
+  const borderColor = "rgba(0,180,255,.12)";
+  const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
+  const sectionBg = isDark ? "#04081c" : "#f0f4ff";
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden" ref={ref}>
-      {/* Background decor */}
-      {/* <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-5 -top-48 -left-48`}
-        />
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-5 -bottom-48 -right-48`}
-        />
-        <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-      </div> */}
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-10 md:mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex items-center gap-2 mb-4 justify-center">
-            <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
-            ></div>
-            <span
-              className={`text-sm font-semibold uppercase tracking-wider ${
-                isDark ? "text-primary" : "text-primaryInLight"
-              }`}
-            >
-              Get In Touch
-            </span>
-            <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
-            ></div>
-          </div>
+        @keyframes cp-scan {
+          0%  { top: 0;    opacity: 0; }
+          5%  { opacity: 1; }
+          95% { opacity: 1; }
+          100%{ top: 100%; opacity: 0; }
+        }
+        @keyframes cp-pdot {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,.7); }
+          50%       { box-shadow: 0 0 0 5px rgba(0,212,255,0); }
+        }
+        @keyframes cp-fadein {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
 
-          <h2
-            className={`text-2xl sm:text-3xl md:text-4xl font-bold ${
-              isDark ? "text-white" : "text-gray-800"
-            }`}
+        .cp-scan {
+          position: absolute; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0,180,255,.3), transparent);
+          animation: cp-scan 7s ease-in-out infinite;
+          pointer-events: none; z-index: 1; top: 0;
+        }
+        .cp-corner {
+          position: absolute; width: 18px; height: 18px; z-index: 2; pointer-events: none;
+        }
+        .cp-pdot {
+          width: 6px; height: 6px; border-radius: 50%; background: #00d4ff;
+          flex-shrink: 0; animation: cp-pdot 2s infinite; display: inline-block;
+        }
+        .cp-col-label {
+          font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+          color: #00d4ff; display: flex; align-items: center; gap: 8px;
+          margin-bottom: 16px; font-family: 'DM Sans', sans-serif;
+        }
+        .cp-col-label::after {
+          content: ''; flex: 1; height: 1px;
+          background: linear-gradient(90deg, rgba(0,180,255,.3), transparent);
+        }
+        .cp-contact-card {
+          display: flex; align-items: center; gap: 14px;
+          border: 1px solid rgba(0,180,255,.12); border-radius: 9px;
+          padding: 14px 16px; text-decoration: none; color: inherit;
+          transition: border-color .2s, background .2s;
+        }
+        .cp-contact-card:hover {
+          border-color: rgba(0,180,255,.35);
+        }
+        .cp-icon-wrap {
+          width: 38px; height: 38px; border-radius: 50%;
+          border: 1px solid rgba(0,180,255,.22);
+          background: rgba(0,180,255,.07);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0; color: #00d4ff;
+          transition: background .2s;
+        }
+        .cp-contact-card:hover .cp-icon-wrap {
+          background: rgba(0,180,255,.15);
+        }
+        .cp-social-btn {
+          width: 34px; height: 34px; border-radius: 50%;
+          border: 1px solid rgba(255,255,255,.12);
+          display: flex; align-items: center; justify-content: center;
+          color: rgba(255,255,255,.4); text-decoration: none;
+          transition: border-color .2s, color .2s;
+        }
+        .cp-social-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+        .cp-social-btn-light {
+          border-color: rgba(10,18,48,.15); color: rgba(10,18,48,.35);
+        }
+        .cp-social-btn-light:hover { border-color: #0ea5e9; color: #0ea5e9; }
+        .cp-stat-bar-bg {
+          height: 2px; border-radius: 2px;
+          background: rgba(255,255,255,.08); margin-top: 5px;
+        }
+        .cp-stat-bar-bg-light {
+          background: rgba(10,18,48,.08);
+        }
+        .cp-stat-bar-fill {
+          height: 2px; border-radius: 2px;
+          background: linear-gradient(90deg, #0066ff, #00d4ff);
+        }
+        .cp-cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 11px 28px;
+          background: linear-gradient(135deg, #0066ff, #00d4ff);
+          border: none; border-radius: 100px; cursor: pointer;
+          font-family: 'DM Sans', sans-serif; font-size: .82rem;
+          font-weight: 500; color: white; text-decoration: none;
+          box-shadow: 0 0 24px rgba(0,100,255,.35);
+          transition: transform .2s, box-shadow .2s;
+        }
+        .cp-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 0 40px rgba(0,150,255,.55);
+        }
+        .cp-animate {
+          animation: cp-fadein .7s ease both;
+        }
+      `}</style>
+
+      <section
+        id="contact"
+        ref={ref}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          background: sectionBg,
+          padding: "72px clamp(24px, 5vw, 80px)",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        {/* Scan line */}
+        <div className="cp-scan" />
+
+        {/* Corner marks */}
+        {[
+          {
+            top: 14,
+            left: 14,
+            borderTop: "1px solid rgba(0,180,255,.35)",
+            borderLeft: "1px solid rgba(0,180,255,.35)",
+          },
+          {
+            top: 14,
+            right: 14,
+            borderTop: "1px solid rgba(0,180,255,.35)",
+            borderRight: "1px solid rgba(0,180,255,.35)",
+          },
+          {
+            bottom: 14,
+            left: 14,
+            borderBottom: "1px solid rgba(0,180,255,.35)",
+            borderLeft: "1px solid rgba(0,180,255,.35)",
+          },
+          {
+            bottom: 14,
+            right: 14,
+            borderBottom: "1px solid rgba(0,180,255,.35)",
+            borderRight: "1px solid rgba(0,180,255,.35)",
+          },
+        ].map((s, i) => (
+          <div key={i} className="cp-corner" style={s} />
+        ))}
+
+        {inView && (
+          <div
+            className="cp-animate"
+            style={{
+              position: "relative",
+              zIndex: 2,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "clamp(28px, 5vw, 64px)",
+              alignItems: "start",
+            }}
           >
-            Let's{" "}
-            <span
-              className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                isDark
-                  ? "from-primary to-blue-400"
-                  : "from-primaryInLight to-blue-500"
-              }`}
-            >
-              Connect
-            </span>
-          </h2>
-        </motion.div>
+            {/* ══ LEFT COLUMN ══ */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {/* Section label */}
+              <div className="cp-col-label">
+                <MessageSquare size={11} />
+                Get in touch
+              </div>
 
-        <motion.div
-          className="mb-6 text-center lg:text-right"
-          variants={itemVariants}
-        >
-          <Link
-            to="/contact"
-            className={`inline-flex items-center gap-2 font-medium ${
-              isDark
-                ? "text-primary hover:text-primary/80"
-                : "text-primaryInLight hover:text-primaryInLight/80"
-            } transition-colors`}
-          >
-            <span>Email Me</span>
-            <ArrowRight
-              size={16}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </Link>
-        </motion.div>
+              {/* Big title */}
+              <div
+                style={{
+                  fontFamily: "Syne, sans-serif",
+                  fontSize: "clamp(2.6rem, 5.5vw, 5rem)",
+                  fontWeight: 800,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 0.9,
+                  textTransform: "uppercase",
+                  marginBottom: 24,
+                }}
+              >
+                <span style={{ display: "block", color: textPrimary }}>
+                  LET'S
+                </span>
+                <span style={{ display: "block", color: textPrimary }}>
+                  BUILD
+                </span>
+                <span
+                  style={{
+                    display: "block",
+                    color: "transparent",
+                    WebkitTextStroke: isDark
+                      ? "2px rgba(255,255,255,.15)"
+                      : "2px rgba(10,18,48,.15)",
+                  }}
+                >
+                  TOGETHER
+                </span>
+              </div>
 
-        <motion.div
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          {/* Quick Contact Info */}
-          <motion.div
-            className="lg:col-span-4 space-y-4 sm:space-y-6"
-            variants={itemVariants}
-          >
-            {contactInfo.map((item, index) => (
-              <motion.a
-                key={index}
-                href={item.link}
-                target={item.title === "Location" ? "_blank" : undefined}
-                rel={
-                  item.title === "Location" ? "noopener noreferrer" : undefined
-                }
-                whileHover={{ x: 5 }}
-                className={`flex items-center gap-4 p-4 rounded-lg ${
-                  isDark
-                    ? "bg-gray-900/80 border border-gray-800 hover:bg-gray-800/80"
-                    : "bg-white/80 border border-gray-200 hover:bg-gray-50/80"
-                } transition-colors backdrop-blur-sm group`}
+              {/* Subtitle */}
+              <p
+                style={{
+                  fontSize: ".88rem",
+                  lineHeight: 1.7,
+                  color: textMuted,
+                  margin: "0 0 22px",
+                  maxWidth: 340,
+                }}
+              >
+                Open to freelance projects, collaborations, and new
+                opportunities. Drop a message — I'll get back to you.
+              </p>
+
+              {/* Available badge */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "rgba(0,180,255,.07)",
+                  border: "1px solid rgba(0,180,255,.2)",
+                  borderRadius: 100,
+                  padding: "6px 14px",
+                  fontSize: ".68rem",
+                  letterSpacing: ".1em",
+                  textTransform: "uppercase",
+                  color: accent,
+                  width: "fit-content",
+                  marginBottom: 28,
+                }}
+              >
+                <span className="cp-pdot" />
+                Available Now · Freelance
+              </div>
+
+              {/* Contact cards grid */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 10,
+                  marginBottom: 24,
+                }}
+              >
+                {contactCards.map((item, i) => (
+                  <a
+                    key={i}
+                    href={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener noreferrer" : undefined}
+                    className="cp-contact-card"
+                    style={{ background: cardBg }}
+                  >
+                    <div className="cp-icon-wrap">{item.icon}</div>
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: ".58rem",
+                          letterSpacing: ".14em",
+                          textTransform: "uppercase",
+                          color: textFaint,
+                          marginBottom: 3,
+                        }}
+                      >
+                        {item.label}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "Syne, sans-serif",
+                          fontSize: ".8rem",
+                          fontWeight: 700,
+                          color: textPrimary,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+              {/* Divider */}
+              <div
+                style={{
+                  height: 1,
+                  background: "rgba(0,180,255,.1)",
+                  marginBottom: 18,
+                }}
+              />
+
+              {/* Social links */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span
+                  style={{
+                    fontSize: ".58rem",
+                    letterSpacing: ".16em",
+                    textTransform: "uppercase",
+                    color: textFaint,
+                    marginRight: 4,
+                  }}
+                >
+                  Follow
+                </span>
+                {socialLinks.map((s, i) => (
+                  <a
+                    key={i}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={s.name}
+                    className={`cp-social-btn${!isDark ? " cp-social-btn-light" : ""}`}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* ══ RIGHT COLUMN ══ */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Giscus block */}
+              <div
+                style={{
+                  border: `1px solid ${borderColor}`,
+                  borderRadius: 9,
+                  background: cardBg,
+                  padding: "20px 22px",
+                }}
               >
                 <div
-                  className={`p-3 rounded-full ${
-                    isDark
-                      ? "bg-gray-800 text-primary group-hover:bg-primary/20"
-                      : "bg-gray-100 text-primaryInLight group-hover:bg-primaryInLight/20"
-                  } transition-colors`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 16,
+                  }}
                 >
-                  {item.icon}
+                  <div className="cp-col-label" style={{ margin: 0, flex: 1 }}>
+                    <MessageSquare size={11} />
+                    Join the conversation
+                  </div>
+                  <a
+                    href="https://github.com/RianFarhan07/RianPortofolio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 5,
+                      fontSize: ".68rem",
+                      letterSpacing: ".1em",
+                      textTransform: "uppercase",
+                      color: accent,
+                      textDecoration: "none",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Star size={11} /> Star Repo
+                  </a>
                 </div>
-                <div>
-                  <h3
-                    className={`text-sm font-medium ${
-                      isDark ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {item.title}
-                  </h3>
+
+                {/* Giscus container */}
+                <div id="giscus-container" style={{ width: "100%" }} />
+
+                {/* Hint */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    marginTop: 12,
+                    padding: "10px 12px",
+                    background: "rgba(0,180,255,.04)",
+                    border: "1px solid rgba(0,180,255,.08)",
+                    borderRadius: 7,
+                  }}
+                >
+                  <Info
+                    size={13}
+                    style={{ color: accent, flexShrink: 0, marginTop: 1 }}
+                  />
                   <p
-                    className={`text-base font-semibold ${
-                      isDark ? "text-white" : "text-gray-800"
-                    }`}
+                    style={{
+                      fontSize: ".73rem",
+                      lineHeight: 1.6,
+                      color: textMuted,
+                      margin: 0,
+                    }}
                   >
-                    {item.value}
+                    Login dengan GitHub untuk berkomentar. Jangan lupa kasih
+                    reaksi ❤️ atau ⭐ dan star repo-nya ya! 🙌
                   </p>
                 </div>
-              </motion.a>
-            ))}
+              </div>
 
-            {/* Social Links buat di mobile */}
-            <motion.div className="flex flex-wrap gap-3 justify-center lg:justify-start pt-2 lg:hidden">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`p-3 rounded-full ${
-                    isDark
-                      ? "bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
-                  } transition-colors`}
-                >
-                  {social.icon}
-                </motion.a>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Giscus Comments Section */}
-          <motion.div className="lg:col-span-8" variants={itemVariants}>
-            <div
-              className={`p-6 rounded-lg ${
-                isDark
-                  ? "bg-gray-900/80 border border-gray-800"
-                  : "bg-white/80 border border-gray-200"
-              } backdrop-blur-sm h-full`}
-            >
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <MessageSquare
-                    size={20}
-                    className={isDark ? "text-primary" : "text-primaryInLight"}
-                  />
-                  <h3
-                    className={`text-xl font-bold ${
-                      isDark ? "text-white" : "text-gray-800"
-                    }`}
-                  >
-                    Join the Conversation
-                  </h3>
+              {/* Quick stats block */}
+              <div
+                style={{
+                  border: `1px solid ${borderColor}`,
+                  borderRadius: 9,
+                  background: cardBg,
+                  padding: "18px 22px",
+                }}
+              >
+                <div className="cp-col-label">
+                  <BarChart2 size={11} />
+                  Quick stats
                 </div>
 
-                {/* Social links - di desktop aja */}
-                <div className="hidden lg:flex gap-2">
-                  {socialLinks.map((social, index) => (
-                    <motion.a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ y: -3 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-2 rounded-full ${
-                        isDark
-                          ? "bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
-                      } transition-colors`}
-                    >
-                      {social.icon}
-                    </motion.a>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 13 }}
+                >
+                  {stats.map(({ label, value, pct }) => (
+                    <div key={label}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "baseline",
+                        }}
+                      >
+                        <span style={{ fontSize: ".78rem", color: textMuted }}>
+                          {label}
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "Syne, sans-serif",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: accent,
+                          }}
+                        >
+                          {value}
+                        </span>
+                      </div>
+                      <div
+                        className={`cp-stat-bar-bg${!isDark ? " cp-stat-bar-bg-light" : ""}`}
+                      >
+                        <div
+                          className="cp-stat-bar-fill"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* Giscus container */}
-              <div className="min-h-64 mb-2">
-                <div id="giscus-container" className="w-full"></div>
-
-                {/* Instructions notice */}
-                <div
-                  className={`text-xs mt-4 p-3 rounded ${
-                    isDark
-                      ? "bg-gray-800 text-gray-400"
-                      : "bg-gray-100 text-gray-500"
-                  }`}
+              {/* CTA */}
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <Link to="/contact" className="cp-cta">
+                  <Send size={13} />
+                  Email Me Directly
+                  <ArrowRight size={13} />
+                </Link>
+                <span
+                  style={{
+                    fontSize: ".68rem",
+                    color: textFaint,
+                    letterSpacing: ".08em",
+                  }}
                 >
-                  <p>
-                    <strong>Note :</strong> Please log in to your GitHub account
-                    and leave a comment below! 😊 Don't forget to add an emoji
-                    reaction like ❤️, 🚀, or any emoji you like to show your
-                    thoughts! <br />
-                    Feel free to check out my repository, and don't forget to
-                    star it ⭐ if you find it useful! 🙌
-                  </p>
-                </div>
+                  or use the form above
+                </span>
               </div>
             </div>
-
-            {/* Link to full contact page */}
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
+          </div>
+        )}
+      </section>
+    </>
   );
 }
