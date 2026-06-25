@@ -58,7 +58,7 @@ function AnimCounter({ to, suffix = "", delay = 0 }) {
   return (
     <span>
       {val}
-      <em style={{ fontStyle: "normal", color: "#00d4ff" }}>{suffix}</em>
+      <em style={{ fontStyle: "normal", color: "var(--ac)" }}>{suffix}</em>
     </span>
   );
 }
@@ -176,7 +176,7 @@ export default function ProjectPreview() {
 
   const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
   const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
-  const borderColor = "rgba(0,180,255,.18)";
+  const borderColor = "rgba(var(--ac2),.18)";
   const cardBg = isDark ? "rgba(4,8,28,.96)" : "rgba(240,244,255,.96)";
 
   /* ══════════════════════════════════════════
@@ -192,41 +192,41 @@ export default function ProjectPreview() {
             0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
           }
           @keyframes pp-pdot {
-            0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)} 50%{box-shadow:0 0 0 5px rgba(0,212,255,0)}
+            0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)} 50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}
           }
           .pp-scan {
             position:absolute; left:0; right:0; height:1px;
-            background:linear-gradient(90deg,transparent,rgba(0,180,255,.35),transparent);
+            background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);
             animation:pp-scan 7s ease-in-out infinite;
             pointer-events:none; z-index:8;
           }
           .pp-pdot {
-            width:6px; height:6px; border-radius:50%; background:#00d4ff;
+            width:6px; height:6px; border-radius:50%; background:var(--ac);
             flex-shrink:0; animation:pp-pdot 2s infinite;
           }
           .pp-mob-chip {
             display:inline-flex; align-items:center;
             padding:3px 10px;
-            border:1px solid rgba(0,180,255,.2); border-radius:100px;
-            font-size:.68rem; color:rgba(0,212,255,.75);
-            background:rgba(0,180,255,.07);
+            border:1px solid rgba(var(--ac2),.2); border-radius:100px;
+            font-size:.68rem; color:rgba(var(--ac1),.75);
+            background:rgba(var(--ac2),.07);
             letter-spacing:.05em;
           }
           .pp-mob-cta {
             display:inline-flex; align-items:center; gap:7px;
             padding:10px 22px;
-            background:linear-gradient(135deg,#0066ff,#00d4ff);
+            background:linear-gradient(135deg,var(--ac-deep),var(--ac));
             border:none; border-radius:100px; cursor:pointer;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
             font-weight:500; color:white;
-            box-shadow:0 0 24px rgba(0,100,255,.35);
+            box-shadow:0 0 24px rgba(var(--ac-glow),.35);
             text-decoration:none;
           }
           .pp-mob-ghost {
             display:inline-flex; align-items:center; gap:7px;
             padding:10px 22px;
-            background:rgba(0,180,255,.06);
-            border:1px solid rgba(0,180,255,.22); border-radius:100px;
+            background:rgba(var(--ac2),.06);
+            border:1px solid rgba(var(--ac2),.22); border-radius:100px;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
             font-weight:500; color:rgba(220,230,255,.72);
             text-decoration:none;
@@ -250,26 +250,26 @@ export default function ProjectPreview() {
             {
               top: 14,
               left: 14,
-              borderTop: "1px solid rgba(0,180,255,.35)",
-              borderLeft: "1px solid rgba(0,180,255,.35)",
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
             },
             {
               top: 14,
               right: 14,
-              borderTop: "1px solid rgba(0,180,255,.35)",
-              borderRight: "1px solid rgba(0,180,255,.35)",
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
             },
             {
               bottom: 14,
               left: 14,
-              borderBottom: "1px solid rgba(0,180,255,.35)",
-              borderLeft: "1px solid rgba(0,180,255,.35)",
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
             },
             {
               bottom: 14,
               right: 14,
-              borderBottom: "1px solid rgba(0,180,255,.35)",
-              borderRight: "1px solid rgba(0,180,255,.35)",
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
             },
           ].map((s, i) => (
             <div
@@ -300,7 +300,7 @@ export default function ProjectPreview() {
               style={{
                 width: 28,
                 height: 1,
-                background: "linear-gradient(90deg,#00d4ff,transparent)",
+                background: "linear-gradient(90deg,var(--ac),transparent)",
               }}
             />
             <span
@@ -308,7 +308,7 @@ export default function ProjectPreview() {
                 fontSize: ".65rem",
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
-                color: "rgba(0,212,255,.7)",
+                color: "rgba(var(--ac1),.7)",
                 fontFamily: "Syne,sans-serif",
                 fontWeight: 700,
               }}
@@ -379,7 +379,7 @@ export default function ProjectPreview() {
                 style={{
                   width: 24,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -387,7 +387,7 @@ export default function ProjectPreview() {
                   fontSize: ".62rem",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.6)",
+                  color: "rgba(var(--ac1),.6)",
                   fontFamily: "Syne,sans-serif",
                 }}
               >
@@ -448,7 +448,7 @@ export default function ProjectPreview() {
                   fontSize: ".65rem",
                   letterSpacing: ".18em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.6)",
+                  color: "rgba(var(--ac1),.6)",
                 }}
               >
                 Project — {String(activeIndex + 1).padStart(2, "0")}
@@ -537,7 +537,7 @@ export default function ProjectPreview() {
                 justifyContent: "center",
                 gap: 5,
                 padding: "10px 0 12px",
-                borderTop: `1px solid rgba(0,180,255,.08)`,
+                borderTop: `1px solid rgba(var(--ac2),.08)`,
               }}
             >
               {projects.map((_, i) => (
@@ -552,8 +552,8 @@ export default function ProjectPreview() {
                     cursor: "pointer",
                     background:
                       i === activeIndex
-                        ? "linear-gradient(90deg,#0066ff,#00d4ff)"
-                        : "rgba(0,180,255,.18)",
+                        ? "linear-gradient(90deg,var(--ac-deep),var(--ac))"
+                        : "rgba(var(--ac2),.18)",
                     transition: "width .3s ease, background .3s ease",
                     padding: 0,
                   }}
@@ -579,13 +579,13 @@ export default function ProjectPreview() {
                 alignItems: "center",
                 gap: 8,
                 padding: "12px 28px",
-                background: "linear-gradient(135deg,#0066ff,#00d4ff)",
+                background: "linear-gradient(135deg,var(--ac-deep),var(--ac))",
                 borderRadius: 100,
                 fontSize: ".83rem",
                 fontWeight: 500,
                 color: "white",
                 textDecoration: "none",
-                boxShadow: "0 0 28px rgba(0,100,255,.35)",
+                boxShadow: "0 0 28px rgba(var(--ac-glow),.35)",
               }}
             >
               View All Projects <ArrowRight size={14} />
@@ -608,7 +608,7 @@ export default function ProjectPreview() {
           0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
         }
         @keyframes pp-pdot {
-          0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)} 50%{box-shadow:0 0 0 6px rgba(0,212,255,0)}
+          0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)} 50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}
         }
         @keyframes pp-arr {
           0%,100%{transform:rotate(45deg) translate(0,0);opacity:.3}
@@ -617,90 +617,90 @@ export default function ProjectPreview() {
 
         .pp-scan {
           position:absolute; left:0; right:0; height:1px;
-          background:linear-gradient(90deg,transparent,rgba(0,180,255,.25),transparent);
+          background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent);
           animation:pp-scan 7s ease-in-out infinite;
           pointer-events:none; z-index:8;
         }
         .pp-gridbg {
           position:absolute; inset:0; pointer-events:none;
           background-image:
-            repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(0,180,255,.018) 72px,rgba(0,180,255,.018) 73px),
-            repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(0,180,255,.018) 72px,rgba(0,180,255,.018) 73px);
+            repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px),
+            repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px);
           z-index:0;
         }
         .pp-pdot {
-          width:6px; height:6px; border-radius:50%; background:#00d4ff;
+          width:6px; height:6px; border-radius:50%; background:var(--ac);
           flex-shrink:0; animation:pp-pdot 2s infinite;
         }
         .pp-chip {
           display:inline-flex; align-items:center;
           padding:4px 12px;
-          border:1px solid rgba(0,180,255,.2); border-radius:100px;
-          font-size:.7rem; color:rgba(0,212,255,.75);
-          background:rgba(0,180,255,.07);
+          border:1px solid rgba(var(--ac2),.2); border-radius:100px;
+          font-size:.7rem; color:rgba(var(--ac1),.75);
+          background:rgba(var(--ac2),.07);
           letter-spacing:.06em;
           transition: border-color .2s, background .2s;
         }
         .pp-chip:hover {
-          border-color:rgba(0,180,255,.45);
-          background:rgba(0,180,255,.13);
+          border-color:rgba(var(--ac2),.45);
+          background:rgba(var(--ac2),.13);
         }
         .pp-cta {
           display:inline-flex; align-items:center; gap:7px;
           padding:11px 26px;
-          background:linear-gradient(135deg,#0066ff,#00d4ff);
+          background:linear-gradient(135deg,var(--ac-deep),var(--ac));
           border:none; border-radius:100px; cursor:pointer;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
           font-weight:500; color:white;
-          box-shadow:0 0 28px rgba(0,100,255,.4);
+          box-shadow:0 0 28px rgba(var(--ac-glow),.4);
           text-decoration:none;
           transition:transform .22s, box-shadow .22s;
           white-space:nowrap;
         }
-        .pp-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(0,150,255,.65); }
+        .pp-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(var(--ac-glow),.65); }
 
         .pp-ghost {
           display:inline-flex; align-items:center; gap:7px;
           padding:11px 26px;
-          background:rgba(0,180,255,.06);
-          border:1px solid rgba(0,180,255,.22); border-radius:100px;
+          background:rgba(var(--ac2),.06);
+          border:1px solid rgba(var(--ac2),.22); border-radius:100px;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
           font-weight:500; color:rgba(220,230,255,.72);
           text-decoration:none;
           transition:transform .22s, border-color .22s;
           white-space:nowrap;
         }
-        .pp-ghost:hover { transform:translateY(-2px); border-color:rgba(0,180,255,.5); }
+        .pp-ghost:hover { transform:translateY(-2px); border-color:rgba(var(--ac2),.5); }
 
         .pp-nav-btn {
           width:38px; height:38px; border-radius:50%;
-          border:1px solid rgba(0,180,255,.22);
-          background:rgba(0,180,255,.06);
+          border:1px solid rgba(var(--ac2),.22);
+          background:rgba(var(--ac2),.06);
           display:flex; align-items:center; justify-content:center;
           cursor:pointer; color:rgba(220,230,255,.7);
           transition:border-color .2s, background .2s, transform .2s;
         }
         .pp-nav-btn:hover {
-          border-color:rgba(0,180,255,.5);
-          background:rgba(0,180,255,.14);
+          border-color:rgba(var(--ac2),.5);
+          background:rgba(var(--ac2),.14);
           transform:scale(1.08);
         }
 
         .pp-proj-thumb {
           cursor:pointer;
-          border:1px solid rgba(0,180,255,.12);
+          border:1px solid rgba(var(--ac2),.12);
           border-radius:8px;
           overflow:hidden;
           transition:border-color .25s, transform .25s;
           flex-shrink:0;
         }
-        .pp-proj-thumb:hover { border-color:rgba(0,180,255,.4); transform:scale(1.03); }
-        .pp-proj-thumb.active { border-color:rgba(0,212,255,.7); }
+        .pp-proj-thumb:hover { border-color:rgba(var(--ac2),.4); transform:scale(1.03); }
+        .pp-proj-thumb.active { border-color:rgba(var(--ac1),.7); }
 
         .pp-scroll-arrow {
           width:12px; height:12px;
-          border-right:1px solid rgba(0,180,255,.5);
-          border-bottom:1px solid rgba(0,180,255,.5);
+          border-right:1px solid rgba(var(--ac2),.5);
+          border-bottom:1px solid rgba(var(--ac2),.5);
           transform:rotate(45deg);
           animation:pp-arr 1.5s ease-in-out infinite;
         }
@@ -732,26 +732,26 @@ export default function ProjectPreview() {
           {
             top: 14,
             left: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             top: 14,
             right: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             left: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             right: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
         ].map((s, i) => (
           <div
@@ -792,7 +792,7 @@ export default function ProjectPreview() {
                 style={{
                   width: 36,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -800,7 +800,7 @@ export default function ProjectPreview() {
                   fontSize: ".65rem",
                   letterSpacing: ".22em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.7)",
+                  color: "rgba(var(--ac1),.7)",
                   fontFamily: "Syne,sans-serif",
                   fontWeight: 700,
                 }}
@@ -850,7 +850,7 @@ export default function ProjectPreview() {
                   fontSize: ".68rem",
                   letterSpacing: ".13em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.65)",
+                  color: "rgba(var(--ac1),.65)",
                 }}
               >
                 {String(activeIndex + 1).padStart(2, "0")} /{" "}
@@ -954,7 +954,7 @@ export default function ProjectPreview() {
                 right: 0,
                 height: "1px",
                 background:
-                  "linear-gradient(90deg,transparent,rgba(0,180,255,.3),transparent)",
+                  "linear-gradient(90deg,transparent,rgba(var(--ac2),.3),transparent)",
                 animation: "pp-scan 7s ease-in-out infinite 1.5s",
                 pointerEvents: "none",
               }}
@@ -969,7 +969,7 @@ export default function ProjectPreview() {
                   fontSize: ".6rem",
                   letterSpacing: ".18em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.55)",
+                  color: "rgba(var(--ac1),.55)",
                   marginBottom: 6,
                 }}
               >
@@ -1018,14 +1018,14 @@ export default function ProjectPreview() {
               {
                 top: 10,
                 left: 10,
-                borderTop: "1px solid rgba(0,180,255,.45)",
-                borderLeft: "1px solid rgba(0,180,255,.45)",
+                borderTop: "1px solid rgba(var(--ac2),.45)",
+                borderLeft: "1px solid rgba(var(--ac2),.45)",
               },
               {
                 top: 10,
                 right: 10,
-                borderTop: "1px solid rgba(0,180,255,.45)",
-                borderRight: "1px solid rgba(0,180,255,.45)",
+                borderTop: "1px solid rgba(var(--ac2),.45)",
+                borderRight: "1px solid rgba(var(--ac2),.45)",
               },
             ].map((s, i) => (
               <div
@@ -1053,7 +1053,7 @@ export default function ProjectPreview() {
             <div
               style={{
                 padding: "14px 20px",
-                borderBottom: `1px solid rgba(0,180,255,.1)`,
+                borderBottom: `1px solid rgba(var(--ac2),.1)`,
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -1064,7 +1064,7 @@ export default function ProjectPreview() {
                 style={{
                   width: 24,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -1072,7 +1072,7 @@ export default function ProjectPreview() {
                   fontSize: ".62rem",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.6)",
+                  color: "rgba(var(--ac1),.6)",
                   fontFamily: "Syne,sans-serif",
                 }}
               >
@@ -1094,7 +1094,7 @@ export default function ProjectPreview() {
                     fontSize: ".62rem",
                     letterSpacing: ".16em",
                     textTransform: "uppercase",
-                    color: "rgba(0,212,255,.55)",
+                    color: "rgba(var(--ac1),.55)",
                     marginBottom: 6,
                   }}
                 >
@@ -1120,7 +1120,7 @@ export default function ProjectPreview() {
                   style={{
                     height: 1,
                     background:
-                      "linear-gradient(90deg,rgba(0,180,255,.3),transparent)",
+                      "linear-gradient(90deg,rgba(var(--ac2),.3),transparent)",
                     marginBottom: 14,
                   }}
                 />
@@ -1162,7 +1162,7 @@ export default function ProjectPreview() {
                         flex: 1,
                         height: 1,
                         background:
-                          "linear-gradient(90deg,rgba(0,180,255,.2),transparent)",
+                          "linear-gradient(90deg,rgba(var(--ac2),.2),transparent)",
                       }}
                     />
                   </div>
@@ -1175,7 +1175,7 @@ export default function ProjectPreview() {
             <div
               style={{
                 padding: "14px 20px",
-                borderTop: `1px solid rgba(0,180,255,.1)`,
+                borderTop: `1px solid rgba(var(--ac2),.1)`,
                 display: "flex",
                 gap: 8,
                 flexShrink: 0,
@@ -1231,7 +1231,7 @@ export default function ProjectPreview() {
                   background: "none",
                 }}
               >
-                <img
+                <img loading="lazy" decoding="async"
                   src={p.image || "/placeholder.svg"}
                   alt={p.title}
                   style={{
@@ -1252,7 +1252,7 @@ export default function ProjectPreview() {
             style={{
               flex: 1,
               height: 1,
-              background: "rgba(0,180,255,.12)",
+              background: "rgba(var(--ac2),.12)",
               margin: "0 20px",
               position: "relative",
             }}
@@ -1264,7 +1264,7 @@ export default function ProjectPreview() {
                 top: 0,
                 height: "100%",
                 width: `${((activeIndex + 1) / projects.length) * 100}%`,
-                background: "linear-gradient(90deg,#0066ff,#00d4ff)",
+                background: "linear-gradient(90deg,var(--ac-deep),var(--ac))",
                 transition: "width .4s ease",
               }}
             />

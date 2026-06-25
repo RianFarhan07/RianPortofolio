@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -35,7 +35,7 @@ export default function CertificatesPreview() {
 
   const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
   const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
-  const borderColor = "rgba(0,180,255,.18)";
+  const borderColor = "rgba(var(--ac2),.18)";
   const cardBg = isDark ? "rgba(4,8,28,.96)" : "rgba(240,244,255,.96)";
 
   /* ── Responsive ── */
@@ -57,7 +57,7 @@ export default function CertificatesPreview() {
   }, [autoplay]);
 
   /* ── GSAP entrance (desktop) ── */
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isMobile !== false) return;
     if (!wrapperRef.current) return;
     const ctx = gsap.context(() => {
@@ -104,14 +104,14 @@ export default function CertificatesPreview() {
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
           @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
-          @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)}50%{box-shadow:0 0 0 5px rgba(0,212,255,0)}}
-          .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,180,255,.35),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
-          .cp-pdot{width:6px;height:6px;border-radius:50%;background:#00d4ff;flex-shrink:0;animation:cp-pdot 2s infinite}
-          .cp-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border:1px solid rgba(0,180,255,.2);border-radius:100px;font-size:.68rem;color:rgba(0,212,255,.75);background:rgba(0,180,255,.07);letter-spacing:.05em}
-          .cp-verify-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:linear-gradient(135deg,#0066ff,#00d4ff);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(0,100,255,.35);text-decoration:none}
-          .cp-mob-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(0,180,255,.12);background:rgba(0,180,255,.04);margin-bottom:6px;transition:border-color .2s,background .2s}
-          .cp-mob-item.active{border-color:rgba(0,212,255,.5);background:rgba(0,180,255,.1)}
-          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(0,180,255,.06);border:1px solid rgba(0,180,255,.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none}
+          @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}}
+          .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
+          .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
+          .cp-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.68rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.05em}
+          .cp-verify-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(var(--ac-glow),.35);text-decoration:none}
+          .cp-mob-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.12);background:rgba(var(--ac2),.04);margin-bottom:6px;transition:border-color .2s,background .2s}
+          .cp-mob-item.active{border-color:rgba(var(--ac1),.5);background:rgba(var(--ac2),.1)}
+          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none}
         `}</style>
 
         <section
@@ -132,26 +132,26 @@ export default function CertificatesPreview() {
             {
               top: 14,
               left: 14,
-              borderTop: "1px solid rgba(0,180,255,.35)",
-              borderLeft: "1px solid rgba(0,180,255,.35)",
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
             },
             {
               top: 14,
               right: 14,
-              borderTop: "1px solid rgba(0,180,255,.35)",
-              borderRight: "1px solid rgba(0,180,255,.35)",
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
             },
             {
               bottom: 14,
               left: 14,
-              borderBottom: "1px solid rgba(0,180,255,.35)",
-              borderLeft: "1px solid rgba(0,180,255,.35)",
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
             },
             {
               bottom: 14,
               right: 14,
-              borderBottom: "1px solid rgba(0,180,255,.35)",
-              borderRight: "1px solid rgba(0,180,255,.35)",
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
             },
           ].map((s, i) => (
             <div
@@ -187,7 +187,7 @@ export default function CertificatesPreview() {
                 style={{
                   width: 28,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -195,7 +195,7 @@ export default function CertificatesPreview() {
                   fontSize: ".65rem",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.7)",
+                  color: "rgba(var(--ac1),.7)",
                   fontFamily: "Syne,sans-serif",
                   fontWeight: 700,
                 }}
@@ -288,7 +288,7 @@ export default function CertificatesPreview() {
                   display: "flex",
                   gap: 5,
                   alignItems: "center",
-                  border: "1px solid rgba(0,180,255,.2)",
+                  border: "1px solid rgba(var(--ac2),.2)",
                 }}
               >
                 <span
@@ -300,7 +300,7 @@ export default function CertificatesPreview() {
                   style={{
                     fontSize: ".7rem",
                     fontWeight: 700,
-                    color: "#00d4ff",
+                    color: "var(--ac)",
                     fontFamily: "Syne,sans-serif",
                   }}
                 >
@@ -316,7 +316,7 @@ export default function CertificatesPreview() {
                   fontSize: ".6rem",
                   letterSpacing: ".18em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.55)",
+                  color: "rgba(var(--ac1),.55)",
                 }}
               >
                 {String(activeIndex + 1).padStart(2, "0")} /{" "}
@@ -407,7 +407,7 @@ export default function CertificatesPreview() {
                 justifyContent: "center",
                 gap: 5,
                 padding: "10px 0 12px",
-                borderTop: `1px solid rgba(0,180,255,.08)`,
+                borderTop: `1px solid rgba(var(--ac2),.08)`,
               }}
             >
               {certificates.map((_, i) => (
@@ -422,8 +422,8 @@ export default function CertificatesPreview() {
                     cursor: "pointer",
                     background:
                       i === activeIndex
-                        ? "linear-gradient(90deg,#0066ff,#00d4ff)"
-                        : "rgba(0,180,255,.18)",
+                        ? "linear-gradient(90deg,var(--ac-deep),var(--ac))"
+                        : "rgba(var(--ac2),.18)",
                     transition: "width .3s ease",
                     padding: 0,
                   }}
@@ -454,9 +454,9 @@ export default function CertificatesPreview() {
                     borderRadius: "50%",
                     background:
                       i === activeIndex
-                        ? "rgba(0,180,255,.15)"
-                        : "rgba(0,180,255,.05)",
-                    border: `1px solid ${i === activeIndex ? "rgba(0,212,255,.4)" : "rgba(0,180,255,.12)"}`,
+                        ? "rgba(var(--ac2),.15)"
+                        : "rgba(var(--ac2),.05)",
+                    border: `1px solid ${i === activeIndex ? "rgba(var(--ac1),.4)" : "rgba(var(--ac2),.12)"}`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -466,7 +466,7 @@ export default function CertificatesPreview() {
                   <Award
                     size={15}
                     color={
-                      i === activeIndex ? "#00d4ff" : "rgba(220,230,255,.4)"
+                      i === activeIndex ? "var(--ac)" : "rgba(220,230,255,.4)"
                     }
                   />
                 </div>
@@ -509,28 +509,28 @@ export default function CertificatesPreview() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
         @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
-        @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)}50%{box-shadow:0 0 0 6px rgba(0,212,255,0)}}
+        @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}}
         @keyframes cp-arr{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.3}50%{transform:rotate(45deg) translate(4px,4px);opacity:1}}
 
-        .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,180,255,.25),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
-        .cp-gridbg{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(0,180,255,.018) 72px,rgba(0,180,255,.018) 73px),repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(0,180,255,.018) 72px,rgba(0,180,255,.018) 73px);z-index:0}
-        .cp-pdot{width:6px;height:6px;border-radius:50%;background:#00d4ff;flex-shrink:0;animation:cp-pdot 2s infinite}
-        .cp-pdot-sm{width:5px;height:5px;border-radius:50%;background:#00d4ff;flex-shrink:0;animation:cp-pdot 2s infinite}
+        .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
+        .cp-gridbg{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px),repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px);z-index:0}
+        .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
+        .cp-pdot-sm{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
 
-        .cp-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid rgba(0,180,255,.2);border-radius:100px;font-size:.7rem;color:rgba(0,212,255,.75);background:rgba(0,180,255,.07);letter-spacing:.06em;transition:border-color .2s,background .2s}
-        .cp-chip:hover{border-color:rgba(0,180,255,.45);background:rgba(0,180,255,.13)}
+        .cp-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.7rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.06em;transition:border-color .2s,background .2s}
+        .cp-chip:hover{border-color:rgba(var(--ac2),.45);background:rgba(var(--ac2),.13)}
 
-        .cp-verify{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:linear-gradient(135deg,#0066ff,#00d4ff);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:white;box-shadow:0 0 28px rgba(0,100,255,.4);text-decoration:none;transition:transform .22s,box-shadow .22s;white-space:nowrap}
-        .cp-verify:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(0,150,255,.65)}
+        .cp-verify{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:white;box-shadow:0 0 28px rgba(var(--ac-glow),.4);text-decoration:none;transition:transform .22s,box-shadow .22s;white-space:nowrap}
+        .cp-verify:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(var(--ac-glow),.65)}
 
-        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(0,180,255,.06);border:1px solid rgba(0,180,255,.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none;transition:transform .22s,border-color .22s}
-        .cp-view-all:hover{transform:translateY(-2px);border-color:rgba(0,180,255,.5)}
+        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none;transition:transform .22s,border-color .22s}
+        .cp-view-all:hover{transform:translateY(-2px);border-color:rgba(var(--ac2),.5)}
 
-        .cp-list-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:1px solid rgba(0,180,255,.08);background:transparent;transition:border-color .2s,background .2s,transform .2s;margin-bottom:6px}
-        .cp-list-item:hover{border-color:rgba(0,180,255,.25);background:rgba(0,180,255,.05);transform:translateX(4px)}
-        .cp-list-item.active{border-color:rgba(0,212,255,.45);background:rgba(0,180,255,.09)}
+        .cp-list-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.08);background:transparent;transition:border-color .2s,background .2s,transform .2s;margin-bottom:6px}
+        .cp-list-item:hover{border-color:rgba(var(--ac2),.25);background:rgba(var(--ac2),.05);transform:translateX(4px)}
+        .cp-list-item.active{border-color:rgba(var(--ac1),.45);background:rgba(var(--ac2),.09)}
 
-        .cp-scroll-arrow{width:12px;height:12px;border-right:1px solid rgba(0,180,255,.5);border-bottom:1px solid rgba(0,180,255,.5);transform:rotate(45deg);animation:cp-arr 1.5s ease-in-out infinite}
+        .cp-scroll-arrow{width:12px;height:12px;border-right:1px solid rgba(var(--ac2),.5);border-bottom:1px solid rgba(var(--ac2),.5);transform:rotate(45deg);animation:cp-arr 1.5s ease-in-out infinite}
       `}</style>
 
       <section
@@ -559,26 +559,26 @@ export default function CertificatesPreview() {
           {
             top: 14,
             left: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             top: 14,
             right: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             left: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             right: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
         ].map((s, i) => (
           <div
@@ -618,7 +618,7 @@ export default function CertificatesPreview() {
                 style={{
                   width: 36,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -626,7 +626,7 @@ export default function CertificatesPreview() {
                   fontSize: ".65rem",
                   letterSpacing: ".22em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.7)",
+                  color: "rgba(var(--ac1),.7)",
                   fontFamily: "Syne,sans-serif",
                   fontWeight: 700,
                 }}
@@ -674,7 +674,7 @@ export default function CertificatesPreview() {
                   fontSize: ".68rem",
                   letterSpacing: ".13em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.65)",
+                  color: "rgba(var(--ac1),.65)",
                 }}
               >
                 {String(activeIndex + 1).padStart(2, "0")} /{" "}
@@ -728,7 +728,7 @@ export default function CertificatesPreview() {
             <div
               style={{
                 padding: "13px 20px",
-                borderBottom: `1px solid rgba(0,180,255,.1)`,
+                borderBottom: `1px solid rgba(var(--ac2),.1)`,
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -739,7 +739,7 @@ export default function CertificatesPreview() {
                 style={{
                   width: 24,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -747,7 +747,7 @@ export default function CertificatesPreview() {
                   fontSize: ".62rem",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.6)",
+                  color: "rgba(var(--ac1),.6)",
                   fontFamily: "Syne,sans-serif",
                 }}
               >
@@ -823,7 +823,7 @@ export default function CertificatesPreview() {
                   display: "flex",
                   gap: 6,
                   alignItems: "center",
-                  border: "1px solid rgba(0,180,255,.22)",
+                  border: "1px solid rgba(var(--ac2),.22)",
                 }}
               >
                 <span
@@ -835,7 +835,7 @@ export default function CertificatesPreview() {
                   style={{
                     fontSize: ".72rem",
                     fontWeight: 700,
-                    color: "#00d4ff",
+                    color: "var(--ac)",
                     fontFamily: "Syne,sans-serif",
                   }}
                 >
@@ -848,14 +848,14 @@ export default function CertificatesPreview() {
                 {
                   top: 10,
                   left: 10,
-                  borderTop: "1px solid rgba(0,180,255,.45)",
-                  borderLeft: "1px solid rgba(0,180,255,.45)",
+                  borderTop: "1px solid rgba(var(--ac2),.45)",
+                  borderLeft: "1px solid rgba(var(--ac2),.45)",
                 },
                 {
                   top: 10,
                   right: 10,
-                  borderTop: "1px solid rgba(0,180,255,.45)",
-                  borderRight: "1px solid rgba(0,180,255,.45)",
+                  borderTop: "1px solid rgba(var(--ac2),.45)",
+                  borderRight: "1px solid rgba(var(--ac2),.45)",
                 },
               ].map((s, i) => (
                 <div
@@ -891,7 +891,7 @@ export default function CertificatesPreview() {
                   style={{
                     height: 1,
                     background:
-                      "linear-gradient(90deg,rgba(0,180,255,.3),transparent)",
+                      "linear-gradient(90deg,rgba(var(--ac2),.3),transparent)",
                     marginBottom: 12,
                   }}
                 />
@@ -954,7 +954,7 @@ export default function CertificatesPreview() {
                         flex: 1,
                         height: 1,
                         background:
-                          "linear-gradient(90deg,rgba(0,180,255,.2),transparent)",
+                          "linear-gradient(90deg,rgba(var(--ac2),.2),transparent)",
                       }}
                     />
                   </div>
@@ -974,7 +974,7 @@ export default function CertificatesPreview() {
             <div
               style={{
                 padding: "12px 20px",
-                borderTop: `1px solid rgba(0,180,255,.1)`,
+                borderTop: `1px solid rgba(var(--ac2),.1)`,
                 flexShrink: 0,
               }}
             >
@@ -1006,7 +1006,7 @@ export default function CertificatesPreview() {
             <div
               style={{
                 padding: "13px 20px",
-                borderBottom: `1px solid rgba(0,180,255,.1)`,
+                borderBottom: `1px solid rgba(var(--ac2),.1)`,
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -1017,7 +1017,7 @@ export default function CertificatesPreview() {
                 style={{
                   width: 24,
                   height: 1,
-                  background: "linear-gradient(90deg,#00d4ff,transparent)",
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
                 }}
               />
               <span
@@ -1025,7 +1025,7 @@ export default function CertificatesPreview() {
                   fontSize: ".62rem",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
-                  color: "rgba(0,212,255,.6)",
+                  color: "rgba(var(--ac1),.6)",
                   fontFamily: "Syne,sans-serif",
                 }}
               >
@@ -1049,9 +1049,9 @@ export default function CertificatesPreview() {
                       borderRadius: "50%",
                       background:
                         i === activeIndex
-                          ? "rgba(0,180,255,.15)"
-                          : "rgba(0,180,255,.05)",
-                      border: `1px solid ${i === activeIndex ? "rgba(0,212,255,.4)" : "rgba(0,180,255,.12)"}`,
+                          ? "rgba(var(--ac2),.15)"
+                          : "rgba(var(--ac2),.05)",
+                      border: `1px solid ${i === activeIndex ? "rgba(var(--ac1),.4)" : "rgba(var(--ac2),.12)"}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -1062,7 +1062,7 @@ export default function CertificatesPreview() {
                     <Award
                       size={16}
                       color={
-                        i === activeIndex ? "#00d4ff" : "rgba(220,230,255,.35)"
+                        i === activeIndex ? "var(--ac)" : "rgba(220,230,255,.35)"
                       }
                     />
                   </div>
@@ -1110,7 +1110,7 @@ export default function CertificatesPreview() {
               style={{
                 margin: "0 14px 10px",
                 height: 1,
-                background: "rgba(0,180,255,.1)",
+                background: "rgba(var(--ac2),.1)",
                 position: "relative",
               }}
             >
@@ -1121,7 +1121,7 @@ export default function CertificatesPreview() {
                   top: 0,
                   height: "100%",
                   width: `${((activeIndex + 1) / certificates.length) * 100}%`,
-                  background: "linear-gradient(90deg,#0066ff,#00d4ff)",
+                  background: "linear-gradient(90deg,var(--ac-deep),var(--ac))",
                   transition: "width .4s ease",
                 }}
               />

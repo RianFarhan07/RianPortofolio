@@ -13,112 +13,89 @@ const MainLayout = ({ children }) => {
         overflowX: "hidden",
         fontFamily: "'DM Sans', sans-serif",
         background: isDark
-          ? "radial-gradient(ellipse 80% 80% at 50% 30%, #0a1230 0%, #040810 70%)"
-          : "radial-gradient(ellipse 80% 80% at 50% 30%, #e8f4ff 0%, #f0f8ff 70%)",
+          ? "linear-gradient(180deg, #08111f 0%, #0a1730 42%, #03070f 100%)"
+          : "linear-gradient(180deg, #edf6f2 0%, #e2f1ec 46%, #f5faf8 100%)",
       }}
     >
-      {/* ── Grid overlay ── */}
+      {/* ── Horizon glow ── */}
       <div
         style={{
           position: "fixed",
           inset: 0,
           zIndex: 0,
           pointerEvents: "none",
-          backgroundImage: isDark
-            ? "linear-gradient(rgba(0,180,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,255,0.04) 1px, transparent 1px)"
-            : "linear-gradient(rgba(0,100,200,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,100,200,0.04) 1px, transparent 1px)",
-          backgroundSize: "70px 70px",
+          background: isDark
+            ? "radial-gradient(ellipse 65% 42% at 50% 50%, rgba(0,180,255,0.32), rgba(0,110,255,0.15) 42%, transparent 70%)"
+            : "radial-gradient(ellipse 65% 42% at 50% 50%, rgba(20,184,166,0.26), rgba(16,185,129,0.12) 42%, transparent 70%)",
         }}
       />
 
-      {/* ── Ambient glow blobs ── */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      >
-        {/* Top-right blue blob */}
+      {/* ── Sun / horizon orb (dark theme) ── */}
+      {isDark && (
         <div
           style={{
-            position: "absolute",
-            top: "10%",
-            right: "5%",
-            width: "clamp(200px, 25vw, 380px)",
-            height: "clamp(200px, 25vw, 380px)",
-            borderRadius: "50%",
-            background: isDark
-              ? "rgba(0,100,255,0.12)"
-              : "rgba(59,130,246,0.1)",
-            filter: "blur(80px)",
-            animation: "mlPulse 8s infinite ease-in-out",
-          }}
-        />
-        {/* Bottom-left cyan blob */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "20%",
-            left: "10%",
-            width: "clamp(200px, 25vw, 380px)",
-            height: "clamp(200px, 25vw, 380px)",
-            borderRadius: "50%",
-            background: isDark
-              ? "rgba(0,212,255,0.08)"
-              : "rgba(20,184,166,0.08)",
-            filter: "blur(80px)",
-            animation: "mlPulse 8s infinite ease-in-out reverse",
-          }}
-        />
-        {/* Center purple blob */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
+            position: "fixed",
+            top: "32%",
             left: "50%",
+            width: "clamp(160px, 22vw, 300px)",
+            height: "clamp(160px, 22vw, 300px)",
             transform: "translate(-50%, -50%)",
-            width: "clamp(180px, 22vw, 320px)",
-            height: "clamp(180px, 22vw, 320px)",
             borderRadius: "50%",
-            background: isDark
-              ? "rgba(120,40,255,0.05)"
-              : "rgba(168,85,247,0.05)",
-            filter: "blur(80px)",
-            animation: "mlPulse 10s infinite ease-in-out",
+            background:
+              "radial-gradient(circle, rgba(120,220,255,0.45), rgba(0,130,255,0.20) 48%, transparent 70%)",
+            filter: "blur(8px)",
+            zIndex: 0,
+            pointerEvents: "none",
           }}
         />
-      </div>
+      )}
 
-      {/* ── Scan line ── */}
+      {/* ── Perspective grid floor ── */}
       <div
         style={{
           position: "fixed",
           left: 0,
           right: 0,
-          height: 1,
-          background:
-            "linear-gradient(90deg, transparent, rgba(0,180,255,0.25), transparent)",
-          zIndex: 1,
+          top: "50%",
+          bottom: 0,
+          zIndex: 0,
           pointerEvents: "none",
-          animation: "mlScan 12s ease-in-out infinite",
+          overflow: "hidden",
+          perspective: "300px",
+          perspectiveOrigin: "50% 0%",
         }}
-      />
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "-50%",
+            right: "-50%",
+            bottom: "-60%",
+            backgroundImage: isDark
+              ? "linear-gradient(rgba(31,182,255,0.42) 1px, transparent 1px), linear-gradient(90deg, rgba(56,130,255,0.36) 1px, transparent 1px)"
+              : "linear-gradient(rgba(20,184,166,0.34) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.26) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+            transform: "rotateX(74deg)",
+            transformOrigin: "top center",
+            WebkitMaskImage:
+              "linear-gradient(180deg, transparent 0%, #000 32%, #000 100%)",
+            maskImage:
+              "linear-gradient(180deg, transparent 0%, #000 32%, #000 100%)",
+          }}
+        />
+      </div>
 
       {/* ── Main content ── */}
       <div style={{ position: "relative", zIndex: 10 }}>{children}</div>
 
       <style>{`
-        @keyframes mlPulse {
-          0%, 100% { transform: scale(1);   opacity: 0.8; }
-          50%       { transform: scale(1.15); opacity: 1;   }
+        @keyframes mlFloor {
+          from { background-position: 0 0; }
+          to   { background-position: 0 60px; }
         }
-        @keyframes mlScan {
-          0%   { top: 0;    opacity: 0; }
-          5%   { opacity: 1; }
-          95%  { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="mlFloor"] { animation: none !important; }
         }
       `}</style>
     </div>

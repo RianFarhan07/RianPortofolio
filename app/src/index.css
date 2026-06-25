@@ -13,16 +13,37 @@
   --bg-dark: #222831;
   --text-dark: #eeeeee;
   --accent-dark: #00adb5;
+
+  /* Accent fallback (defaults to dark/blue until a theme class mounts) */
+  --ac: #00d4ff;
+  --ac-deep: #0066ff;
+  --ac1: 0, 212, 255;
+  --ac2: 0, 180, 255;
+  --ac-glow: 0, 100, 255;
 }
 
 body.light-theme {
   background-color: var(--bg-light);
   color: var(--text-light);
+
+  /* Accent (light = green / teal, from palette) */
+  --ac: #14b8a6;        /* bright accent (solid)        */
+  --ac-deep: #0d9488;   /* deep accent (gradient stops) */
+  --ac1: 20, 184, 166;  /* bright accent as rgb triplet */
+  --ac2: 16, 185, 129;  /* secondary / glow rgb         */
+  --ac-glow: 16, 185, 129;
 }
 
 body.dark-theme {
   background-color: var(--bg-dark);
   color: var(--text-dark);
+
+  /* Accent (dark = blue / cyan) */
+  --ac: #00d4ff;
+  --ac-deep: #0066ff;
+  --ac1: 0, 212, 255;
+  --ac2: 0, 180, 255;
+  --ac-glow: 0, 100, 255;
 }
 
 /* Additional theme-specific styles */

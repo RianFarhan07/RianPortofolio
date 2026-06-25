@@ -165,8 +165,8 @@ export const TechStackTabs = ({ techStack }) => {
           className="absolute rounded-md z-0"
           style={{
             background: isDark
-              ? "linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2))"
-              : "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))",
+              ? "linear-gradient(135deg, rgba(var(--ac2), 0.2), rgba(var(--ac-glow), 0.2))"
+              : "linear-gradient(135deg, rgba(var(--ac2), 0.1), rgba(var(--ac-glow), 0.1))",
             boxShadow: isDark
               ? "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
               : "0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
@@ -259,13 +259,13 @@ export const TechStackTabs = ({ techStack }) => {
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
                       isDark
                         ? "bg-gray-800 text-primary border border-primary/30 hover:bg-gray-700"
-                        : "bg-blue-50 text-primaryInLight border border-blue-200 hover:bg-blue-100"
+                        : "bg-[rgba(var(--ac1),0.1)] text-[var(--ac)] border border-[rgba(var(--ac1),0.3)] hover:bg-[rgba(var(--ac1),0.18)]"
                     } shadow-sm transition-colors cursor-pointer`}
                     whileHover={{
                       y: -5,
                       boxShadow: isDark
-                        ? "0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.3)"
-                        : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(59, 130, 246, 0.2)",
+                        ? "0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(var(--ac2), 0.3)"
+                        : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(var(--ac2), 0.2)",
                       scale: 1.05,
                     }}
                     whileTap={{ scale: 0.95 }}
@@ -277,8 +277,8 @@ export const TechStackTabs = ({ techStack }) => {
                       className="absolute inset-0 rounded-full opacity-0 -z-10"
                       style={{
                         background: isDark
-                          ? "radial-gradient(circle at center, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0) 70%)"
-                          : "radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0) 70%)",
+                          ? "radial-gradient(circle at center, rgba(var(--ac2), 0.3) 0%, rgba(var(--ac2), 0) 70%)"
+                          : "radial-gradient(circle at center, rgba(var(--ac2), 0.2) 0%, rgba(var(--ac2), 0) 70%)",
                       }}
                       whileHover={{ opacity: 1 }}
                     />
@@ -317,9 +317,7 @@ export const TechStackTabs = ({ techStack }) => {
         />
 
         <motion.div
-          className={`absolute -left-10 -top-10 w-40 h-40 rounded-full opacity-5 ${
-            isDark ? "bg-blue-400" : "bg-blue-300"
-          }`}
+          className={`absolute -left-10 -top-10 w-40 h-40 rounded-full opacity-5 bg-[var(--ac)]`}
           animate={{
             scale: [1, 1.3, 1],
             opacity: [0.05, 0.07, 0.05],
@@ -341,10 +339,10 @@ export const TechStackTabs = ({ techStack }) => {
               isDark
                 ? i % 2 === 0
                   ? "bg-primary/30"
-                  : "bg-blue-400/30"
+                  : "bg-[rgba(var(--ac2),0.3)]"
                 : i % 2 === 0
                 ? "bg-primaryInLight/30"
-                : "bg-blue-400/30"
+                : "bg-[rgba(var(--ac2),0.3)]"
             }`}
             initial={{
               x: Math.random() * 300 - 150,

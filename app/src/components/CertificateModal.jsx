@@ -116,7 +116,7 @@ export const CertificateModal = ({ certificate, isDark, onClose }) => {
           <div className="md:w-1/2">
             <div className="relative aspect-video md:aspect-square">
               <div className="absolute inset-0 flex items-center justify-center">
-                <img
+                <img loading="lazy" decoding="async"
                   src={certificate.image || "/placeholder.svg"}
                   alt={certificate.title}
                   className="w-full h-full object-contain object-center"

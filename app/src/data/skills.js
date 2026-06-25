@@ -1,4 +1,4 @@
-import cover from "../assets/grab-to-back.png";
+import cover from "../assets/grab-to-back.webp";
 // data kalau di desktop
 export const stackData = [
   //   {
@@ -15,15 +15,15 @@ export const stackData = [
   },
   //   {
   //     id: "html",
-  //     img: "https://static.vecteezy.com/system/resources/previews/013/313/458/non_2x/html-icon-3d-rendering-illustration-vector.jpg",
+  //     img: "https://static.vecteezy.com/system/resources/previews/013/313/458/non_2x/html-icon-3d-rendering-illustration-vector.webp",
   //   },
   //   {
   //     id: "css",
-  //     img: "https://seeklogo.com/images/C/css3-logo-F1923C8D0E-seeklogo.com.png",
+  //     img: "https://seeklogo.com/images/C/css3-logo-F1923C8D0E-seeklogo.com.webp",
   //   },
   //   {
   //     id: "tailwindcss",
-  //     img: "https://res.cloudinary.com/benjamincrozat-com/image/fetch/c_scale,f_webp,q_auto,w_1200/https://life-long-bunny.fra1.digitaloceanspaces.com/media-library/production/25/tailwind-css_uoqpuu.png",
+  //     img: "https://res.cloudinary.com/benjamincrozat-com/image/fetch/c_scale,f_webp,q_auto,w_1200/https://life-long-bunny.fra1.digitaloceanspaces.com/media-library/production/25/tailwind-css_uoqpuu.webp",
   //   },
   //   {
   //     id: "nextjs",
@@ -39,11 +39,11 @@ export const stackData = [
   //   },
   {
     id: "kotlin",
-    img: "https://images.prismic.io/qovery/5fbe059d-281e-4748-8c1b-e4ba3d0ea75c_5e88cdbcbcf6e13c14c276d8_kotlin.jpg?ixlib=gatsbyFP&auto=compress%2Cformat&fit=max",
+    img: "https://images.prismic.io/qovery/5fbe059d-281e-4748-8c1b-e4ba3d0ea75c_5e88cdbcbcf6e13c14c276d8_kotlin.webp?ixlib=gatsbyFP&auto=compress%2Cformat&fit=max",
   },
   //   {
   //     id: "reactnative",
-  //     img: "https://miro.medium.com/v2/resize:fit:848/1*RuVFJ8RMnzjKm6ZwDYE8bA.png",
+  //     img: "https://miro.medium.com/v2/resize:fit:848/1*RuVFJ8RMnzjKm6ZwDYE8bA.webp",
   //   },
   //   {
   //     id: "firebase",

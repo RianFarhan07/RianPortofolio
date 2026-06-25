@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import fotoRian from "../assets/foto_rian_3.png";
+import fotoRian from "../assets/foto_rian_3.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {

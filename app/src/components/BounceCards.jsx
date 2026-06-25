@@ -130,7 +130,7 @@ export default function BounceCards({
           onMouseEnter={() => pushSiblings(idx)}
           onMouseLeave={resetSiblings}
         >
-          <img
+          <img loading="lazy" decoding="async"
             className="w-full h-full object-cover"
             src={src}
             alt={`card-${idx}`}

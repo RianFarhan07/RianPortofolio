@@ -333,9 +333,7 @@ export default function Footer() {
   const parallaxShapes = [
     {
       depth: "0.1",
-      className: `parallax-shape absolute w-16 h-16 ${
-        isDark ? "bg-cyan-500" : "bg-blue-400"
-      } opacity-20 rounded-md`,
+      className: `parallax-shape absolute w-16 h-16 bg-[var(--ac)] opacity-20 rounded-md`,
       style: { left: "15%", top: "10%" },
       rotate: "rotate(45deg)",
     },
@@ -395,16 +393,12 @@ export default function Footer() {
 
     {
       depth: "0.5",
-      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl ${
-        isDark ? "bg-blue-500" : "bg-blue-300"
-      } opacity-30`,
+      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-30`,
       style: { right: "-5%", top: "-10%" },
     },
     {
       depth: "0.7",
-      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl ${
-        isDark ? "bg-primary" : "bg-primaryInLight"
-      } opacity-30`,
+      className: `parallax-shape absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-30`,
       style: { left: "-5%", bottom: "-10%" },
     },
 
@@ -415,7 +409,7 @@ export default function Footer() {
       content: (
         <Sparkles
           size={28}
-          className={`${isDark ? "text-cyan-400" : "text-primary"} opacity-70`}
+          className={`text-[var(--ac)] opacity-70`}
         />
       ),
     },
@@ -519,15 +513,13 @@ export default function Footer() {
               onClick={scrollToTop}
               className={`group w-12 h-12 rounded-full ${
                 isDark
-                  ? "bg-gray-800 text-gray-300 hover:bg-primary hover:text-white"
-                  : "bg-white text-gray-600 hover:bg-primaryInLight hover:text-white border border-gray-200"
+                  ? "bg-gray-800 text-gray-300 hover:bg-[var(--ac)] hover:text-white"
+                  : "bg-white text-gray-600 hover:bg-[var(--ac)] hover:text-white border border-gray-200"
               } flex items-center justify-center transition-all duration-300 shadow-md`}
               whileHover={{
                 scale: 1.1,
                 y: -5,
-                boxShadow: isDark
-                  ? "0 10px 25px -5px rgba(0, 173, 181, 0.5)"
-                  : "0 10px 25px -5px rgba(95, 111, 255, 0.5)",
+                boxShadow: "0 10px 25px -5px rgba(var(--ac1), 0.5)",
               }}
               whileTap={{ scale: 0.9 }}
               data-tooltip-id="scroll-tooltip"
@@ -564,16 +556,12 @@ export default function Footer() {
             >
               Rian{" "}
               <span
-                className={`relative inline-block ${
-                  isDark ? "text-cyan-400" : "text-primary"
-                }`}
+                className={`relative inline-block text-[var(--ac)]`}
               >
                 <span className={`relative z-20`}>Farhan</span>
 
                 <motion.span
-                  className={`absolute inset-0 blur-md rounded-lg ${
-                    isDark ? "bg-cyan-500" : "bg-blue-500"
-                  } opacity-30 z-10`}
+                  className={`absolute inset-0 blur-md rounded-lg bg-[var(--ac)] opacity-30 z-10`}
                   animate={{
                     opacity: [0.3, 0.6, 0.3],
                     scale: [1, 1.05, 1],
@@ -582,9 +570,7 @@ export default function Footer() {
                 />
 
                 <motion.span
-                  className={`absolute inset-0 blur-lg rounded-lg ${
-                    isDark ? "bg-cyan-400" : "bg-primary"
-                  } opacity-20 -z-10 scale-110`}
+                  className={`absolute inset-0 blur-lg rounded-lg bg-[var(--ac)] opacity-20 -z-10 scale-110`}
                   animate={{
                     opacity: [0.2, 0.4, 0.2],
                     scale: [1.1, 1.15, 1.1],
@@ -597,9 +583,7 @@ export default function Footer() {
                 />
 
                 <motion.span
-                  className={`absolute -inset-1 blur-xl rounded-lg ${
-                    isDark ? "bg-cyan-400" : "bg-primary"
-                  } opacity-10 -z-20 scale-125`}
+                  className={`absolute -inset-1 blur-xl rounded-lg bg-[var(--ac)] opacity-10 -z-20 scale-125`}
                   animate={{
                     opacity: [0.1, 0.2, 0.1],
                     scale: [1.25, 1.3, 1.25],
@@ -622,8 +606,8 @@ export default function Footer() {
                     href={item.href}
                     className={`${
                       isDark
-                        ? "text-gray-400 hover:text-cyan-400"
-                        : "text-gray-600 hover:text-primary"
+                        ? "text-gray-400 hover:text-[var(--ac)]"
+                        : "text-gray-600 hover:text-[var(--ac)]"
                     } transition-colors font-medium relative`}
                     onMouseEnter={() => setHoveredNav(index)}
                     onMouseLeave={() => setHoveredNav(null)}
@@ -633,9 +617,7 @@ export default function Footer() {
                     <AnimatePresence>
                       {hoveredNav === index && (
                         <motion.span
-                          className={`absolute -bottom-1 left-0 right-0 h-0.5 ${
-                            isDark ? "bg-cyan-400" : "bg-primary"
-                          } rounded-full`}
+                          className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-[var(--ac)] rounded-full`}
                           initial={{ width: 0, left: "50%" }}
                           animate={{ width: "100%", left: 0 }}
                           exit={{ width: 0, left: "50%" }}
@@ -697,9 +679,11 @@ export default function Footer() {
                 animate={{
                   scale: [1, 1.2, 1],
                   rotate: [0, 10, -10, 0],
-                  color: isDark
-                    ? ["#00adb5", "#22d3ee", "#00adb5"]
-                    : ["#5F6FFF", "#3b82f6", "#5F6FFF"],
+                  color: [
+                    "rgb(var(--ac1))",
+                    "rgb(var(--ac2))",
+                    "rgb(var(--ac1))",
+                  ],
                 }}
                 transition={{
                   duration: 2,
@@ -707,7 +691,7 @@ export default function Footer() {
                   ease: "easeInOut",
                 }}
               >
-                <Heart size={16} fill={isDark ? "#00adb5" : "#5F6FFF"} />
+                <Heart size={16} fill="var(--ac)" />
               </motion.span>
               by Rian Farhan
             </motion.p>

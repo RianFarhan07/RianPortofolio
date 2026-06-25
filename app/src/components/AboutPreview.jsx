@@ -1,29 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import { ArrowRight, Award, Briefcase, Clock, MapPin, Code2, Layers, Quote } from "lucide-react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { ArrowRight, Award, MapPin } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
-import aboutImage from "../assets/foto-nobg.png";
-import BounceCards from "./BounceCards";
+import aboutImage from "../assets/foto-nobg.webp";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const images = [
-  "https://images.prismic.io/qovery/5fbe059d-281e-4748-8c1b-e4ba3d0ea75c_5e88cdbcbcf6e13c14c276d8_kotlin.jpg?ixlib=gatsbyFP&auto=compress%2Cformat&fit=max",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4vxfPlxUGB4j6dO4NSYh6LAPH94CGS-T7TgdL04X9dMHXhQd-7Bc-XRTXqo-WYLHtxzk&usqp=CAU",
-  "https://miro.medium.com/v2/resize:fit:848/1*RuVFJ8RMnzjKm6ZwDYE8bA.png",
-  "https://static.cdnlogo.com/logos/t/96/typescript.svg",
-  "https://static.cdnlogo.com/logos/j/44/javascript.svg",
-];
-
-const transformStyles = [
-  "rotate(5deg) translate(-150px)",
-  "rotate(0deg) translate(-75px)",
-  "rotate(-5deg)",
-  "rotate(5deg) translate(75px)",
-  "rotate(-5deg) translate(150px)",
-];
 
 function AnimCounter({ to, suffix = "", delay = 0 }) {
   const [val, setVal] = useState(0);
@@ -43,7 +26,7 @@ function AnimCounter({ to, suffix = "", delay = 0 }) {
   return (
     <span>
       {val}
-      <em style={{ fontStyle: "normal", color: "#00d4ff" }}>{suffix}</em>
+      <em style={{ fontStyle: "normal", color: "var(--ac)" }}>{suffix}</em>
     </span>
   );
 }
@@ -54,28 +37,46 @@ export default function AboutPreview() {
   // null = belum tahu (SSR / first paint), biar GSAP tidak jalan dulu
   const [isMobile, setIsMobile] = useState(null);
   const [cardVisible, setCardVisible] = useState(false);
+  const [tab, setTab] = useState("rian.tsx");
+  const [skillsReady, setSkillsReady] = useState(false);
 
   const wrapperRef = useRef(null);
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
   const line3Ref = useRef(null);
   const cardRef = useRef(null);
+  const prevMobileRef = useRef(null);
 
-  const accent = isDark ? "#00d4ff" : "#0ea5e9";
   const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
   const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
-  const borderColor = "rgba(0,180,255,.11)";
-  const cardBg = "rgba(255,255,255,.025)";
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
+    const check = () => {
+      const next = window.innerWidth < 768;
+      // Desktop -> mobile: revert/kill GSAP pins SECARA SINKRON sebelum React unmount
+      // tree desktop, biar pin-spacer ScrollTrigger nggak bikin removeChild crash.
+      if (prevMobileRef.current === false && next) {
+        try { ScrollTrigger.getAll().forEach((t) => t.kill(true)); } catch (e) { /* noop */ }
+      }
+      prevMobileRef.current = next;
+      setIsMobile(next);
+    };
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  // animate skill bars whenever the skills.json tab opens
   useEffect(() => {
+    if (tab !== "skills.json") { setSkillsReady(false); return; }
+    const t = setTimeout(() => setSkillsReady(true), 80);
+    return () => clearTimeout(t);
+  }, [tab]);
+
+  useLayoutEffect(() => {
     // Hanya jalan kalau sudah pasti desktop (bukan null, bukan true)
+    // useLayoutEffect: cleanup (ctx.revert) jalan SEBELUM React hapus DOM saat resize,
+    // biar pin-spacer GSAP nggak bentrok sama removeChild React.
     if (isMobile !== false) return;
     if (!wrapperRef.current || !line1Ref.current || !cardRef.current) return;
     const ctx = gsap.context(() => {
@@ -112,13 +113,13 @@ export default function AboutPreview() {
       <>
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
-          @keyframes ap-pdot{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)}50%{box-shadow:0 0 0 5px rgba(0,212,255,0)}}
-          .m-pdot{width:6px;height:6px;border-radius:50%;background:#00d4ff;flex-shrink:0;animation:ap-pdot 2s infinite}
-          .m-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#0066ff,#00d4ff);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(0,100,255,.4);text-decoration:none}
-          .m-cta-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:rgba(255,255,255,.05);border:1px solid rgba(0,180,255,.22);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.7);text-decoration:none}
+          @keyframes ap-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}}
+          .m-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:ap-pdot 2s infinite}
+          .m-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(var(--ac-glow),.4);text-decoration:none}
+          .m-cta-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:rgba(255,255,255,.05);border:1px solid rgba(var(--ac2),.22);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.7);text-decoration:none}
         `}</style>
         <section id="about" style={{ padding: "72px 24px", fontFamily: "'DM Sans',sans-serif" }}>
-          <div style={{ marginBottom: 40, fontFamily: "Syne,sans-serif", fontSize: "clamp(2.5rem,12vw,4rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.92, textTransform: "uppercase" }}>
+          <div style={{ marginBottom: 40, fontFamily: "Syne,sans-serif", fontSize: "clamp(2rem,9.5vw,3.2rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.92, textTransform: "uppercase" }}>
             <div style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}>TURNING</div>
             <div style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}>IDEAS INTO</div>
             <div style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,.15)" }}>DIGITAL REALITY</div>
@@ -145,111 +146,117 @@ export default function AboutPreview() {
     );
   }
 
-  /* ─────────── DESKTOP — OPSI B (fixed) ─────────── */
+  /* ─────────── DESKTOP — OPSI B · Terminal / IDE ─────────── */
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-        @keyframes b-scan {
-          0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
-        }
-        @keyframes ap-pdot {
-          0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.7)} 50%{box-shadow:0 0 0 6px rgba(0,212,255,0)}
-        }
+        @keyframes b-scan { 0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0} }
+        @keyframes ap-pdot { 0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)} 50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)} }
 
         .b-scan {
           position:absolute; left:0; right:0; height:1px;
-          background:linear-gradient(90deg,transparent,rgba(0,180,255,.22),transparent);
-          animation:b-scan 8s ease-in-out infinite;
-          pointer-events:none; z-index:0;
+          background:linear-gradient(90deg,transparent,rgba(var(--ac2),.22),transparent);
+          animation:b-scan 8s ease-in-out infinite; pointer-events:none; z-index:0;
         }
-        .b-pdot {
-          width:7px; height:7px; border-radius:50%; background:#00d4ff;
-          flex-shrink:0; animation:ap-pdot 2s infinite;
-        }
-        .b-pdot-sm {
-          width:5px; height:5px; border-radius:50%; background:#00d4ff;
-          flex-shrink:0; animation:ap-pdot 2s infinite;
-        }
-        .b-badge {
-          display:inline-flex; align-items:center; gap:8px;
-          background:rgba(0,180,255,.08); border:1px solid rgba(0,180,255,.2);
-          border-radius:100px; padding:5px 16px;
-          font-size:.68rem; letter-spacing:.13em; text-transform:uppercase; color:#00d4ff;
-          white-space:nowrap;
-        }
-        .b-cta {
-          display:inline-flex; align-items:center; gap:7px; padding:11px 28px;
-          background:linear-gradient(135deg,#0066ff,#00d4ff);
-          border:none; border-radius:100px; cursor:pointer;
-          font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500;
-          color:white; box-shadow:0 0 28px rgba(0,100,255,.4);
-          text-decoration:none; transition:transform .2s,box-shadow .2s; white-space:nowrap;
-        }
-        .b-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(0,150,255,.65); }
-        .b-cta-ghost {
-          display:inline-flex; align-items:center; gap:7px; padding:11px 28px;
-          background:rgba(255,255,255,.04); border:1px solid rgba(0,180,255,.22);
-          border-radius:100px; cursor:pointer;
-          font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500;
-          color:rgba(220,230,255,.72); text-decoration:none;
-          transition:transform .2s,border-color .2s; white-space:nowrap;
-        }
-        .b-cta-ghost:hover { transform:translateY(-2px); border-color:rgba(0,180,255,.5); }
+        .b-pdot-sm { width:6px; height:6px; border-radius:50%; background:var(--ac); flex-shrink:0; animation:ap-pdot 2s infinite; }
         .b-gridbg {
           position:absolute; inset:0; pointer-events:none;
           background-image:
-            repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(0,180,255,.02) 72px,rgba(0,180,255,.02) 73px),
-            repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(0,180,255,.02) 72px,rgba(0,180,255,.02) 73px);
+            repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(var(--ac2),.02) 72px,rgba(var(--ac2),.02) 73px),
+            repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(var(--ac2),.02) 72px,rgba(var(--ac2),.02) 73px);
           z-index:0;
         }
-        .b-bar-bg { height:3px; border-radius:3px; background:rgba(255,255,255,.07); margin-top:6px; }
-        .b-bar-fill { height:3px; border-radius:3px; background:linear-gradient(90deg,#0066ff,#00d4ff); }
-        .b-col-label {
-          font-size:.6rem; letter-spacing:.2em; text-transform:uppercase;
-          color:#00d4ff; display:flex; align-items:center; gap:8px;
-          flex-shrink:0;
+        .b-cta {
+          display:inline-flex; align-items:center; gap:7px; padding:10px 22px;
+          background:linear-gradient(135deg,var(--ac-deep),var(--ac));
+          border:none; border-radius:100px; cursor:pointer;
+          font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:500;
+          color:white; box-shadow:0 0 28px rgba(var(--ac-glow),.4);
+          text-decoration:none; transition:transform .2s,box-shadow .2s; white-space:nowrap;
         }
-        .b-col-label::after {
-          content:''; flex:1; height:1px;
-          background:linear-gradient(90deg,rgba(0,180,255,.3),transparent);
+        .b-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(var(--ac-glow),.65); }
+
+        /* ── Terminal / IDE editor ── */
+        .ed-win {
+          display:flex; flex-direction:column; width:100%; max-width:1180px; margin:0 auto;
+          background:var(--ed-bg); border:1px solid var(--ed-line); border-radius:14px; overflow:hidden;
+          box-shadow:0 30px 80px -30px rgba(0,0,0,.55), 0 0 0 1px rgba(var(--ac2),.04);
+          font-family:var(--ed-mono);
         }
-        .b-journey-wrap { border-left:1px solid rgba(0,180,255,.28); padding-left:20px; }
-        .b-journey-dot {
-          position:absolute; left:-25px; top:6px;
-          width:9px; height:9px; border-radius:50%;
-          background:#00d4ff; box-shadow:0 0 8px rgba(0,212,255,.55);
+        .ed-titlebar { display:flex; align-items:center; gap:14px; background:var(--ed-chrome); border-bottom:1px solid var(--ed-line); padding:0 14px; height:42px; flex-shrink:0; }
+        .ed-dots { display:flex; gap:7px; flex-shrink:0; }
+        .ed-dot { width:11px; height:11px; border-radius:50%; }
+        .ed-tabs { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; }
+        .ed-tabs::-webkit-scrollbar { display:none; }
+        .ed-tab { font-family:var(--ed-mono); font-size:12px; color:var(--ed-muted); background:transparent; border:none; border-bottom:2px solid transparent; padding:9px 13px; white-space:nowrap; cursor:pointer; }
+        .ed-tab:hover { color:var(--ed-txt); }
+        .ed-tab .ext { color:var(--ac); opacity:.7; }
+        .ed-tab.active { color:var(--ed-txt); border-bottom-color:var(--ac); background:var(--ed-bg); }
+        .ed-clock { margin-left:auto; font-size:11px; color:var(--ed-muted); flex-shrink:0; white-space:nowrap; }
+
+        .ed-body { flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+        .ed-file { flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+        .ed-pad { padding:16px 20px; }
+
+        .ed-code { display:flex; font-size:13px; line-height:1.8; }
+        .ed-gutter { flex-shrink:0; text-align:right; color:var(--ed-muted); opacity:.5; padding:16px 12px 10px 16px; background:var(--ed-gutter); user-select:none; border-right:1px solid var(--ed-line); white-space:pre; }
+        .ed-lines { padding:16px 18px 10px; flex:1; white-space:pre; color:var(--ed-txt); overflow-x:auto; }
+        .ed-kw{color:var(--ed-kw)} .ed-str{color:var(--ed-str)} .ed-num{color:var(--ed-num)}
+        .ed-prop{color:var(--ed-prop)} .ed-com{color:var(--ed-com);font-style:italic} .ed-fn{color:var(--ed-fn)} .ed-punc{color:var(--ed-muted)}
+        .ed-pulse { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--ac); box-shadow:0 0 0 0 rgba(var(--ac1),.6); animation:ap-pdot 2s infinite; vertical-align:middle; margin-right:6px; }
+
+        .ed-sec { padding:14px 18px; border-top:1px solid var(--ed-line); }
+        .ed-label { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ed-muted); margin:0 0 12px; display:flex; gap:8px; align-items:center; }
+        .ed-label::before { content:''; width:14px; height:1px; background:var(--ac); }
+
+        .ed-skillrow { display:grid; grid-template-columns:118px 1fr 32px; align-items:center; gap:12px; margin:9px 0; font-size:12px; }
+        .ed-skillrow .nm { color:var(--ed-prop); }
+        .ed-bar { height:6px; border-radius:6px; background:var(--ed-line); overflow:hidden; }
+        .ed-bar > i { display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,var(--ac-deep),var(--ac)); width:0; transition:width 1.1s cubic-bezier(.2,.8,.2,1); }
+        .ed-skillrow .pc { text-align:right; color:var(--ac); font-variant-numeric:tabular-nums; }
+
+        .ed-avail { padding:12px 18px 16px; border-top:1px solid var(--ed-line); font-size:12px; line-height:1.95; }
+        .ed-avail .on { color:var(--ed-txt); display:flex; align-items:center; gap:7px; }
+        .ed-avail .off { color:var(--ed-muted); text-decoration:line-through; }
+
+        .ed-log { display:flex; flex-direction:column; gap:13px; }
+        .ed-entry { display:grid; grid-template-columns:14px 1fr; gap:10px; }
+        .ed-rail { position:relative; }
+        .ed-rail::before { content:''; position:absolute; left:4px; top:4px; width:8px; height:8px; border-radius:50%; background:var(--ac); box-shadow:0 0 8px rgba(var(--ac1),.6); }
+        .ed-rail::after { content:''; position:absolute; left:7px; top:13px; bottom:-13px; width:1px; background:var(--ed-line); }
+        .ed-entry:last-child .ed-rail::after { display:none; }
+        .ed-yr { color:var(--ac); font-size:11px; letter-spacing:.05em; }
+        .ed-t { color:var(--ed-txt); font-weight:600; margin:2px 0; }
+        .ed-d { color:var(--ed-muted); font-size:11.5px; line-height:1.5; }
+        .ed-cursor { display:inline-block; width:7px; height:13px; background:var(--ac); vertical-align:text-bottom; animation:ed-blink 1.1s step-end infinite; margin-left:3px; }
+        @keyframes ed-blink { 50%{opacity:0} }
+
+        .ed-imp { font-size:12px; color:var(--ed-muted); margin-bottom:11px; }
+        .ed-chips { display:flex; flex-wrap:wrap; gap:7px; }
+        .ed-chip { font-size:11.5px; color:var(--ed-txt); background:rgba(var(--ac2),.08); border:1px solid rgba(var(--ac2),.25); border-radius:7px; padding:5px 10px; }
+        .ed-chip .k { color:var(--ac); }
+        .ed-edu { display:flex; align-items:center; gap:10px; margin-top:14px; background:linear-gradient(135deg,var(--ac-deep),var(--ac)); color:#fff; border-radius:10px; padding:11px 14px; box-shadow:0 0 24px rgba(var(--ac-glow),.3); }
+
+        .ed-footer { display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:11px 16px; border-top:1px solid var(--ed-line); background:var(--ed-chrome); }
+        .ed-ident { display:flex; align-items:center; gap:10px; min-width:0; flex-wrap:wrap; }
+        .ed-ava { width:30px; height:30px; border-radius:50%; overflow:hidden; border:1.5px solid rgba(var(--ac2),.4); flex-shrink:0; }
+        .ed-ava img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+        .ed-name { font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; color:var(--ed-txt); white-space:nowrap; }
+        .ed-open { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ac); white-space:nowrap; }
+        .ed-loc { display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--ed-muted); white-space:nowrap; }
+        .ed-actions { display:flex; gap:9px; margin-left:auto; flex-shrink:0; }
+        .ed-ghost {
+          display:inline-flex; align-items:center; gap:7px; padding:10px 22px;
+          background:transparent; border:1px solid rgba(var(--ac2),.35); border-radius:100px;
+          font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:500; color:var(--ed-txt);
+          text-decoration:none; transition:border-color .2s,transform .2s; white-space:nowrap;
         }
-        .b-info-row {
-          display:flex; justify-content:space-between; align-items:center;
-          padding:8px 0; border-bottom:1px solid rgba(0,180,255,.07);
-          font-size:.76rem;
-        }
-        .b-info-row:last-child { border-bottom:none; }
-        .b-stat-num {
-          font-family:Syne,sans-serif; font-weight:800; line-height:1;
-          font-size:clamp(1.8rem,2.8vw,2.8rem);
-        }
-        .b-stat-label {
-          font-size:.58rem; letter-spacing:.1em; text-transform:uppercase;
-          color:rgba(220,230,255,.35); margin-top:4px;
-        }
-        .b-motto-bar {
-          display:flex; align-items:center; gap:16px;
-          padding:12px clamp(32px,5vw,80px);
-          border-top:1px solid rgba(0,180,255,.1);
-          border-bottom:1px solid rgba(0,180,255,.1);
-          background:rgba(0,180,255,.028);
-          flex-shrink:0;
-        }
-        .b-tech-chip {
-          display:inline-flex; align-items:center; gap:5px;
-          padding:4px 11px;
-          border:1px solid rgba(0,180,255,.18); border-radius:100px;
-          font-size:.7rem; color:rgba(220,230,255,.6);
-          background:rgba(0,180,255,.05);
-        }
+        .ed-ghost:hover { border-color:var(--ac); transform:translateY(-2px); }
+
+        .ed-status { display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:var(--ac); color:#04121a; padding:6px 16px; font-size:11px; font-weight:600; letter-spacing:.02em; }
+        .ed-status .sp { margin-left:auto; }
       `}</style>
 
       <div
@@ -262,7 +269,7 @@ export default function AboutPreview() {
 
         {/* Title layer */}
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2, pointerEvents: "none" }}>
-          <div style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(4rem,10vw,10rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.88, textTransform: "uppercase", textAlign: "left", padding: "0 clamp(24px,5vw,80px)" }}>
+          <div style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(3.2rem,8vw,8rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.88, textTransform: "uppercase", textAlign: "left", padding: "0 clamp(24px,5vw,80px)", maxWidth: "100%" }}>
             <div ref={line1Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: textPrimary }}>TURNING</span></div>
             <div ref={line2Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: textPrimary }}>IDEAS INTO</span></div>
             <div ref={line3Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,.15)" : "2px rgba(10,18,48,.15)" }}>DIGITAL REALITY</span></div>
@@ -277,12 +284,12 @@ export default function AboutPreview() {
           <div
             style={{
               height: "100vh",
-              background: isDark ? "rgba(4,8,28,0.96)" : "rgba(240,244,255,0.96)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
+              background: isDark ? "#04081c" : "#eaf4ef",
               display: "flex",
               flexDirection: "column",
-              paddingTop: 68,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "84px clamp(20px,4vw,56px) 28px",
               boxSizing: "border-box",
               position: "relative",
               overflow: "hidden",
@@ -290,225 +297,141 @@ export default function AboutPreview() {
           >
             <div className="b-scan" />
 
-            {/* ══ ROW 1: Identity bar ══ */}
             <div
+              className="ed-win"
               style={{
-                display: "flex", alignItems: "center",
-                gap: "clamp(14px,2vw,32px)",
-                padding: "14px clamp(32px,5vw,80px)",
-                borderBottom: `1px solid ${borderColor}`,
-                flexShrink: 0,
+                "--ed-mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+                "--ed-bg": isDark ? "#0a1322" : "#f6faf8",
+                "--ed-chrome": isDark ? "#0c1526" : "#ffffff",
+                "--ed-gutter": isDark ? "#08101e" : "#eef4f1",
+                "--ed-line": isDark ? "#16233c" : "#dde8e2",
+                "--ed-txt": isDark ? "#c4d2ea" : "#1e2a3b",
+                "--ed-muted": isDark ? "#5d6f8e" : "#7c8aa0",
+                "--ed-kw": isDark ? "#00d4ff" : "#0d9488",
+                "--ed-str": isDark ? "#3ddc97" : "#0f9d6b",
+                "--ed-num": isDark ? "#ffb27a" : "#c2683a",
+                "--ed-prop": isDark ? "#9ec9ff" : "#2563a8",
+                "--ed-com": isDark ? "#4d5f7e" : "#94a3b8",
+                "--ed-fn": isDark ? "#c792ea" : "#8b5cf6",
+                height: "100%",
+                maxHeight: "calc(100vh - 112px)",
               }}
             >
-              {/* Avatar */}
-              <div style={{ width: 60, height: 60, borderRadius: "50%", border: "2px solid rgba(0,180,255,.38)", overflow: "hidden", flexShrink: 0, position: "relative", background: "rgba(0,20,60,.4)", boxShadow: "0 0 20px rgba(0,180,255,.18)" }}>
-                <img src={aboutImage} alt="Rian Farhan" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
-                <div style={{ position: "absolute", bottom: 3, right: 3, width: 10, height: 10, borderRadius: "50%", background: "#00d4ff", border: "2px solid rgba(4,8,28,1)", animation: "ap-pdot 2s infinite" }} />
-              </div>
-
-              {/* Name + badge */}
-              <div style={{ flexShrink: 0 }}>
-                <div style={{ fontFamily: "Syne,sans-serif", fontSize: "clamp(.95rem,1.4vw,1.35rem)", fontWeight: 800, color: textPrimary, letterSpacing: "-.03em", marginBottom: 6 }}>
-                  Baso Rian Farhan Mallanti
+              {/* Title bar */}
+              <div className="ed-titlebar">
+                <div className="ed-dots">
+                  <span className="ed-dot" style={{ background: "#ff5f57" }} />
+                  <span className="ed-dot" style={{ background: "#febc2e" }} />
+                  <span className="ed-dot" style={{ background: "#28c840" }} />
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div className="b-badge"><div className="b-pdot-sm" /> Available for Freelance · Full Stack Developer</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: ".72rem", color: textMuted }}>
-                    <MapPin size={11} /> Makassar, ID
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg,rgba(0,180,255,.15),transparent)", minWidth: 0, margin: "0 8px" }} />
-
-              {/* Stats */}
-              {[
-                { to: 50, suf: "+", label: "Projects Done" },
-                { to: 4, suf: "+", label: "Years Exp" },
-                { to: 99, suf: "%", label: "Satisfaction" },
-              ].map(({ to, suf, label }, i) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: "clamp(14px,2vw,32px)" }}>
-                  {i > 0 && <div style={{ width: 1, height: 38, background: "rgba(0,180,255,.18)", flexShrink: 0 }} />}
-                  <div style={{ textAlign: "center", flexShrink: 0 }}>
-                    <div className="b-stat-num" style={{ color: textPrimary }}>
-                      {cardVisible
-                        ? <AnimCounter to={to} suffix={suf} delay={i * 130} />
-                        : <span>0<em style={{ fontStyle: "normal", color: "#00d4ff" }}>{suf}</em></span>
-                      }
-                    </div>
-                    <div className="b-stat-label">{label}</div>
-                  </div>
-                </div>
-              ))}
-
-              <div style={{ width: 1, height: 38, background: "rgba(0,180,255,.18)", flexShrink: 0 }} />
-
-              <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
-                <Link to="/about" className="b-cta">Read More <ArrowRight size={13} /></Link>
-                <Link to="/contact" className="b-cta-ghost">Contact Me <ArrowRight size={13} /></Link>
-              </div>
-            </div>
-
-            {/* ══ MOTTO BANNER ══ */}
-            <div className="b-motto-bar">
-              <Quote size={15} color={accent} style={{ flexShrink: 0, opacity: 0.65 }} />
-              <p style={{ margin: 0, fontStyle: "italic", fontSize: "clamp(.82rem,1vw,.98rem)", color: isDark ? "rgba(240,244,255,.82)" : "rgba(10,18,48,.75)", flex: 1, letterSpacing: ".01em" }}>
-                "It always seems impossible, until its done."
-              </p>
-              <span style={{ fontSize: ".7rem", color: textMuted, flexShrink: 0, letterSpacing: ".04em" }}>— Nelson Mandela</span>
-            </div>
-
-            {/* ══ ROW 2: 3 columns ══ */}
-            <div
-              style={{
-                flex: 1,
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                minHeight: 0,
-                padding: "0 clamp(32px,5vw,80px)",
-                overflow: "visible",
-              }}
-            >
-
-              {/* ── COL 1: Personal Info + Skills + bio + Available For ── */}
-              <div style={{ display: "flex", flexDirection: "column", padding: "18px 28px 18px 0", borderRight: `1px solid ${borderColor}`, overflow: "hidden" }}>
-
-                {/* Personal Info — top of col 1 */}
-                <div style={{ border: `1px solid rgba(0,180,255,.14)`, borderRadius: 9, background: cardBg, padding: "4px 14px", flexShrink: 0, marginBottom: 16 }}>
-                  {[
-                    { k: "Full Name", v: "Baso Rian Farhan M." },
-                    { k: "Born", v: "July 07, 2002" },
-                    { k: "Location", v: "Makassar, ID" },
-                    { k: "Languages", v: "ID · EN" },
-                    { k: "Status", v: null },
-                  ].map(({ k, v }) => (
-                    <div key={k} className="b-info-row">
-                      <span style={{ color: textMuted, letterSpacing: ".07em", textTransform: "uppercase", fontSize: ".62rem" }}>{k}</span>
-                      {v
-                        ? <span style={{ fontFamily: "Syne,sans-serif", fontSize: ".76rem", fontWeight: 700, color: textPrimary }}>{v}</span>
-                        : <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "Syne,sans-serif", fontSize: ".76rem", fontWeight: 700, color: "#00d4ff" }}><div className="b-pdot-sm" />Open to Work</span>
-                      }
-                    </div>
+                <div className="ed-tabs">
+                  {[["rian.tsx", "rian", ".tsx"], ["skills.json", "skills", ".json"], ["journey.log", "journey", ".log"], ["stack.ts", "stack", ".ts"]].map(([key, nm, ext]) => (
+                    <button key={key} type="button" className={"ed-tab" + (tab === key ? " active" : "")} onClick={() => setTab(key)}>{nm}<span className="ext">{ext}</span></button>
                   ))}
                 </div>
+                <div className="ed-clock">~/portfolio · main</div>
+              </div>
 
-                <div className="b-col-label" style={{ marginBottom: 14 }}><Code2 size={11} />Core Skills</div>
-
-                {/* Skills */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-                  {[
-                    { name: "Full Stack Development", pct: 90 },
-                    { name: "React / Next.js", pct: 88 },
-                    { name: "TypeScript", pct: 82 },
-                    { name: "Kotlin / Mobile", pct: 75 },
-                    { name: "UI / UX Design", pct: 70 },
-                  ].map(({ name, pct }) => (
-                    <div key={name}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: ".78rem", color: isDark ? "rgba(220,230,255,.65)" : "rgba(10,18,48,.65)" }}>{name}</span>
-                        <span style={{ fontSize: ".78rem", color: accent, fontFamily: "Syne,sans-serif", fontWeight: 700 }}>{pct}%</span>
-                      </div>
-                      <div className="b-bar-bg">
-                        <div className="b-bar-fill" style={{ width: `${pct}%` }} />
+              {/* Body — tabbed (klik tab buat ganti file, tanpa scroll) */}
+              <div className="ed-body">
+                {tab === "rian.tsx" && (
+                  <div className="ed-file">
+                    <div className="ed-code">
+                      <div className="ed-gutter">{"1\n2\n3\n4\n5\n6\n7\n8\n9\n10"}</div>
+                      <div className="ed-lines">
+                        <div><span className="ed-com">// Baso Rian Farhan Mallanti — Full Stack Developer</span></div>
+                        <div><span className="ed-kw">const</span> <span className="ed-prop">rian</span><span className="ed-punc">:</span> <span className="ed-fn">Developer</span> <span className="ed-punc">= {'{'}</span></div>
+                        <div>{"  "}<span className="ed-prop">location</span><span className="ed-punc">:</span> <span className="ed-str">"Makassar, ID"</span><span className="ed-punc">,</span></div>
+                        <div>{"  "}<span className="ed-prop">born</span><span className="ed-punc">:</span> <span className="ed-str">"2002-07-07"</span><span className="ed-punc">,</span></div>
+                        <div>{"  "}<span className="ed-prop">languages</span><span className="ed-punc">:</span> <span className="ed-punc">[</span><span className="ed-str">"ID"</span><span className="ed-punc">,</span> <span className="ed-str">"EN"</span><span className="ed-punc">],</span></div>
+                        <div>{"  "}<span className="ed-prop">status</span><span className="ed-punc">:</span> <span className="ed-str">"open_to_work"</span><span className="ed-punc">,</span>{"   "}<span className="ed-com"><span className="ed-pulse" />// available for freelance</span></div>
+                        <div>{"  "}<span className="ed-prop">projects</span><span className="ed-punc">:</span> <span className="ed-num">50</span><span className="ed-punc">,</span> <span className="ed-prop">years</span><span className="ed-punc">:</span> <span className="ed-num">4</span><span className="ed-punc">,</span> <span className="ed-prop">satisfaction</span><span className="ed-punc">:</span> <span className="ed-num">99</span><span className="ed-punc">,</span></div>
+                        <div><span className="ed-punc">{'}'}</span></div>
+                        <div>{" "}</div>
+                        <div><span className="ed-com">// "It always seems impossible, until it's done." — Mandela</span></div>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Bio paragraph — fills the gap */}
-                <p style={{ fontSize: ".82rem", lineHeight: 1.75, color: textMuted, margin: "18px 0 0", flex: 1 }}>
-                  I'm a passionate Full Stack Developer with a strong focus on creating clean, efficient code and intuitive user experiences.
-                  With expertise in both front-end and back-end technologies, I enjoy bringing complex projects to life — from idea to production.
-                </p>
-
-                {/* Available For */}
-                <div style={{ border: `1px solid rgba(0,180,255,.14)`, borderRadius: 9, background: cardBg, padding: "12px 14px", flexShrink: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
-                    <Briefcase size={12} color={accent} />
-                    <span style={{ fontSize: ".6rem", letterSpacing: ".14em", textTransform: "uppercase", color: textMuted }}>Available For</span>
-                    <div className="b-pdot-sm" />
-                  </div>
-                  {[["Full-time Positions", true], ["Freelance Projects", false], ["Contract", true]].map(([t, struck]) => (
-                    <div key={t} style={{ fontSize: ".78rem", color: struck ? isDark ? "rgba(220,230,255,.27)" : "rgba(10,18,48,.27)" : isDark ? "rgba(220,230,255,.88)" : "rgba(10,18,48,.82)", textDecoration: struck ? "line-through" : "none", marginBottom: 5, display: "flex", alignItems: "center", gap: 6 }}>
-                      {t} {!struck && <div className="b-pdot-sm" />}
+                    <div className="ed-avail">
+                      <div><span className="ed-com">// available_for</span></div>
+                      <div className="on">▸ freelance_projects <span className="b-pdot-sm" /></div>
+                      <div className="off">▸ full_time_positions</div>
+                      <div className="off">▸ contract</div>
                     </div>
-                  ))}
+                  </div>
+                )}
+
+                {tab === "skills.json" && (
+                  <div className="ed-file"><div className="ed-pad">
+                    <p className="ed-label">core skills</p>
+                    {[
+                      { name: "fullstack", pct: 90 },
+                      { name: "react_next", pct: 88 },
+                      { name: "typescript", pct: 82 },
+                      { name: "kotlin", pct: 75 },
+                      { name: "ui_ux", pct: 70 },
+                    ].map(({ name, pct }) => (
+                      <div className="ed-skillrow" key={name}>
+                        <span className="nm">{name}</span>
+                        <span className="ed-bar"><i style={{ width: skillsReady ? `${pct}%` : "0%" }} /></span>
+                        <span className="pc">{pct}</span>
+                      </div>
+                    ))}
+                  </div></div>
+                )}
+
+                {tab === "journey.log" && (
+                  <div className="ed-file"><div className="ed-pad">
+                    <p className="ed-label">journey.log</p>
+                    <div className="ed-log">
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2023 — NOW</div><div className="ed-t">Full Stack Developer<span className="ed-cursor" /></div><div className="ed-d">Freelance &amp; open source</div></div></div>
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2022 — NOW</div><div className="ed-t">BE Computer Science</div><div className="ed-d">State University of Makassar — algorithms, data structures, software engineering</div></div></div>
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2021</div><div className="ed-t">Started coding</div><div className="ed-d">First line of code, never looked back</div></div></div>
+                    </div>
+                  </div></div>
+                )}
+
+                {tab === "stack.ts" && (
+                  <div className="ed-file"><div className="ed-pad">
+                    <p className="ed-label">stack.ts</p>
+                    <div className="ed-imp"><span className="ed-kw">import</span> <span className="ed-punc">{'{'}</span> <span className="ed-fn">React, Next, Flutter, ReactNative, PHP, Node</span> <span className="ed-punc">{'}'}</span> <span className="ed-kw">from</span> <span className="ed-str">"@rian/stack"</span></div>
+                    <div className="ed-chips">
+                      {["React", "Next.js", "React Native", "Flutter", "TypeScript", "JavaScript", "Kotlin", "PHP", "Node.js", "Apps Script", "Tailwind"].map((t) => (
+                        <span className="ed-chip" key={t}><span className="k">▸</span> {t}</span>
+                      ))}
+                    </div>
+                    <div className="ed-edu">
+                      <Award size={16} style={{ fill: "#fde047", color: "#fde047", flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".85rem", fontWeight: 700 }}>BE in Computer Science</div>
+                        <div style={{ fontSize: ".72rem", opacity: 0.85 }}>State University of Makassar · since 2021</div>
+                      </div>
+                    </div>
+                  </div></div>
+                )}
+              </div>
+
+              {/* Footer toolbar */}
+              <div className="ed-footer">
+                <div className="ed-ident">
+                  <div className="ed-ava"><img loading="lazy" decoding="async" src={aboutImage} alt="Rian Farhan" /></div>
+                  <span className="ed-name">Baso Rian Farhan</span>
+                  <span className="ed-open"><span className="b-pdot-sm" /> Open to Work</span>
+                  <span className="ed-loc"><MapPin size={11} /> Makassar, ID</span>
+                </div>
+                <div className="ed-actions">
+                  <Link to="/about" className="b-cta">Read More <ArrowRight size={13} /></Link>
+                  <Link to="/contact" className="ed-ghost">Contact Me <ArrowRight size={13} /></Link>
                 </div>
               </div>
 
-              {/* ── COL 2: Journey + Personal Info ── */}
-              <div style={{ display: "flex", flexDirection: "column", padding: "18px 28px", borderRight: `1px solid ${borderColor}`, overflow: "hidden" }}>
-                <div className="b-col-label" style={{ marginBottom: 14 }}><Clock size={11} />Journey</div>
-
-                {/* Timeline — spaced to fill */}
-                <div className="b-journey-wrap" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  {[
-                    { year: "2021", title: "Started Coding", sub: "First line of code, never looked back", detail: "Sparked by curiosity, built my first web project and fell in love with the craft." },
-                    { year: "2022 — Now", title: "BE Computer Science", sub: "State University of Makassar", detail: "Deepening fundamentals — algorithms, data structures, software engineering." },
-                    { year: "2023 — Now", title: "Full Stack Developer", sub: "Freelance & open source", detail: "Building real products for clients and contributing to the open source community." },
-                  ].map(({ year, title, sub, detail }) => (
-                    <div key={year} style={{ position: "relative" }}>
-                      <div className="b-journey-dot" />
-                      <div style={{ fontSize: ".6rem", letterSpacing: ".15em", textTransform: "uppercase", color: accent, marginBottom: 3 }}>{year}</div>
-                      <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".9rem", fontWeight: 700, color: textPrimary, marginBottom: 2 }}>{title}</div>
-                      <div style={{ fontSize: ".75rem", color: textMuted, marginBottom: 4 }}>{sub}</div>
-                      <div style={{ fontSize: ".73rem", color: isDark ? "rgba(220,230,255,.35)" : "rgba(10,18,48,.35)", lineHeight: 1.5 }}>{detail}</div>
-                    </div>
-                  ))}
-                </div>
-
+              {/* Status bar */}
+              <div className="ed-status">
+                <span>⎇ main</span>
+                <span>50+ projects</span>
+                <span>· 4+ yrs</span>
+                <span>· 99% satisfaction</span>
+                <span className="sp">TSX · UTF-8</span>
               </div>
-
-              {/* ── COL 3: Tech Stack BounceCards + chips + Education + Hire ── */}
-              <div style={{ display: "flex", flexDirection: "column", padding: "18px 0 18px 28px", overflow: "visible", position: "relative", zIndex: 10 }}>
-                <div className="b-col-label" style={{ marginBottom: 14 }}><Layers size={11} />Tech Stack</div>
-
-                {/* BounceCards — top, overflow visible so cards escape column */}
-                <div style={{ flex: 1, display: "flex", alignItems: "flex-start", justifyContent: "center", minHeight: 0, overflow: "visible", paddingTop: 8 }}>
-                  <BounceCards
-                    images={images}
-                    containerWidth={320}
-                    containerHeight={200}
-                    animationDelay={1}
-                    animationStagger={0.08}
-                    easeType="elastic.out(1, 0.5)"
-                    transformStyles={transformStyles}
-                    enableHover={true}
-                    isDark={isDark}
-                  />
-                </div>
-
-                {/* Tech chips below cards */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
-                  {["Kotlin", "React", "Next.js", "TypeScript", "JavaScript", "Node.js", "Tailwind"].map((t) => (
-                    <span key={t} className="b-tech-chip">{t}</span>
-                  ))}
-                </div>
-
-                {/* Education */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#0066ff,#00d4ff)", color: "white", borderRadius: 9, padding: "12px 16px", boxShadow: "0 0 24px rgba(0,100,255,.3)", flexShrink: 0, marginBottom: 10 }}>
-                  <Award size={15} style={{ fill: "#fde047", color: "#fde047", flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".85rem", fontWeight: 700 }}>BE in Computer Science</div>
-                    <div style={{ fontSize: ".7rem", opacity: 0.85 }}>State University of Makassar</div>
-                  </div>
-                </div>
-
-                {/* Hire Status */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 15px", border: `1px solid rgba(0,180,255,.15)`, borderRadius: 9, background: "rgba(0,180,255,.04)", flexShrink: 0 }}>
-                  <div>
-                    <div style={{ fontSize: ".6rem", letterSpacing: ".13em", textTransform: "uppercase", color: textMuted, marginBottom: 4 }}>Hire Status</div>
-                    <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".82rem", fontWeight: 700, color: "#00d4ff", display: "flex", alignItems: "center", gap: 6 }}>
-                      <div className="b-pdot-sm" /> Open to Work
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: ".6rem", letterSpacing: ".13em", textTransform: "uppercase", color: textMuted, marginBottom: 4 }}>Since</div>
-                    <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".82rem", fontWeight: 700, color: textPrimary }}>2021</div>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>

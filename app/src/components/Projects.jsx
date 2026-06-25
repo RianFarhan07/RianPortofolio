@@ -149,9 +149,7 @@ export default function Projects() {
           } opacity-5 -top-48 -left-48`}
         />
         <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-5 -bottom-48 -right-48`}
+          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -bottom-48 -right-48`}
         />
         <div
           className={`absolute inset-0 opacity-10 ${
@@ -197,8 +195,8 @@ export default function Projects() {
             <span
               className={`text-transparent bg-clip-text bg-gradient-to-r ${
                 isDark
-                  ? "from-primary via-blue-400 to-purple-400"
-                  : "from-primaryInLight via-blue-500 to-purple-500"
+                  ? "from-primary via-[var(--ac)] to-purple-400"
+                  : "from-primaryInLight via-[var(--ac)] to-purple-500"
               }`}
             >
               Projects

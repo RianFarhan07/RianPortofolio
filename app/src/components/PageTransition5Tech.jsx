@@ -132,18 +132,11 @@ export default function PageTransition5Tech({ children }) {
 
   return (
     <div className="relative overflow-hidden perspective-1000">
-      {/* Main content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      {/* Main content — render langsung tanpa AnimatePresence mode="wait".
+          Wrapper opacity lama kadang nyangkut di opacity:0 saat ganti route
+          (race framer-motion vs React Router) → halaman blank tanpa error.
+          Transisi visual sudah ditangani overlay tech di bawah. */}
+      {children}
 
       {/* Initial Intro Animation */}
       <AnimatePresence>
@@ -159,11 +152,7 @@ export default function PageTransition5Tech({ children }) {
             }}
           >
             <motion.div
-              className={`absolute inset-0 ${
-                isDark
-                  ? "bg-gradient-to-br from-cyan-900 via-cyan-800 to-blue-900"
-                  : "bg-gradient-to-br from-teal-700 via-teal-600 to-teal-800"
-              }`}
+              className={`absolute inset-0 bg-gradient-to-br from-[var(--ac-deep)] via-[var(--ac)] to-[var(--ac-deep)]`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
@@ -172,17 +161,13 @@ export default function PageTransition5Tech({ children }) {
             {particles.map((particle) => (
               <motion.div
                 key={`intro-particle-${particle.id}`}
-                className={`fixed rounded-full mix-blend-screen pointer-events-none ${
-                  isDark ? "bg-cyan-300" : "bg-teal-300"
-                }`}
+                className={`fixed rounded-full mix-blend-screen pointer-events-none bg-[var(--ac)]`}
                 style={{
                   left: `${particle.x}%`,
                   top: `${particle.y}%`,
                   width: `${particle.size}px`,
                   height: `${particle.size}px`,
-                  boxShadow: isDark
-                    ? "0 0 15px 5px rgba(6, 182, 212, 0.3)"
-                    : "0 0 15px 5px rgba(20, 184, 166, 0.3)",
+                  boxShadow: "0 0 15px 5px rgba(var(--ac1), 0.3)",
                 }}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
@@ -201,11 +186,7 @@ export default function PageTransition5Tech({ children }) {
             ))}
 
             <motion.div
-              className={`w-24 h-24 rounded-full flex items-center justify-center mb-8 ${
-                isDark
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                  : "bg-gradient-to-r from-teal-500 to-teal-600"
-              }`}
+              className={`w-24 h-24 rounded-full flex items-center justify-center mb-8 bg-gradient-to-r from-[var(--ac)] to-[var(--ac-deep)]`}
               initial={{ scale: 0, opacity: 0 }}
               animate={{
                 scale: [0, 1.2, 1, 1, 0.9],
@@ -236,9 +217,7 @@ export default function PageTransition5Tech({ children }) {
                 ease: "easeOut",
               }}
               style={{
-                textShadow: isDark
-                  ? "0 0 20px rgba(6, 182, 212, 0.6)"
-                  : "0 0 20px rgba(20, 184, 166, 0.6)",
+                textShadow: "0 0 20px rgba(var(--ac1), 0.6)",
               }}
             >
               {personalInfo.name}
@@ -313,9 +292,7 @@ export default function PageTransition5Tech({ children }) {
               {personalInfo.skills.map((skill, index) => (
                 <motion.span
                   key={`intro-skill-${index}`}
-                  className={`px-3 py-1 rounded-full text-sm text-white ${
-                    isDark ? "bg-cyan-500/30" : "bg-teal-500/30"
-                  }`}
+                  className={`px-3 py-1 rounded-full text-sm text-white bg-[rgba(var(--ac1),0.3)]`}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{
                     opacity: [0, 1, 1, 0],
@@ -345,11 +322,7 @@ export default function PageTransition5Tech({ children }) {
               }}
             >
               <motion.div
-                className={`h-full rounded-full ${
-                  isDark
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                    : "bg-gradient-to-r from-teal-500 to-teal-600"
-                }`}
+                className={`h-full rounded-full bg-gradient-to-r from-[var(--ac)] to-[var(--ac-deep)]`}
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 3, delay: 1.5, ease: "easeInOut" }}
@@ -380,7 +353,9 @@ export default function PageTransition5Tech({ children }) {
             {/* Background Blackout with Fade */}
             <motion.div
               key={`blackout-${pathname}`}
-              className="fixed inset-0 z-[100] bg-black pointer-events-none"
+              className={`fixed inset-0 z-[100] pointer-events-none ${
+                isDark ? "bg-black" : "bg-[#eaf4ef]"
+              }`}
               initial={{ opacity: 0 }}
               animate={{
                 opacity: [0, 1, 1, 0],
@@ -396,7 +371,7 @@ export default function PageTransition5Tech({ children }) {
             <motion.div
               key={`letterbox-top-${pathname}`}
               className={`fixed top-0 left-0 w-full h-16 z-[101] pointer-events-none ${
-                isDark ? "bg-black" : "bg-gray-900"
+                isDark ? "bg-black" : "bg-[var(--ac-deep)]"
               }`}
               initial={{ y: -64 }}
               animate={{
@@ -411,7 +386,7 @@ export default function PageTransition5Tech({ children }) {
             <motion.div
               key={`letterbox-bottom-${pathname}`}
               className={`fixed bottom-0 left-0 w-full h-16 z-[101] pointer-events-none ${
-                isDark ? "bg-black" : "bg-gray-900"
+                isDark ? "bg-black" : "bg-[var(--ac-deep)]"
               }`}
               initial={{ y: 64 }}
               animate={{
@@ -445,15 +420,9 @@ export default function PageTransition5Tech({ children }) {
                   }}
                 >
                   <motion.div
-                    className={`w-full h-32 ${
-                      isDark
-                        ? "bg-gradient-to-b from-transparent via-cyan-400 to-transparent"
-                        : "bg-gradient-to-b from-transparent via-teal-400 to-transparent"
-                    }`}
+                    className={`w-full h-32 bg-gradient-to-b from-transparent via-[var(--ac)] to-transparent`}
                     style={{
-                      boxShadow: isDark
-                        ? "0 0 10px 2px rgba(6, 182, 212, 0.5)"
-                        : "0 0 10px 2px rgba(20, 184, 166, 0.5)",
+                      boxShadow: "0 0 10px 2px rgba(var(--ac1), 0.5)",
                     }}
                     initial={{ y: "-100%" }}
                     animate={{
@@ -483,18 +452,15 @@ export default function PageTransition5Tech({ children }) {
                 },
               }}
               style={{
-                background: isDark
-                  ? "radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%)"
-                  : "radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.1) 0%, transparent 70%)",
+                background:
+                  "radial-gradient(circle at 50% 50%, rgba(var(--ac1), 0.1) 0%, transparent 70%)",
               }}
             >
               {/* Perspective Grid Lines */}
               {gridLines.map((line) => (
                 <motion.div
                   key={`grid-line-${line.id}-${pathname}`}
-                  className={`absolute ${
-                    isDark ? "bg-cyan-400/20" : "bg-teal-400/20"
-                  }`}
+                  className={`absolute bg-[rgba(var(--ac1),0.2)]`}
                   style={
                     line.isVertical
                       ? {
@@ -533,13 +499,10 @@ export default function PageTransition5Tech({ children }) {
             {scanLines.map((scan) => (
               <motion.div
                 key={`scan-${scan.id}-${pathname}`}
-                className={`fixed left-0 w-full h-1 z-[104] pointer-events-none ${
-                  isDark ? "bg-cyan-400/50" : "bg-teal-400/50"
-                }`}
+                className={`fixed left-0 w-full h-1 z-[104] pointer-events-none bg-[rgba(var(--ac1),0.5)]`}
                 style={{
-                  boxShadow: isDark
-                    ? "0 0 20px 5px rgba(6, 182, 212, 0.6), 0 0 40px 10px rgba(6, 182, 212, 0.3)"
-                    : "0 0 20px 5px rgba(20, 184, 166, 0.6), 0 0 40px 10px rgba(20, 184, 166, 0.3)",
+                  boxShadow:
+                    "0 0 20px 5px rgba(var(--ac1), 0.6), 0 0 40px 10px rgba(var(--ac1), 0.3)",
                 }}
                 initial={{ top: "0%", opacity: 0 }}
                 animate={{
@@ -569,16 +532,13 @@ export default function PageTransition5Tech({ children }) {
               }}
             >
               <motion.div
-                className={`relative border-2 ${
-                  isDark ? "border-cyan-400" : "border-teal-400"
-                }`}
+                className={`relative border-2 border-[var(--ac)]`}
                 style={{
                   width: "80vw",
                   height: "60vh",
                   maxWidth: "800px",
-                  boxShadow: isDark
-                    ? "0 0 30px rgba(6, 182, 212, 0.5), inset 0 0 30px rgba(6, 182, 212, 0.2)"
-                    : "0 0 30px rgba(20, 184, 166, 0.5), inset 0 0 30px rgba(20, 184, 166, 0.2)",
+                  boxShadow:
+                    "0 0 30px rgba(var(--ac1), 0.5), inset 0 0 30px rgba(var(--ac1), 0.2)",
                 }}
                 initial={{ scale: 0, rotateY: -90 }}
                 animate={{
@@ -600,9 +560,7 @@ export default function PageTransition5Tech({ children }) {
                 ].map((position, i) => (
                   <motion.div
                     key={`bracket-${i}-${pathname}`}
-                    className={`absolute w-8 h-8 ${position} ${
-                      isDark ? "border-cyan-400" : "border-teal-400"
-                    }`}
+                    className={`absolute w-8 h-8 ${position} border-[var(--ac)]`}
                     style={{
                       borderWidth:
                         i === 0
@@ -641,11 +599,12 @@ export default function PageTransition5Tech({ children }) {
                   <div className="relative">
                     {/* Main Text */}
                     <motion.h1
-                      className="text-white text-6xl md:text-8xl font-bold tracking-wider relative z-10"
+                      className={`text-6xl md:text-8xl font-bold tracking-wider relative z-10 ${
+                        isDark ? "text-white" : "text-[#0a1230]"
+                      }`}
                       style={{
-                        textShadow: isDark
-                          ? "0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.4)"
-                          : "0 0 30px rgba(20, 184, 166, 0.8), 0 0 60px rgba(20, 184, 166, 0.4)",
+                        textShadow:
+                          "0 0 30px rgba(var(--ac1), 0.8), 0 0 60px rgba(var(--ac1), 0.4)",
                         fontFamily: "monospace",
                       }}
                       initial={{ scale: 0.8, y: 20 }}
@@ -665,7 +624,7 @@ export default function PageTransition5Tech({ children }) {
                     <motion.h1
                       className="absolute inset-0 text-6xl md:text-8xl font-bold tracking-wider opacity-70"
                       style={{
-                        color: isDark ? "#06b6d4" : "#14b8a6",
+                        color: "var(--ac)",
                         fontFamily: "monospace",
                         clipPath: "inset(0 0 0 0)",
                       }}
@@ -691,7 +650,7 @@ export default function PageTransition5Tech({ children }) {
                     <motion.h1
                       className="absolute inset-0 text-6xl md:text-8xl font-bold tracking-wider opacity-70"
                       style={{
-                        color: isDark ? "#3b82f6" : "#0d9488",
+                        color: "var(--ac-deep)",
                         fontFamily: "monospace",
                         clipPath: "inset(0 0 0 0)",
                       }}
@@ -719,7 +678,9 @@ export default function PageTransition5Tech({ children }) {
 
                 {/* Loading Bar Inside Frame */}
                 <motion.div
-                  className="absolute bottom-8 left-8 right-8 h-1 bg-white/10 overflow-hidden"
+                  className={`absolute bottom-8 left-8 right-8 h-1 overflow-hidden ${
+                    isDark ? "bg-white/10" : "bg-black/10"
+                  }`}
                   initial={{ opacity: 0 }}
                   animate={{
                     opacity: [0, 1, 1, 0],
@@ -730,11 +691,7 @@ export default function PageTransition5Tech({ children }) {
                   }}
                 >
                   <motion.div
-                    className={`h-full ${
-                      isDark
-                        ? "bg-gradient-to-r from-cyan-400 to-blue-500"
-                        : "bg-gradient-to-r from-teal-400 to-teal-600"
-                    }`}
+                    className={`h-full bg-gradient-to-r from-[var(--ac)] to-[var(--ac-deep)]`}
                     initial={{ width: "0%" }}
                     animate={{
                       width: "100%",
@@ -764,7 +721,7 @@ export default function PageTransition5Tech({ children }) {
               }}
             >
               <div
-                className={`font-mono text-xs ${isDark ? "text-cyan-400" : "text-teal-400"}`}
+                className={`font-mono text-xs text-[var(--ac)]`}
               >
                 <div className="mb-1">USER: {personalInfo.initials}</div>
                 <div className="mb-1">
@@ -778,9 +735,7 @@ export default function PageTransition5Tech({ children }) {
             {[0, 1, 2, 3].map((i) => (
               <motion.div
                 key={`pulse-${i}-${pathname}`}
-                className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 z-[104] pointer-events-none ${
-                  isDark ? "border-cyan-400/30" : "border-teal-400/30"
-                }`}
+                className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 z-[104] pointer-events-none border-[rgba(var(--ac1),0.3)]`}
                 style={{
                   width: "100px",
                   height: "100px",
@@ -824,13 +779,9 @@ export default function PageTransition5Tech({ children }) {
                 }}
               >
                 <div
-                  className={`absolute top-0 left-1/2 w-0.5 h-full origin-bottom ${
-                    isDark ? "bg-cyan-400" : "bg-teal-400"
-                  }`}
+                  className={`absolute top-0 left-1/2 w-0.5 h-full origin-bottom bg-[var(--ac)]`}
                   style={{
-                    boxShadow: isDark
-                      ? "0 0 20px 3px rgba(6, 182, 212, 0.8)"
-                      : "0 0 20px 3px rgba(20, 184, 166, 0.8)",
+                    boxShadow: "0 0 20px 3px rgba(var(--ac1), 0.8)",
                   }}
                 />
               </motion.div>
@@ -839,11 +790,7 @@ export default function PageTransition5Tech({ children }) {
             {/* Diagonal Wipe Effect */}
             <motion.div
               key={`wipe-${pathname}`}
-              className={`fixed top-0 left-0 w-[200%] h-[200%] origin-top-left z-[107] pointer-events-none ${
-                isDark
-                  ? "bg-gradient-to-br from-cyan-500/20 to-blue-500/20"
-                  : "bg-gradient-to-br from-teal-500/20 to-teal-600/20"
-              }`}
+              className={`fixed top-0 left-0 w-[200%] h-[200%] origin-top-left z-[107] pointer-events-none bg-gradient-to-br from-[rgba(var(--ac1),0.2)] to-[rgba(var(--ac-glow),0.2)]`}
               initial={{ x: "-100%", y: "-100%", rotate: 45 }}
               animate={{
                 x: ["- 100%", "100%"],
@@ -872,17 +819,13 @@ export default function PageTransition5Tech({ children }) {
             >
               <div className="text-center">
                 <div
-                  className={`font-mono text-sm mb-2 ${
-                    isDark ? "text-cyan-400" : "text-teal-400"
-                  }`}
+                  className={`font-mono text-sm mb-2 text-[var(--ac)]`}
                 >
                   {getTagline()}
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <motion.div
-                    className={`w-2 h-2 rounded-full ${
-                      isDark ? "bg-cyan-400" : "bg-teal-400"
-                    }`}
+                    className={`w-2 h-2 rounded-full bg-[var(--ac)]`}
                     animate={{
                       scale: [1, 1.5, 1],
                       opacity: [1, 0.5, 1],

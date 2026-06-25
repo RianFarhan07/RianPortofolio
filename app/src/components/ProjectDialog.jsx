@@ -103,7 +103,7 @@ export default function ProjectDialog({ project, onClose }) {
                   onClick={handlePrevImage}
                   whileHover={{
                     scale: 1.1,
-                    backgroundColor: "rgba(0, 173, 181, 0.7)",
+                    backgroundColor: "rgba(var(--ac1), 0.7)",
                   }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -114,7 +114,7 @@ export default function ProjectDialog({ project, onClose }) {
                   onClick={handleNextImage}
                   whileHover={{
                     scale: 1.1,
-                    backgroundColor: "rgba(0, 173, 181, 0.7)",
+                    backgroundColor: "rgba(var(--ac1), 0.7)",
                   }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -151,7 +151,7 @@ export default function ProjectDialog({ project, onClose }) {
                 <h3 className="text-2xl font-bold text-white">
                   {project.title}
                 </h3>
-                <p className="text-cyan-400 text-sm">{project.category}</p>
+                <p className="text-[var(--ac)] text-sm">{project.category}</p>
               </div>
               <div className="flex space-x-3">
                 {project.githubUrl && (
@@ -172,7 +172,7 @@ export default function ProjectDialog({ project, onClose }) {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-2 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 bg-[var(--ac)] rounded-lg text-white hover:bg-[var(--ac)] transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >

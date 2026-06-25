@@ -124,7 +124,7 @@ export const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
           <div className="relative aspect-video w-full overflow-hidden">
             <div className="absolute inset-0 flex">
               {projectImages.map((img, idx) => (
-                <img
+                <img loading="lazy" decoding="async"
                   key={idx}
                   src={img || "/placeholder.svg"}
                   alt={`${project.title} screenshot ${idx + 1}`}

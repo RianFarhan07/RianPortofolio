@@ -114,7 +114,7 @@ export default function Stack({
                 height: cardDimensions.height,
               }}
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={card.img}
                 alt={`card-${card.id}`}
                 className="w-full h-full object-cover pointer-events-none"

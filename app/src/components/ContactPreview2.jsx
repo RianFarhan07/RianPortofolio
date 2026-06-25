@@ -117,11 +117,11 @@ export default function ContactPreview() {
   ];
 
   /* ── Shared tokens ── */
-  const accent = "#00d4ff";
+  const accent = "var(--ac)";
   const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
   const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
   const textFaint = isDark ? "rgba(220,230,255,.28)" : "rgba(10,18,48,.28)";
-  const borderColor = "rgba(0,180,255,.12)";
+  const borderColor = "rgba(var(--ac2),.12)";
   const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
   const sectionBg = isDark ? "#04081c" : "#f0f4ff";
 
@@ -137,8 +137,8 @@ export default function ContactPreview() {
           100%{ top: 100%; opacity: 0; }
         }
         @keyframes cp-pdot {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,.7); }
-          50%       { box-shadow: 0 0 0 5px rgba(0,212,255,0); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),.7); }
+          50%       { box-shadow: 0 0 0 5px rgba(var(--ac1),0); }
         }
         @keyframes cp-fadein {
           from { opacity: 0; transform: translateY(24px); }
@@ -147,7 +147,7 @@ export default function ContactPreview() {
 
         .cp-scan {
           position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(0,180,255,.3), transparent);
+          background: linear-gradient(90deg, transparent, rgba(var(--ac2),.3), transparent);
           animation: cp-scan 7s ease-in-out infinite;
           pointer-events: none; z-index: 1; top: 0;
         }
@@ -155,37 +155,37 @@ export default function ContactPreview() {
           position: absolute; width: 18px; height: 18px; z-index: 2; pointer-events: none;
         }
         .cp-pdot {
-          width: 6px; height: 6px; border-radius: 50%; background: #00d4ff;
+          width: 6px; height: 6px; border-radius: 50%; background: var(--ac);
           flex-shrink: 0; animation: cp-pdot 2s infinite; display: inline-block;
         }
         .cp-col-label {
           font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
-          color: #00d4ff; display: flex; align-items: center; gap: 8px;
+          color: var(--ac); display: flex; align-items: center; gap: 8px;
           margin-bottom: 16px; font-family: 'DM Sans', sans-serif;
         }
         .cp-col-label::after {
           content: ''; flex: 1; height: 1px;
-          background: linear-gradient(90deg, rgba(0,180,255,.3), transparent);
+          background: linear-gradient(90deg, rgba(var(--ac2),.3), transparent);
         }
         .cp-contact-card {
           display: flex; align-items: center; gap: 14px;
-          border: 1px solid rgba(0,180,255,.12); border-radius: 9px;
+          border: 1px solid rgba(var(--ac2),.12); border-radius: 9px;
           padding: 14px 16px; text-decoration: none; color: inherit;
           transition: border-color .2s, background .2s;
         }
         .cp-contact-card:hover {
-          border-color: rgba(0,180,255,.35);
+          border-color: rgba(var(--ac2),.35);
         }
         .cp-icon-wrap {
           width: 38px; height: 38px; border-radius: 50%;
-          border: 1px solid rgba(0,180,255,.22);
-          background: rgba(0,180,255,.07);
+          border: 1px solid rgba(var(--ac2),.22);
+          background: rgba(var(--ac2),.07);
           display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0; color: #00d4ff;
+          flex-shrink: 0; color: var(--ac);
           transition: background .2s;
         }
         .cp-contact-card:hover .cp-icon-wrap {
-          background: rgba(0,180,255,.15);
+          background: rgba(var(--ac2),.15);
         }
         .cp-social-btn {
           width: 34px; height: 34px; border-radius: 50%;
@@ -194,11 +194,11 @@ export default function ContactPreview() {
           color: rgba(255,255,255,.4); text-decoration: none;
           transition: border-color .2s, color .2s;
         }
-        .cp-social-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+        .cp-social-btn:hover { border-color: var(--ac); color: var(--ac); }
         .cp-social-btn-light {
           border-color: rgba(10,18,48,.15); color: rgba(10,18,48,.35);
         }
-        .cp-social-btn-light:hover { border-color: #0ea5e9; color: #0ea5e9; }
+        .cp-social-btn-light:hover { border-color: var(--ac); color: var(--ac); }
         .cp-stat-bar-bg {
           height: 2px; border-radius: 2px;
           background: rgba(255,255,255,.08); margin-top: 5px;
@@ -208,21 +208,21 @@ export default function ContactPreview() {
         }
         .cp-stat-bar-fill {
           height: 2px; border-radius: 2px;
-          background: linear-gradient(90deg, #0066ff, #00d4ff);
+          background: linear-gradient(90deg, var(--ac-deep), var(--ac));
         }
         .cp-cta {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 11px 28px;
-          background: linear-gradient(135deg, #0066ff, #00d4ff);
+          background: linear-gradient(135deg, var(--ac-deep), var(--ac));
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: .82rem;
           font-weight: 500; color: white; text-decoration: none;
-          box-shadow: 0 0 24px rgba(0,100,255,.35);
+          box-shadow: 0 0 24px rgba(var(--ac-glow),.35);
           transition: transform .2s, box-shadow .2s;
         }
         .cp-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 40px rgba(0,150,255,.55);
+          box-shadow: 0 0 40px rgba(var(--ac-glow),.55);
         }
         .cp-animate {
           animation: cp-fadein .7s ease both;
@@ -248,26 +248,26 @@ export default function ContactPreview() {
           {
             top: 14,
             left: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             top: 14,
             right: 14,
-            borderTop: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderTop: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             left: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderLeft: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderLeft: "1px solid rgba(var(--ac2),.35)",
           },
           {
             bottom: 14,
             right: 14,
-            borderBottom: "1px solid rgba(0,180,255,.35)",
-            borderRight: "1px solid rgba(0,180,255,.35)",
+            borderBottom: "1px solid rgba(var(--ac2),.35)",
+            borderRight: "1px solid rgba(var(--ac2),.35)",
           },
         ].map((s, i) => (
           <div key={i} className="cp-corner" style={s} />
@@ -344,8 +344,8 @@ export default function ContactPreview() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  background: "rgba(0,180,255,.07)",
-                  border: "1px solid rgba(0,180,255,.2)",
+                  background: "rgba(var(--ac2),.07)",
+                  border: "1px solid rgba(var(--ac2),.2)",
                   borderRadius: 100,
                   padding: "6px 14px",
                   fontSize: ".68rem",
@@ -413,7 +413,7 @@ export default function ContactPreview() {
               <div
                 style={{
                   height: 1,
-                  background: "rgba(0,180,255,.1)",
+                  background: "rgba(var(--ac2),.1)",
                   marginBottom: 18,
                 }}
               />
@@ -499,8 +499,8 @@ export default function ContactPreview() {
                     gap: 8,
                     marginTop: 12,
                     padding: "10px 12px",
-                    background: "rgba(0,180,255,.04)",
-                    border: "1px solid rgba(0,180,255,.08)",
+                    background: "rgba(var(--ac2),.04)",
+                    border: "1px solid rgba(var(--ac2),.08)",
                     borderRadius: 7,
                   }}
                 >

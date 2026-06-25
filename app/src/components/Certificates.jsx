@@ -149,21 +149,15 @@ export default function Certificates() {
         >
           <div className="flex items-center gap-2 mb-4 justify-center">
             <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
+              className={`h-1 w-8 md:w-12 bg-[var(--ac)] rounded-full`}
             ></div>
             <span
-              className={`text-sm font-semibold uppercase tracking-wider ${
-                isDark ? "text-primary" : "text-primaryInLight"
-              }`}
+              className={`text-sm font-semibold uppercase tracking-wider text-[var(--ac)]`}
             >
               My Credentials
             </span>
             <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
+              className={`h-1 w-8 md:w-12 bg-[var(--ac)] rounded-full`}
             ></div>
           </div>
 
@@ -176,8 +170,8 @@ export default function Certificates() {
             <span
               className={`text-transparent bg-clip-text bg-gradient-to-r ${
                 isDark
-                  ? "from-primary via-blue-400 to-purple-400"
-                  : "from-primaryInLight via-blue-500 to-purple-500"
+                  ? "from-[var(--ac)] via-[var(--ac)] to-purple-400"
+                  : "from-[var(--ac)] via-[var(--ac)] to-purple-500"
               }`}
             >
               Certifications
@@ -207,8 +201,8 @@ export default function Certificates() {
             <div
               className={`flex items-center rounded-lg ${
                 isDark
-                  ? "bg-gray-900/50 border border-gray-800 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/30"
-                  : "bg-white/70 border border-gray-200 focus-within:border-primaryInLight/50 focus-within:ring-1 focus-within:ring-primaryInLight/30"
+                  ? "bg-gray-900/50 border border-gray-800 focus-within:border-[rgba(var(--ac1),0.5)] focus-within:ring-1 focus-within:ring-[rgba(var(--ac1),0.3)]"
+                  : "bg-white/70 border border-gray-200 focus-within:border-[rgba(var(--ac1),0.5)] focus-within:ring-1 focus-within:ring-[rgba(var(--ac1),0.3)]"
               } px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200`}
             >
               <Search
@@ -295,8 +289,8 @@ export default function Certificates() {
                         className={`flex items-center px-3 py-2 cursor-pointer transition-colors ${
                           selectedCategory === category.value
                             ? isDark
-                              ? "bg-gray-800 text-primary"
-                              : "bg-gray-100 text-primaryInLight"
+                              ? "bg-gray-800 text-[var(--ac)]"
+                              : "bg-gray-100 text-[var(--ac)]"
                             : isDark
                             ? "text-white hover:bg-gray-800/70"
                             : "text-gray-800 hover:bg-gray-100/70"
@@ -310,9 +304,7 @@ export default function Certificates() {
                           {selectedCategory === category.value ? (
                             <CheckCircle
                               size={16}
-                              className={
-                                isDark ? "text-primary" : "text-primaryInLight"
-                              }
+                              className="text-[var(--ac)]"
                             />
                           ) : (
                             category.icon
@@ -398,8 +390,8 @@ export default function Certificates() {
                 <button
                   className={`px-5 py-2.5 rounded-lg ${
                     isDark
-                      ? "bg-gradient-to-r from-gray-800 to-gray-900 text-white hover:from-primary hover:to-blue-600 border border-gray-700"
-                      : "bg-gradient-to-r from-gray-100 to-gray-50 text-gray-800 hover:from-primaryInLight hover:to-blue-500 hover:text-white border border-gray-200"
+                      ? "bg-gradient-to-r from-gray-800 to-gray-900 text-white hover:from-[var(--ac)] hover:to-[var(--ac-deep)] border border-gray-700"
+                      : "bg-gradient-to-r from-gray-100 to-gray-50 text-gray-800 hover:from-[var(--ac)] hover:to-[var(--ac-deep)] hover:text-white border border-gray-200"
                   } transition-all duration-300 flex items-center gap-2`}
                   onClick={() => {
                     setSearchTerm("");

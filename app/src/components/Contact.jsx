@@ -173,14 +173,10 @@ export default function Contact() {
       {/* Background decor */}
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-500" : "bg-blue-300"
-          } opacity-5 -top-48 -left-48`}
+          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -top-48 -left-48`}
         />
         <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-5 -bottom-48 -right-48`}
+          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -bottom-48 -right-48`}
         />
         <div
           className={`absolute inset-0 opacity-10 ${
@@ -198,21 +194,15 @@ export default function Contact() {
         >
           <div className="flex items-center gap-2 mb-4 justify-center">
             <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
+              className={`h-1 w-8 md:w-12 bg-[var(--ac)] rounded-full`}
             ></div>
             <span
-              className={`text-sm font-semibold uppercase tracking-wider ${
-                isDark ? "text-primary" : "text-primaryInLight"
-              }`}
+              className={`text-sm font-semibold uppercase tracking-wider text-[var(--ac)]`}
             >
               Get In Touch
             </span>
             <div
-              className={`h-1 w-8 md:w-12 ${
-                isDark ? "bg-primary" : "bg-primaryInLight"
-              } rounded-full`}
+              className={`h-1 w-8 md:w-12 bg-[var(--ac)] rounded-full`}
             ></div>
           </div>
 
@@ -223,10 +213,8 @@ export default function Contact() {
           >
             Let's{" "}
             <span
-              className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                isDark
-                  ? "from-primary via-blue-400 to-purple-400"
-                  : "from-primaryInLight via-blue-500 to-purple-500"
+              className={`text-transparent bg-clip-text bg-gradient-to-r from-[var(--ac)] via-[var(--ac)] ${
+                isDark ? "to-purple-400" : "to-purple-500"
               }`}
             >
               Connect
@@ -284,10 +272,8 @@ export default function Contact() {
                     whileHover={{ x: 5 }}
                   >
                     <div
-                      className={`p-3 rounded-full ${
-                        isDark
-                          ? "bg-gray-800 text-primary"
-                          : "bg-gray-100 text-primaryInLight"
+                      className={`p-3 rounded-full text-[var(--ac)] ${
+                        isDark ? "bg-gray-800" : "bg-gray-100"
                       }`}
                     >
                       {item.icon}
@@ -414,11 +400,7 @@ export default function Contact() {
                         isDark
                           ? "bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                           : "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
-                      } border focus:ring-2 ${
-                        isDark
-                          ? "focus:ring-primary/50 focus:border-primary"
-                          : "focus:ring-primaryInLight/50 focus:border-primaryInLight"
-                      } outline-none transition-all ${
+                      } border focus:ring-2 focus:ring-[rgba(var(--ac1),0.5)] focus:border-[var(--ac)] outline-none transition-all ${
                         errors.name
                           ? isDark
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
@@ -453,11 +435,7 @@ export default function Contact() {
                         isDark
                           ? "bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                           : "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
-                      } border focus:ring-2 ${
-                        isDark
-                          ? "focus:ring-primary/50 focus:border-primary"
-                          : "focus:ring-primaryInLight/50 focus:border-primaryInLight"
-                      } outline-none transition-all ${
+                      } border focus:ring-2 focus:ring-[rgba(var(--ac1),0.5)] focus:border-[var(--ac)] outline-none transition-all ${
                         errors.email
                           ? isDark
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
@@ -495,11 +473,7 @@ export default function Contact() {
                       isDark
                         ? "bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                         : "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
-                    } border focus:ring-2 ${
-                      isDark
-                        ? "focus:ring-primary/50 focus:border-primary"
-                        : "focus:ring-primaryInLight/50 focus:border-primaryInLight"
-                    } outline-none transition-all ${
+                    } border focus:ring-2 focus:ring-[rgba(var(--ac1),0.5)] focus:border-[var(--ac)] outline-none transition-all ${
                       errors.subject
                         ? isDark
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
@@ -536,11 +510,7 @@ export default function Contact() {
                       isDark
                         ? "bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                         : "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
-                    } border focus:ring-2 ${
-                      isDark
-                        ? "focus:ring-primary/50 focus:border-primary"
-                        : "focus:ring-primaryInLight/50 focus:border-primaryInLight"
-                    } outline-none transition-all resize-none ${
+                    } border focus:ring-2 focus:ring-[rgba(var(--ac1),0.5)] focus:border-[var(--ac)] outline-none transition-all resize-none ${
                       errors.message
                         ? isDark
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
@@ -590,11 +560,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={formStatus === "submitting"}
-                  className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg ${
-                    isDark
-                      ? "bg-primary text-white hover:bg-primary/90"
-                      : "bg-primaryInLight text-white hover:bg-primaryInLight/90"
-                  } transition-colors font-medium text-sm disabled:opacity-70`}
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--ac)] text-white hover:bg-[rgba(var(--ac1),0.9)] transition-colors font-medium text-sm disabled:opacity-70`}
                 >
                   {formStatus === "submitting" ? (
                     <>

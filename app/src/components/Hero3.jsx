@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import fotoRianDark from "../assets/foto_rian_nobg.png";
-import fotoRianLight from "../assets/foto_rian_nobg_light.png";
+import fotoRianDark from "../assets/foto_rian_nobg.webp";
+import fotoRianLight from "../assets/foto_rian_nobg_light.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {
@@ -23,7 +23,7 @@ function AnimCounter({ to, suffix = "", delay = 0 }) {
   return (
     <span>
       {val}
-      <em style={{ fontStyle: "normal", color: "#00d4ff" }}>{suffix}</em>
+      <em style={{ fontStyle: "normal", color: "var(--ac)" }}>{suffix}</em>
     </span>
   );
 }
@@ -73,7 +73,7 @@ export default function Hero3() {
     transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
   });
 
-  const blue = "#00d4ff";
+  const blue = "var(--ac)";
 
   /* ══════════════════════════════════════════
      MOBILE LAYOUT — totally different approach
@@ -85,8 +85,8 @@ export default function Hero3() {
           @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
           @keyframes hero-mob-pdot {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.7); }
-            50%       { box-shadow: 0 0 0 5px rgba(0,212,255,0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),0.7); }
+            50%       { box-shadow: 0 0 0 5px rgba(var(--ac1),0); }
           }
           @keyframes hero-mob-scan {
             0%   { top: 0;    opacity: 0; }
@@ -100,35 +100,35 @@ export default function Hero3() {
           }
           .mob-scan {
             position: absolute; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,180,255,0.35), transparent);
+            background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent);
             z-index: 8; pointer-events: none;
             animation: hero-mob-scan 7s ease-in-out infinite;
           }
           .mob-pdot {
             width: 6px; height: 6px; border-radius: 50%;
-            background: #00d4ff; flex-shrink: 0;
+            background: var(--ac); flex-shrink: 0;
             animation: hero-mob-pdot 2s infinite;
           }
           .mob-scroll-arrow {
             width: 12px; height: 12px;
-            border-right: 1px solid rgba(0,180,255,0.5);
-            border-bottom: 1px solid rgba(0,180,255,0.5);
+            border-right: 1px solid rgba(var(--ac2),0.5);
+            border-bottom: 1px solid rgba(var(--ac2),0.5);
             transform: rotate(45deg);
             animation: hero-mob-arr 1.5s ease-in-out infinite;
           }
           .mob-cta {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 13px 32px;
-            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            background: linear-gradient(135deg, var(--ac-deep), var(--ac));
             border: none; border-radius: 100px; cursor: pointer;
             font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
             font-weight: 500; color: white; text-decoration: none;
-            box-shadow: 0 0 28px rgba(0,100,255,0.45);
+            box-shadow: 0 0 28px rgba(var(--ac-glow),0.45);
             transition: transform 0.25s, box-shadow 0.25s;
           }
           .mob-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 45px rgba(0,150,255,0.65);
+            box-shadow: 0 0 45px rgba(var(--ac-glow),0.65);
           }
         `}</style>
 
@@ -143,6 +143,11 @@ export default function Hero3() {
             flexDirection: "column",
             fontFamily: "'DM Sans', sans-serif",
             background: "transparent",
+            "--ac": isDark ? "#00d4ff" : "#14b8a6",
+            "--ac-deep": isDark ? "#0066ff" : "#0d9488",
+            "--ac1": isDark ? "0,212,255" : "20,184,166",
+            "--ac2": isDark ? "0,180,255" : "16,185,129",
+            "--ac-glow": isDark ? "0,100,255" : "16,185,129",
           }}
         >
           <div className="mob-scan" />
@@ -152,26 +157,26 @@ export default function Hero3() {
             {
               top: 14,
               left: 14,
-              borderTop: "1px solid rgba(0,180,255,0.35)",
-              borderLeft: "1px solid rgba(0,180,255,0.35)",
+              borderTop: "1px solid rgba(var(--ac2),0.35)",
+              borderLeft: "1px solid rgba(var(--ac2),0.35)",
             },
             {
               top: 14,
               right: 14,
-              borderTop: "1px solid rgba(0,180,255,0.35)",
-              borderRight: "1px solid rgba(0,180,255,0.35)",
+              borderTop: "1px solid rgba(var(--ac2),0.35)",
+              borderRight: "1px solid rgba(var(--ac2),0.35)",
             },
             {
               bottom: 14,
               left: 14,
-              borderBottom: "1px solid rgba(0,180,255,0.35)",
-              borderLeft: "1px solid rgba(0,180,255,0.35)",
+              borderBottom: "1px solid rgba(var(--ac2),0.35)",
+              borderLeft: "1px solid rgba(var(--ac2),0.35)",
             },
             {
               bottom: 14,
               right: 14,
-              borderBottom: "1px solid rgba(0,180,255,0.35)",
-              borderRight: "1px solid rgba(0,180,255,0.35)",
+              borderBottom: "1px solid rgba(var(--ac2),0.35)",
+              borderRight: "1px solid rgba(var(--ac2),0.35)",
             },
           ].map((s, i) => (
             <div
@@ -246,8 +251,8 @@ export default function Hero3() {
               width: "60%",
               height: 180,
               background:
-                "radial-gradient(ellipse, rgba(0,80,255,0.3) 0%, transparent 70%)",
-              filter: "blur(28px)",
+                "radial-gradient(ellipse, rgba(var(--ac-glow),0.3) 0%, transparent 70%)",
+              filter: "blur(18px)",
               zIndex: 4,
               pointerEvents: "none",
             }}
@@ -335,7 +340,7 @@ export default function Hero3() {
                   width: 40,
                   height: 1,
                   background:
-                    "linear-gradient(90deg, transparent, #00d4ff, transparent)",
+                    "linear-gradient(90deg, transparent, var(--ac), transparent)",
                 }}
               />
               <div
@@ -360,8 +365,8 @@ export default function Hero3() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: "rgba(0,180,255,0.08)",
-                border: "1px solid rgba(0,180,255,0.22)",
+                background: "rgba(var(--ac2),0.08)",
+                border: "1px solid rgba(var(--ac2),0.22)",
                 borderRadius: 100,
                 padding: "5px 14px",
                 fontSize: "0.7rem",
@@ -477,8 +482,8 @@ export default function Hero3() {
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
         @keyframes hero2-pdot {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.7); }
-          50%       { box-shadow: 0 0 0 5px rgba(0,212,255,0); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),0.7); }
+          50%       { box-shadow: 0 0 0 5px rgba(var(--ac1),0); }
         }
         @keyframes hero2-arr {
           0%, 100% { transform: rotate(45deg) translate(0,0); opacity: 0.3; }
@@ -493,36 +498,36 @@ export default function Hero3() {
 
         .h2-scan {
           position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(0,180,255,0.35), transparent);
+          background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent);
           z-index: 8; pointer-events: none;
           animation: hero2-scan 7s ease-in-out infinite;
         }
         .h2-role-dot {
           width: 6px; height: 6px; border-radius: 50%;
-          background: #00d4ff; flex-shrink: 0;
+          background: var(--ac); flex-shrink: 0;
           animation: hero2-pdot 2s infinite;
         }
         .h2-scroll-arrow {
           width: 14px; height: 14px;
-          border-right: 1px solid rgba(0,180,255,0.5);
-          border-bottom: 1px solid rgba(0,180,255,0.5);
+          border-right: 1px solid rgba(var(--ac2),0.5);
+          border-bottom: 1px solid rgba(var(--ac2),0.5);
           transform: rotate(45deg);
           animation: hero2-arr 1.5s ease-in-out infinite;
         }
         .h2-cta {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 12px 28px;
-          background: linear-gradient(135deg, #0066ff, #00d4ff);
+          background: linear-gradient(135deg, var(--ac-deep), var(--ac));
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
           font-weight: 500; color: white; text-decoration: none;
-          box-shadow: 0 0 28px rgba(0,100,255,0.45);
+          box-shadow: 0 0 28px rgba(var(--ac-glow),0.45);
           transition: transform 0.25s, box-shadow 0.25s;
           white-space: nowrap;
         }
         .h2-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 45px rgba(0,150,255,0.65);
+          box-shadow: 0 0 45px rgba(var(--ac-glow),0.65);
         }
         .h2-nav-link {
           font-size: 0.72rem; color: rgba(220,230,255,0.35);
@@ -538,7 +543,7 @@ export default function Hero3() {
           font-size: 0.72rem; color: rgba(255,255,255,0.45);
           text-decoration: none; transition: border-color 0.2s, color 0.2s;
         }
-        .h2-social:hover { border-color: #00d4ff; color: #00d4ff; }
+        .h2-social:hover { border-color: var(--ac); color: var(--ac); }
       `}</style>
 
       <section
@@ -552,6 +557,11 @@ export default function Hero3() {
           flexDirection: "column",
           fontFamily: "'DM Sans', sans-serif",
           background: "transparent",
+          "--ac": isDark ? "#00d4ff" : "#14b8a6",
+          "--ac-deep": isDark ? "#0066ff" : "#0d9488",
+          "--ac1": isDark ? "0,212,255" : "20,184,166",
+          "--ac2": isDark ? "0,180,255" : "16,185,129",
+          "--ac-glow": isDark ? "0,100,255" : "16,185,129",
         }}
       >
         <div className="h2-scan" />
@@ -561,26 +571,26 @@ export default function Hero3() {
           {
             top: 14,
             left: 14,
-            borderTop: "1px solid rgba(0,180,255,0.35)",
-            borderLeft: "1px solid rgba(0,180,255,0.35)",
+            borderTop: "1px solid rgba(var(--ac2),0.35)",
+            borderLeft: "1px solid rgba(var(--ac2),0.35)",
           },
           {
             top: 14,
             right: 14,
-            borderTop: "1px solid rgba(0,180,255,0.35)",
-            borderRight: "1px solid rgba(0,180,255,0.35)",
+            borderTop: "1px solid rgba(var(--ac2),0.35)",
+            borderRight: "1px solid rgba(var(--ac2),0.35)",
           },
           {
             bottom: 14,
             left: 14,
-            borderBottom: "1px solid rgba(0,180,255,0.35)",
-            borderLeft: "1px solid rgba(0,180,255,0.35)",
+            borderBottom: "1px solid rgba(var(--ac2),0.35)",
+            borderLeft: "1px solid rgba(var(--ac2),0.35)",
           },
           {
             bottom: 14,
             right: 14,
-            borderBottom: "1px solid rgba(0,180,255,0.35)",
-            borderRight: "1px solid rgba(0,180,255,0.35)",
+            borderBottom: "1px solid rgba(var(--ac2),0.35)",
+            borderRight: "1px solid rgba(var(--ac2),0.35)",
           },
         ].map((s, i) => (
           <div
@@ -679,8 +689,8 @@ export default function Hero3() {
               width: "50%",
               height: 160,
               background:
-                "radial-gradient(ellipse, rgba(0,180,255,0.12) 0%, transparent 70%)",
-              filter: "blur(40px)",
+                "radial-gradient(ellipse, rgba(var(--ac2),0.12) 0%, transparent 70%)",
+              filter: "blur(24px)",
               pointerEvents: "none",
             }}
           />
@@ -715,8 +725,8 @@ export default function Hero3() {
             width: "28%",
             height: 200,
             background:
-              "radial-gradient(ellipse, rgba(0,80,255,0.35) 0%, transparent 70%)",
-            filter: "blur(32px)",
+              "radial-gradient(ellipse, rgba(var(--ac-glow),0.35) 0%, transparent 70%)",
+            filter: "blur(22px)",
             zIndex: 4,
             pointerEvents: "none",
           }}
@@ -754,7 +764,7 @@ export default function Hero3() {
               width: 1,
               height: 56,
               background:
-                "linear-gradient(to bottom, transparent, rgba(0,180,255,0.3), transparent)",
+                "linear-gradient(to bottom, transparent, rgba(var(--ac2),0.3), transparent)",
               alignSelf: "center",
             }}
           />
@@ -802,8 +812,8 @@ export default function Hero3() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: "rgba(0,180,255,0.08)",
-                border: "1px solid rgba(0,180,255,0.22)",
+                background: "rgba(var(--ac2),0.08)",
+                border: "1px solid rgba(var(--ac2),0.22)",
                 borderRadius: 100,
                 padding: "6px 14px",
                 fontSize: "0.72rem",
@@ -913,7 +923,7 @@ export default function Hero3() {
               width: 60,
               height: 1,
               background:
-                "linear-gradient(90deg, transparent, #00d4ff, transparent)",
+                "linear-gradient(90deg, transparent, var(--ac), transparent)",
             }}
           />
           <div
