@@ -25,11 +25,21 @@ export default function CertificatesPreview() {
   const [autoplay, setAutoplay] = useState(true);
   const [entered, setEntered] = useState(false);
   const [isMobile, setIsMobile] = useState(null);
+  const [reduced] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   const autoplayRef = useRef(null);
   const wrapperRef = useRef(null);
   const headerRef = useRef(null);
   const contentRef = useRef(null);
+  const stickyRef = useRef(null);
+  const introRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
 
@@ -56,33 +66,96 @@ export default function CertificatesPreview() {
     return () => clearInterval(autoplayRef.current);
   }, [autoplay]);
 
-  /* ── GSAP entrance (desktop) ── */
+  /* ── Scroll-morph intro (desktop only) ──────────────────────
+     "VERIFIED SKILLS" muncul gede di tengah → morph ke kiri-atas →
+     header + konten fade-in. "Pin" via CSS sticky (bukan GSAP pin) +
+     ScrollTrigger scrub. Robust: no pin-spacer, no race, no crash. */
   useLayoutEffect(() => {
     if (isMobile !== false) return;
-    if (!wrapperRef.current) return;
+    const section = wrapperRef.current;
+    if (!section) return;
+
+    if (reduced) {
+      gsap.set([headerRef.current, contentRef.current], {
+        clearProps: "all",
+        autoAlpha: 1,
+        y: 0,
+      });
+      if (introRef.current && introRef.current.parentElement)
+        introRef.current.parentElement.style.display = "none";
+      return;
+    }
+
     const ctx = gsap.context(() => {
+      gsap.set(introRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
+      gsap.set(headerRef.current, { autoAlpha: 0, y: 24 });
+      gsap.set(contentRef.current, { autoAlpha: 0, y: 60 });
+
       const tl = gsap.timeline({
+        defaults: { ease: "none" },
         scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-          onEnter: () => setEntered(true),
-          onLeaveBack: () => setEntered(false),
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+          invalidateOnRefresh: true,
         },
       });
-      tl.from(headerRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.55,
-        ease: "power3.out",
-      }).from(
-        contentRef.current,
-        { y: 60, opacity: 0, duration: 0.6, ease: "power3.out" },
-        0.12,
+
+      // Fase 1 — reveal baris dari balik mask
+      tl.fromTo(
+        [line1Ref.current, line2Ref.current],
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 0.2,
+          ease: "power3.out",
+          stagger: 0.1,
+          immediateRender: true,
+        },
+        0.05,
       );
-    }, wrapperRef);
-    return () => ctx.revert();
-  }, [isMobile]);
+
+      // Fase 2 — morph: mengecil + geser kiri-atas + fade out
+      tl.to(
+        introRef.current,
+        {
+          scale: 0.3,
+          x: () => -window.innerWidth * 0.3,
+          y: () => -window.innerHeight * 0.32,
+          autoAlpha: 0,
+          ease: "power2.inOut",
+          duration: 0.26,
+        },
+        0.45,
+      );
+
+      // Fase 3 — header + konten fade-in di tempatnya
+      tl.to(
+        headerRef.current,
+        { autoAlpha: 1, y: 0, duration: 0.16, ease: "power3.out" },
+        0.5,
+      ).to(
+        contentRef.current,
+        { autoAlpha: 1, y: 0, duration: 0.2, ease: "power3.out" },
+        0.58,
+      );
+
+      // Tail kosong → jeda settle sebelum sticky lepas
+      tl.to({}, { duration: 0.18 }, 0.82);
+    }, section);
+
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = requestAnimationFrame(refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
+  }, [isMobile, reduced]);
 
   /* ── Mobile: entered on inView ── */
   useEffect(() => {
@@ -531,6 +604,14 @@ export default function CertificatesPreview() {
         .cp-list-item.active{border-color:rgba(var(--ac1),.45);background:rgba(var(--ac2),.09)}
 
         .cp-scroll-arrow{width:12px;height:12px;border-right:1px solid rgba(var(--ac2),.5);border-bottom:1px solid rgba(var(--ac2),.5);transform:rotate(45deg);animation:cp-arr 1.5s ease-in-out infinite}
+
+        /* ── Intro overlay (scroll-morph) ── */
+        .cp-intro{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;pointer-events:none}
+        .cp-intro-inner{text-align:center;will-change:transform,opacity;transform-origin:center center}
+        .cp-intro-label{display:flex;align-items:center;justify-content:center;gap:12px;font-family:Syne,sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(var(--ac1),.72);margin-bottom:20px}
+        .cp-intro-dash{width:46px;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent)}
+        .cp-intro-title{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(3.5rem,11vw,9rem);line-height:.84;letter-spacing:-.04em;text-transform:uppercase}
+        .cp-intro .cp-mask{overflow:hidden;padding:0 .05em}
       `}</style>
 
       <section
@@ -542,15 +623,25 @@ export default function CertificatesPreview() {
         style={{
           position: "relative",
           width: "100%",
-          minHeight: "100vh",
-          overflow: "hidden",
+          height: reduced ? "auto" : "240vh",
           fontFamily: "'DM Sans',sans-serif",
-          display: "flex",
-          flexDirection: "column",
-          padding: "80px clamp(32px,5vw,80px) 60px",
-          boxSizing: "border-box",
         }}
       >
+        <div
+          ref={stickyRef}
+          style={{
+            position: reduced ? "relative" : "sticky",
+            top: 0,
+            height: reduced ? "auto" : "100vh",
+            minHeight: reduced ? "100vh" : undefined,
+            width: "100%",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            padding: "80px clamp(32px,5vw,80px) 60px",
+            boxSizing: "border-box",
+          }}
+        >
         <div className="cp-scan" />
         <div className="cp-gridbg" />
 
@@ -592,6 +683,36 @@ export default function CertificatesPreview() {
             }}
           />
         ))}
+
+        {/* ── INTRO OVERLAY (scroll-morph) ── */}
+        <div className="cp-intro" aria-hidden="true">
+          <div ref={introRef} className="cp-intro-inner">
+            <div className="cp-intro-label">
+              <span className="cp-intro-dash" />
+              Certifications
+            </div>
+            <div className="cp-intro-title">
+              <div className="cp-mask">
+                <div ref={line1Ref} style={{ color: textPrimary }}>
+                  VERIFIED
+                </div>
+              </div>
+              <div className="cp-mask">
+                <div
+                  ref={line2Ref}
+                  style={{
+                    color: "transparent",
+                    WebkitTextStroke: isDark
+                      ? "2px rgba(255,255,255,.18)"
+                      : "2px rgba(10,18,48,.18)",
+                  }}
+                >
+                  SKILLS
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* ── HEADER ── */}
         <div
@@ -1134,6 +1255,7 @@ export default function CertificatesPreview() {
               </Link>
             </div>
           </div>
+        </div>
         </div>
       </section>
     </>

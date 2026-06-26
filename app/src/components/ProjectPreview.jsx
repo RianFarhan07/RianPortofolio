@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import { bestProjects as projects } from "../data/bestProjects";
-import { TechStackTabs } from "./TechStackTabs";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -72,11 +71,26 @@ export default function ProjectPreview() {
   const [startX, setStartX] = useState(0);
   const [entered, setEntered] = useState(false);
   const [isMobile, setIsMobile] = useState(null);
+  const [descOpen, setDescOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  useEffect(() => { setDescOpen(false); }, [activeIndex]);
 
   const wrapperRef = useRef(null);
   const headerRef = useRef(null);
   const sliderRef = useRef(null);
   const footerRef = useRef(null);
+  const stickyRef = useRef(null);
+  const introRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+
+  // prefers-reduced-motion (sekali baca saja saat mount)
+  const [reduced] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
 
@@ -88,56 +102,129 @@ export default function ProjectPreview() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* ── GSAP entrance animation (desktop only) ── */
-  useEffect(() => {
+  /* ── Scroll-morph intro (desktop only) ──────────────────────
+     Fase 1: "SELECTED WORKS" muncul gede & di tengah (masked reveal)
+     Fase 2: scroll lagi → morph mengecil + geser kiri-atas + fade
+     Fase 3: header/slider/footer fade-in di tempatnya
+
+     NB: TANPA ScrollTrigger pin. "Pin" dilakukan via CSS position:sticky
+     pada stickyRef (section = track tinggi 240vh). ScrollTrigger cuma
+     scrub timeline berdasar progress scroll. Ini bikin kebal dari race
+     antar pinned section (AboutPreview di atas pakai GSAP pin) + nggak
+     ada pin-spacer yang bisa bikin crash/ layout meleset. */
+  useLayoutEffect(() => {
     if (isMobile !== false) return;
-    if (!wrapperRef.current) return;
+    const section = wrapperRef.current;
+    if (!section) return;
+
+    // Reduced-motion: tampilkan semua statis, sembunyikan overlay intro
+    if (reduced) {
+      gsap.set([headerRef.current, sliderRef.current, footerRef.current], {
+        clearProps: "all",
+        autoAlpha: 1,
+        y: 0,
+      });
+      if (introRef.current && introRef.current.parentElement)
+        introRef.current.parentElement.style.display = "none";
+      return;
+    }
 
     const ctx = gsap.context(() => {
+      // State awal: konten ke-hide, judul intro besar di tengah
+      gsap.set(introRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
+      gsap.set(headerRef.current, { autoAlpha: 0, y: 24 });
+      gsap.set(sliderRef.current, { autoAlpha: 0, y: 60 });
+      gsap.set(footerRef.current, { autoAlpha: 0, y: 30 });
+
       const tl = gsap.timeline({
+        defaults: { ease: "none" },
         scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-          onEnter: () => setEntered(true),
-          onLeaveBack: () => setEntered(false),
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+          invalidateOnRefresh: true,
         },
       });
 
-      tl.from(headerRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.55,
-        ease: "power3.out",
-      })
-        .from(
-          sliderRef.current,
-          { y: 60, opacity: 0, duration: 0.6, ease: "power3.out" },
-          0.12,
-        )
-        .from(
-          footerRef.current,
-          { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" },
-          0.25,
-        );
-    }, wrapperRef);
+      // Fase 1 — reveal baris dari balik mask (gsap penuh yang punya transform)
+      tl.fromTo(
+        [line1Ref.current, line2Ref.current],
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 0.2,
+          ease: "power3.out",
+          stagger: 0.1,
+          immediateRender: true,
+        },
+        0.05,
+      );
 
-    return () => ctx.revert();
-  }, [isMobile]);
+      // (hold ~0.35 → 0.45 — judul "diam" sejenak biar kebaca)
+
+      // Fase 2 — morph: mengecil + geser ke kiri-atas + fade out
+      tl.to(
+        introRef.current,
+        {
+          scale: 0.3,
+          x: () => -window.innerWidth * 0.3,
+          y: () => -window.innerHeight * 0.32,
+          autoAlpha: 0,
+          ease: "power2.inOut",
+          duration: 0.26,
+        },
+        0.45,
+      );
+
+      // Fase 3 — konten asli fade-in di tempatnya (selesai sebelum un-stick)
+      tl.to(
+        headerRef.current,
+        { autoAlpha: 1, y: 0, duration: 0.16, ease: "power3.out" },
+        0.5,
+      )
+        .to(
+          sliderRef.current,
+          { autoAlpha: 1, y: 0, duration: 0.18, ease: "power3.out" },
+          0.56,
+        )
+        .to(
+          footerRef.current,
+          { autoAlpha: 1, y: 0, duration: 0.16, ease: "power3.out" },
+          0.64,
+        );
+
+      // Tail kosong → kasih jeda "settle" sebelum sticky lepas
+      tl.to({}, { duration: 0.18 }, 0.82);
+    }, section);
+
+    // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = requestAnimationFrame(refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
+  }, [isMobile, reduced]);
 
   /* ── Mobile: trigger entered on inView ── */
   useEffect(() => {
     if (isMobile && inView) setEntered(true);
   }, [isMobile, inView]);
 
-  /* ── Auto-slide ── */
+  /* ── Auto-slide (pause saat user lagi baca / hover) ── */
   useEffect(() => {
+    if (descOpen || hovered) return; // jangan auto-next pas baca atau kursor di showcase
     const timer = setInterval(() => {
       if (!dragging)
         setActiveIndex((p) => (p === projects.length - 1 ? 0 : p + 1));
-    }, 5000);
+    }, 8000);
     return () => clearInterval(timer);
-  }, [dragging]);
+  }, [dragging, descOpen, hovered]);
 
   const nextSlide = () =>
     setActiveIndex((p) => (p === projects.length - 1 ? 0 : p + 1));
@@ -243,7 +330,6 @@ export default function ProjectPreview() {
             overflow: "hidden",
           }}
         >
-          <div className="pp-scan" />
 
           {/* Corner marks */}
           {[
@@ -674,17 +760,22 @@ export default function ProjectPreview() {
 
         .pp-nav-btn {
           width:38px; height:38px; border-radius:50%;
-          border:1px solid rgba(var(--ac2),.22);
-          background:rgba(var(--ac2),.06);
+          border:1px solid rgba(var(--ac1),.45);
+          background:rgba(var(--ac1),.1);
           display:flex; align-items:center; justify-content:center;
-          cursor:pointer; color:rgba(220,230,255,.7);
+          cursor:pointer; color:var(--ac);
           transition:border-color .2s, background .2s, transform .2s;
         }
         .pp-nav-btn:hover {
-          border-color:rgba(var(--ac2),.5);
-          background:rgba(var(--ac2),.14);
+          border-color:var(--ac);
+          background:rgba(var(--ac1),.2);
           transform:scale(1.08);
         }
+        .pp-tstack { display:flex; flex-direction:column; gap:9px; }
+        .pp-trow { display:flex; gap:10px; align-items:flex-start; }
+        .pp-tcat { flex-shrink:0; width:72px; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(var(--ac1),.65); padding-top:6px; font-family:'DM Sans',sans-serif; }
+        .pp-tchips { display:flex; flex-wrap:wrap; gap:6px; }
+        .pp-tchip { font-size:.7rem; padding:4px 11px; border-radius:7px; color:var(--ac); background:rgba(var(--ac1),.1); border:1px solid rgba(var(--ac1),.28); white-space:nowrap; }
 
         .pp-proj-thumb {
           cursor:pointer;
@@ -704,6 +795,34 @@ export default function ProjectPreview() {
           transform:rotate(45deg);
           animation:pp-arr 1.5s ease-in-out infinite;
         }
+
+        /* ── Intro overlay (scroll-morph) ── */
+        .pp-intro {
+          position:absolute; inset:0; z-index:30;
+          display:flex; align-items:center; justify-content:center;
+          pointer-events:none;
+        }
+        .pp-intro-inner {
+          text-align:center;
+          will-change:transform,opacity;
+          transform-origin:center center;
+        }
+        .pp-intro-label {
+          display:flex; align-items:center; justify-content:center; gap:12px;
+          font-family:Syne,sans-serif; font-weight:700;
+          font-size:.72rem; letter-spacing:.3em; text-transform:uppercase;
+          color:rgba(var(--ac1),.72); margin-bottom:20px;
+        }
+        .pp-intro-dash {
+          width:46px; height:1px;
+          background:linear-gradient(90deg,transparent,var(--ac),transparent);
+        }
+        .pp-intro-title {
+          font-family:Syne,sans-serif; font-weight:800;
+          font-size:clamp(3.5rem,11vw,9rem); line-height:.84;
+          letter-spacing:-.04em; text-transform:uppercase;
+        }
+        .pp-intro .pp-mask { overflow:hidden; padding:0 .05em; }
       `}</style>
 
       <section
@@ -715,16 +834,28 @@ export default function ProjectPreview() {
         style={{
           position: "relative",
           width: "100%",
-          minHeight: "100vh",
-          overflow: "hidden",
+          // track tinggi → ruang scroll buat scrub. Sticky inner yang "nge-pin".
+          height: reduced ? "auto" : "240vh",
           fontFamily: "'DM Sans',sans-serif",
-          display: "flex",
-          flexDirection: "column",
-          padding: "80px clamp(32px,5vw,80px) 60px",
-          boxSizing: "border-box",
         }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
-        <div className="pp-scan" />
+        <div
+          ref={stickyRef}
+          style={{
+            position: reduced ? "relative" : "sticky",
+            top: 0,
+            height: reduced ? "auto" : "100vh",
+            minHeight: reduced ? "100vh" : undefined,
+            width: "100%",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            padding: "80px clamp(32px,5vw,80px) 60px",
+            boxSizing: "border-box",
+          }}
+        >
         <div className="pp-gridbg" />
 
         {/* Corner marks */}
@@ -765,6 +896,36 @@ export default function ProjectPreview() {
             }}
           />
         ))}
+
+        {/* ── INTRO OVERLAY (scroll-morph) ── */}
+        <div className="pp-intro" aria-hidden="true">
+          <div ref={introRef} className="pp-intro-inner">
+            <div className="pp-intro-label">
+              <span className="pp-intro-dash" />
+              Featured Projects
+            </div>
+            <div className="pp-intro-title">
+              <div className="pp-mask">
+                <div ref={line1Ref} style={{ color: textPrimary }}>
+                  SELECTED
+                </div>
+              </div>
+              <div className="pp-mask">
+                <div
+                  ref={line2Ref}
+                  style={{
+                    color: "transparent",
+                    WebkitTextStroke: isDark
+                      ? "2px rgba(255,255,255,.18)"
+                      : "2px rgba(10,18,48,.18)",
+                  }}
+                >
+                  WORKS
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* ── SECTION HEADER ── */}
         <div
@@ -946,19 +1107,36 @@ export default function ProjectPreview() {
               }}
             />
 
-            {/* Scan line on image */}
+            {/* Live Demo / Source — overlay pojok kanan-bawah gambar */}
             <div
-              style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                height: "1px",
-                background:
-                  "linear-gradient(90deg,transparent,rgba(var(--ac2),.3),transparent)",
-                animation: "pp-scan 7s ease-in-out infinite 1.5s",
-                pointerEvents: "none",
-              }}
-            />
+              style={{ position: "absolute", bottom: 18, right: 18, display: "flex", gap: 8, zIndex: 6 }}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              {currentProject.liveUrl && (
+                <a
+                  href={currentProject.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pp-cta"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink size={13} /> Live Demo
+                </a>
+              )}
+              {currentProject.githubUrl && (
+                <a
+                  href={currentProject.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pp-ghost"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label="Source Code"
+                >
+                  <Github size={13} />
+                </a>
+              )}
+            </div>
+
 
             {/* Bottom info on image */}
             <div
@@ -1080,15 +1258,16 @@ export default function ProjectPreview() {
               </span>
             </div>
 
-            {/* Scrollable content */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 0" }}>
+            {/* Content — no scroll: deskripsi clamp + "Baca selengkapnya" */}
+            <div style={{ flex: 1, overflow: "hidden", padding: "20px 20px 18px", display: "flex", flexDirection: "column" }}>
               <motion.div
                 key={`content-${activeIndex}`}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45 }}
+                style={{ fontFamily: "'DM Sans',sans-serif" }}
               >
-                {/* Project title */}
+                {/* Project number */}
                 <div
                   style={{
                     fontSize: ".62rem",
@@ -1125,83 +1304,99 @@ export default function ProjectPreview() {
                   }}
                 />
 
-                {/* Description */}
+                {/* Description (clamp 5 baris saat tertutup) */}
                 <p
                   style={{
+                    fontFamily: "'DM Sans',sans-serif",
                     fontSize: ".84rem",
                     lineHeight: 1.7,
                     color: textMuted,
-                    marginBottom: 18,
+                    margin: 0,
+                    ...(descOpen
+                      ? {}
+                      : {
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }),
                   }}
                 >
                   {currentProject.description}
                 </p>
 
-                {/* Tech stack section */}
-                <div style={{ marginBottom: 18 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: 10,
-                    }}
-                  >
-                    <span
+                {currentProject.description &&
+                  currentProject.description.length > 150 && (
+                    <button
+                      onClick={() => setDescOpen((o) => !o)}
                       style={{
-                        fontSize: ".6rem",
-                        letterSpacing: ".15em",
-                        textTransform: "uppercase",
-                        color: textMuted,
+                        alignSelf: "flex-start",
+                        marginTop: 8,
+                        marginBottom: 14,
+                        padding: 0,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontFamily: "'DM Sans',sans-serif",
+                        fontSize: ".78rem",
+                        fontWeight: 500,
+                        color: "var(--ac)",
                       }}
                     >
-                      Tech Stack
-                    </span>
+                      {descOpen ? "Tutup ↑" : "Baca selengkapnya →"}
+                    </button>
+                  )}
+
+                {/* Tech stack — disembunyikan saat deskripsi dibuka biar muat tanpa scroll */}
+                {!descOpen && (
+                  <div style={{ marginTop: 6 }}>
                     <div
                       style={{
-                        flex: 1,
-                        height: 1,
-                        background:
-                          "linear-gradient(90deg,rgba(var(--ac2),.2),transparent)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginBottom: 10,
                       }}
-                    />
+                    >
+                      <span
+                        style={{
+                          fontSize: ".6rem",
+                          letterSpacing: ".15em",
+                          textTransform: "uppercase",
+                          color: textMuted,
+                          fontFamily: "'DM Sans',sans-serif",
+                        }}
+                      >
+                        Tech Stack
+                      </span>
+                      <div
+                        style={{
+                          flex: 1,
+                          height: 1,
+                          background:
+                            "linear-gradient(90deg,rgba(var(--ac2),.2),transparent)",
+                        }}
+                      />
+                    </div>
+                    <div className="pp-tstack">
+                      {Object.entries(currentProject.techStack || {})
+                        .filter(([, arr]) => Array.isArray(arr) && arr.length)
+                        .map(([cat, arr]) => (
+                          <div className="pp-trow" key={cat}>
+                            <span className="pp-tcat">{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                            <span className="pp-tchips">
+                              {arr.map((t, i) => (
+                                <span className="pp-tchip" key={i}>{t}</span>
+                              ))}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                  <TechStackTabs techStack={currentProject.techStack} />
-                </div>
+                )}
               </motion.div>
             </div>
 
-            {/* Action buttons — pinned to bottom */}
-            <div
-              style={{
-                padding: "14px 20px",
-                borderTop: `1px solid rgba(var(--ac2),.1)`,
-                display: "flex",
-                gap: 8,
-                flexShrink: 0,
-              }}
-            >
-              {currentProject.liveUrl && (
-                <a
-                  href={currentProject.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pp-cta"
-                >
-                  <ExternalLink size={13} /> Live Demo
-                </a>
-              )}
-              {currentProject.githubUrl && (
-                <a
-                  href={currentProject.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pp-ghost"
-                >
-                  <Github size={13} /> Source Code
-                </a>
-              )}
-            </div>
           </div>
         </div>
 
@@ -1290,6 +1485,7 @@ export default function ProjectPreview() {
               View All <ArrowRight size={13} />
             </Link>
           </div>
+        </div>
         </div>
       </section>
     </>

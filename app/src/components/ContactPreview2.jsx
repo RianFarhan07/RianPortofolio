@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   Phone,
@@ -17,6 +17,10 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ContactPreview() {
   const { theme } = useTheme();
@@ -26,6 +30,110 @@ export default function ContactPreview() {
     triggerOnce: true,
     threshold: 0.15,
   });
+
+  const [isMobile, setIsMobile] = useState(null);
+  const [reduced] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const trackRef = useRef(null);
+  const introRef = useRef(null);
+  const l1Ref = useRef(null);
+  const l2Ref = useRef(null);
+  const l3Ref = useRef(null);
+  const contentRef = useRef(null);
+
+  /* ── Responsive ── */
+  useEffect(() => {
+    const c = () => setIsMobile(window.innerWidth < 768);
+    c();
+    window.addEventListener("resize", c);
+    return () => window.removeEventListener("resize", c);
+  }, []);
+
+  /* ── Curtain intro (desktop only) ────────────────────────────
+     "LET'S BUILD TOGETHER" muncul gede di tengah → morph keluar saat
+     scroll, lalu konten asli (kartu, comments, stats) flow normal di
+     bawahnya — full & scrollable, Giscus nggak kepotong.
+     Curtain = CSS sticky (no GSAP pin) + ScrollTrigger scrub. */
+  useLayoutEffect(() => {
+    if (isMobile !== false) return;
+    const track = trackRef.current;
+    if (!track || !contentRef.current) return;
+
+    if (reduced) {
+      gsap.set(contentRef.current, { clearProps: "all", autoAlpha: 1, y: 0 });
+      if (introRef.current && introRef.current.parentElement)
+        introRef.current.parentElement.style.display = "none";
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(introRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
+      gsap.set(contentRef.current, { autoAlpha: 0, y: 40 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: track,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Fase 1 — reveal 3 baris dari balik mask
+      tl.fromTo(
+        [l1Ref.current, l2Ref.current, l3Ref.current],
+        { yPercent: 115 },
+        {
+          yPercent: 0,
+          duration: 0.18,
+          ease: "power3.out",
+          stagger: 0.08,
+          immediateRender: true,
+        },
+        0.04,
+      );
+
+      // Fase 2 — morph keluar (mengecil + geser kiri-atas + fade)
+      tl.to(
+        introRef.current,
+        {
+          scale: 0.34,
+          x: () => -window.innerWidth * 0.26,
+          y: () => -window.innerHeight * 0.3,
+          autoAlpha: 0,
+          ease: "power2.inOut",
+          duration: 0.28,
+        },
+        0.46,
+      );
+
+      // Fase 3 — konten asli fade-in (flow normal di bawah curtain)
+      tl.to(
+        contentRef.current,
+        { autoAlpha: 1, y: 0, duration: 0.22, ease: "power3.out" },
+        0.6,
+      );
+
+      tl.to({}, { duration: 0.16 }, 0.84);
+    }, track);
+
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = requestAnimationFrame(refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
+  }, [isMobile, reduced]);
 
   /* ── Giscus ── */
   useEffect(() => {
@@ -227,6 +335,12 @@ export default function ContactPreview() {
         .cp-animate {
           animation: cp-fadein .7s ease both;
         }
+
+        /* ── Curtain intro (scroll-morph) ── */
+        .ct-intro-inner{text-align:center;will-change:transform,opacity;transform-origin:center center}
+        .ct-intro-label{display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ac);margin-bottom:18px}
+        .ct-intro-title{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(3rem,10vw,8rem);line-height:.86;letter-spacing:-.04em;text-transform:uppercase}
+        .ct-mask{overflow:hidden;padding:0 .05em}
       `}</style>
 
       <section
@@ -234,48 +348,139 @@ export default function ContactPreview() {
         ref={ref}
         style={{
           position: "relative",
-          overflow: "hidden",
           background: sectionBg,
-          padding: "72px clamp(24px, 5vw, 80px)",
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        {/* Scan line */}
-        <div className="cp-scan" />
-
-        {/* Corner marks */}
-        {[
-          {
-            top: 14,
-            left: 14,
-            borderTop: "1px solid rgba(var(--ac2),.35)",
-            borderLeft: "1px solid rgba(var(--ac2),.35)",
-          },
-          {
-            top: 14,
-            right: 14,
-            borderTop: "1px solid rgba(var(--ac2),.35)",
-            borderRight: "1px solid rgba(var(--ac2),.35)",
-          },
-          {
-            bottom: 14,
-            left: 14,
-            borderBottom: "1px solid rgba(var(--ac2),.35)",
-            borderLeft: "1px solid rgba(var(--ac2),.35)",
-          },
-          {
-            bottom: 14,
-            right: 14,
-            borderBottom: "1px solid rgba(var(--ac2),.35)",
-            borderRight: "1px solid rgba(var(--ac2),.35)",
-          },
-        ].map((s, i) => (
-          <div key={i} className="cp-corner" style={s} />
-        ))}
-
-        {inView && (
+        {/* ── CURTAIN INTRO (desktop, non-reduced) ── */}
+        {isMobile === false && !reduced && (
           <div
-            className="cp-animate"
+            ref={trackRef}
+            style={{
+              position: "relative",
+              height: "170vh",
+              marginBottom: "-100vh",
+            }}
+          >
+            <div
+              style={{
+                position: "sticky",
+                top: 0,
+                height: "100vh",
+                overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+              }}
+            >
+              <div className="cp-scan" />
+              {[
+                {
+                  top: 14,
+                  left: 14,
+                  borderTop: "1px solid rgba(var(--ac2),.35)",
+                  borderLeft: "1px solid rgba(var(--ac2),.35)",
+                },
+                {
+                  top: 14,
+                  right: 14,
+                  borderTop: "1px solid rgba(var(--ac2),.35)",
+                  borderRight: "1px solid rgba(var(--ac2),.35)",
+                },
+                {
+                  bottom: 14,
+                  left: 14,
+                  borderBottom: "1px solid rgba(var(--ac2),.35)",
+                  borderLeft: "1px solid rgba(var(--ac2),.35)",
+                },
+                {
+                  bottom: 14,
+                  right: 14,
+                  borderBottom: "1px solid rgba(var(--ac2),.35)",
+                  borderRight: "1px solid rgba(var(--ac2),.35)",
+                },
+              ].map((s, i) => (
+                <div key={i} className="cp-corner" style={s} />
+              ))}
+
+              <div ref={introRef} className="ct-intro-inner">
+                <div className="ct-intro-label">
+                  <MessageSquare size={11} /> Get in touch
+                </div>
+                <div className="ct-intro-title">
+                  <div className="ct-mask">
+                    <div ref={l1Ref} style={{ color: textPrimary }}>
+                      LET'S
+                    </div>
+                  </div>
+                  <div className="ct-mask">
+                    <div ref={l2Ref} style={{ color: textPrimary }}>
+                      BUILD
+                    </div>
+                  </div>
+                  <div className="ct-mask">
+                    <div
+                      ref={l3Ref}
+                      style={{
+                        color: "transparent",
+                        WebkitTextStroke: isDark
+                          ? "2px rgba(255,255,255,.18)"
+                          : "2px rgba(10,18,48,.18)",
+                      }}
+                    >
+                      TOGETHER
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── CONTENT (flow normal, scrollable) ── */}
+        <div
+          ref={contentRef}
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            padding: "72px clamp(24px, 5vw, 80px)",
+          }}
+        >
+          {/* Scan line */}
+          <div className="cp-scan" />
+
+          {/* Corner marks */}
+          {[
+            {
+              top: 14,
+              left: 14,
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
+            },
+            {
+              top: 14,
+              right: 14,
+              borderTop: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
+            },
+            {
+              bottom: 14,
+              left: 14,
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderLeft: "1px solid rgba(var(--ac2),.35)",
+            },
+            {
+              bottom: 14,
+              right: 14,
+              borderBottom: "1px solid rgba(var(--ac2),.35)",
+              borderRight: "1px solid rgba(var(--ac2),.35)",
+            },
+          ].map((s, i) => (
+            <div key={i} className="cp-corner" style={s} />
+          ))}
+
+          <div
             style={{
               position: "relative",
               zIndex: 2,
@@ -594,7 +799,7 @@ export default function ContactPreview() {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </section>
     </>
   );

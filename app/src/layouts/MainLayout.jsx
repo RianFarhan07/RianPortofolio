@@ -10,7 +10,9 @@ const MainLayout = ({ children }) => {
       style={{
         minHeight: "100vh",
         position: "relative",
-        overflowX: "hidden",
+        // 'clip' (bukan 'hidden') → tetap cegah scroll horizontal TANPA bikin
+        // scroll-container, biar position:sticky di dalam (ProjectPreview) jalan.
+        overflowX: "clip",
         fontFamily: "'DM Sans', sans-serif",
         background: isDark
           ? "linear-gradient(180deg, #08111f 0%, #0a1730 42%, #03070f 100%)"

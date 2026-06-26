@@ -131,7 +131,7 @@ export default function PageTransition5Tech({ children }) {
   const transitionDuration = 2.5;
 
   return (
-    <div className="relative overflow-hidden perspective-1000">
+    <div className="relative perspective-1000" style={{ overflowX: "clip" }}>
       {/* Main content — render langsung tanpa AnimatePresence mode="wait".
           Wrapper opacity lama kadang nyangkut di opacity:0 saat ganti route
           (race framer-motion vs React Router) → halaman blank tanpa error.
