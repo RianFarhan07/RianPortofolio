@@ -23,7 +23,7 @@
 }
 
 body.light-theme {
-  background-color: var(--bg-light);
+  background-color: #ffffff;
   color: var(--text-light);
 
   /* Accent (light = green / teal, from palette) */
@@ -35,7 +35,7 @@ body.light-theme {
 }
 
 body.dark-theme {
-  background-color: var(--bg-dark);
+  background-color: #0f1115;
   color: var(--text-dark);
 
   /* Accent (dark = blue / cyan) */

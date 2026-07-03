@@ -57,13 +57,11 @@ const AppContent = () => {
     <MainLayout>
       <Navbar />
       <ScrollToTop />
-      {/* INTRO VARIANTS: pulse | typewriter | cards | particles | countdown | random */}
-      {/* <PageTransition6Clean variant="slide-strips" introVariant="pulse"> */}
-      {/* <PageTransition6Clean variant="slide-strips" introVariant="typewriter"> */}
-      {/* <PageTransition6Clean variant="slide-strips" introVariant="cards"> */}
-      {/* <PageTransition6Clean variant="slide-strips" introVariant="particles"> */}
-      {/* <PageTransition6Clean variant="slide-strips" introVariant="countdown"> */}
-      <PageTransition6Clean variant="slide-strips" introVariant="random">
+      {/* ═══ VARIANTS ═══════════════════════════════════════ */}
+      {/* INTRO: pulse | typewriter | cards | particles | countdown | random */}
+      {/* TRANSITION: slide-strips | curtain-reveal | flip-card | radial-expand */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <PageTransition6Clean variant="slide-strips" introVariant="pulse">
         <Routes location={location}>
           <Route
             path="/"

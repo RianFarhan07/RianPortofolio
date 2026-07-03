@@ -11,13 +11,18 @@ import {
   PenTool,
 } from "lucide-react";
 
-const categories = [
-  { value: "all", label: "All", icon: <Filter size={18} /> },
-  { value: "web", label: "Web Apps", icon: <Globe size={18} /> },
-  { value: "mobile", label: "Mobile Apps", icon: <Smartphone size={18} /> },
-  { value: "desktop", label: "Desktop Apps", icon: <Laptop size={18} /> },
-  { value: "desain", label: "Desain", icon: <PenTool size={18} /> },
-];
+const A = "var(--ac)";
+const AD = "var(--ac-deep)";
+const AR = "var(--ac1)";
+const AR2 = "var(--ac2)";
+
+const categoryMap = {
+  all: { label: "All", icon: <Filter size={14} /> },
+  web: { label: "Web Apps", icon: <Globe size={14} /> },
+  mobile: { label: "Mobile Apps", icon: <Smartphone size={14} /> },
+  desktop: { label: "Desktop Apps", icon: <Laptop size={14} /> },
+  desain: { label: "Desain", icon: <PenTool size={14} /> },
+};
 
 export const ProjectCard = ({ project, isDark, onOpenModal }) => {
   const [ref, inView] = useInView({
@@ -25,166 +30,155 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
     threshold: 0.1,
   });
 
-  const cardVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-  };
+  const cardBg = isDark ? "rgba(4,8,28,0.96)" : "rgba(240,244,255,0.96)";
+  const cardBorder = `rgba(${AR2}, 0.18)`;
+  const muted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.45)";
+  const muted2 = isDark ? "rgba(220,230,255,0.35)" : "rgba(10,18,48,0.35)";
+  const txt = isDark ? "#f0f4ff" : "#0a1230";
+  const cat = categoryMap[project.category] || { label: project.category };
 
   return (
     <motion.div
       ref={ref}
-      variants={cardVariants}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      className={`group relative h-full rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${
-        isDark
-          ? "bg-gray-900/70 hover:shadow-primary/20 border border-gray-800/60"
-          : "bg-white hover:shadow-primaryInLight/20 border border-gray-200"
-      } hover:shadow-xl hover:-translate-y-1`}
+      initial={{ y: 24, opacity: 0 }}
+      animate={inView ? { y: 0, opacity: 1 } : { y: 24, opacity: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 14 }}
+      className="group relative h-full rounded-[14px] overflow-hidden cursor-pointer"
+      style={{
+        background: cardBg,
+        border: `1px solid ${cardBorder}`,
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+      onClick={() => onOpenModal(project)}
     >
-      {/* Image container */}
+      {/* Image area */}
       <div className="relative overflow-hidden aspect-video">
-        <img loading="lazy" decoding="async"
+        <motion.img
+          loading="lazy" decoding="async"
           src={project.image || "/placeholder.svg"}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
         />
+        {/* Navy-tinted overlay */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: `linear-gradient(to top, ${isDark ? "rgba(4,8,28,0.85)" : "rgba(240,244,255,0.85)"} 0%, rgba(4,8,28,0.08) 55%, transparent 100%)` }} />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-60"></div>
+        {/* Corner brackets */}
+        {[
+          { t: 8, l: 8, bt: "border-t", bl: "border-l" },
+          { t: 8, r: 8, bt: "border-t", br: "border-r" },
+          { b: 8, l: 8, bb: "border-b", bl: "border-l" },
+          { b: 8, r: 8, bb: "border-b", br: "border-r" },
+        ].map((s, i) => (
+          <div key={i} className="absolute w-3 h-3 pointer-events-none"
+            style={{
+              top: s.t, left: s.l, right: s.r, bottom: s.b,
+              borderTop: s.bt ? `1px solid rgba(${AR}, 0.35)` : undefined,
+              borderLeft: s.bl ? `1px solid rgba(${AR}, 0.35)` : undefined,
+              borderRight: s.br ? `1px solid rgba(${AR}, 0.35)` : undefined,
+              borderBottom: s.bb ? `1px solid rgba(${AR}, 0.35)` : undefined,
+            }} />
+        ))}
 
-        {/* Category badge */}
-        <div className="absolute top-3 left-3">
-          <span className="text-xs font-medium px-2 py-1 rounded-full bg-black/50 text-white backdrop-blur-sm">
-            {categories.find((cat) => cat.value === project.category)?.label ||
-              project.category}
+        {/* Category badge — dark glass pill */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] tracking-wider uppercase"
+            style={{
+              background: isDark ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.85)",
+              color: A,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 600,
+              backdropFilter: "blur(6px)",
+              border: `1px solid rgba(${AR}, 0.25)`,
+            }}>
+            {cat.icon} {cat.label}
           </span>
         </div>
 
         {/* Featured badge */}
         {project.featured && (
           <div className="absolute top-3 right-3">
-            <span
-              className={`text-xs font-medium px-2 py-1 rounded-full ${
-                isDark
-                  ? "bg-primary/90 text-white"
-                  : "bg-primaryInLight/90 text-white"
-              } flex items-center gap-1 backdrop-blur-sm`}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] tracking-wider uppercase"
+              style={{
+                background: `linear-gradient(135deg, ${AD}, ${A})`,
+                color: "#fff",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 500,
+                boxShadow: `0 0 16px rgba(${AR}, 0.4)`,
+              }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-white inline-block"
+                style={{ animation: "pulse 2s infinite" }} />
               Featured
             </span>
           </div>
         )}
 
-        {/* Project title -*/}
-        <div className="absolute bottom-0 left-0 right-0 transition-all duration-300 group-hover:bottom-8">
-          <h3
-            className={`text-lg font-bold text-white mx-4 mb-2 p-2 drop-shadow-md  rounded-md inline-block transition-all duration-300`}
-          >
+        {/* Title on image */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+          <h3 className="text-lg font-bold drop-shadow-md"
+            style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>
             {project.title}
           </h3>
         </div>
-
-        {/* Tech stack  */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
-          <div className="flex flex-wrap gap-1.5 transform translate-y-2 group-hover:-translate-y-1 transition-transform duration-500 ease-out">
-            {project.techLogos.slice(0, 3).map((tech, index) => (
-              <span
-                key={index}
-                className={`text-xs font-medium px-2.5 py-1 rounded-full 
-          ${
-            isDark
-              ? "bg-gray-900/70 text-white border border-white/20 shadow-sm"
-              : "bg-white/80 text-gray-800 border border-gray-200/50 shadow-sm"
-          } backdrop-blur-sm hover:scale-105 transition-transform`}
-              >
-                {tech}
-              </span>
-            ))}
-            {project.techLogos.length > 3 && (
-              <span
-                className={`text-xs font-medium px-2.5 py-1 rounded-full 
-       ${
-         isDark
-           ? "bg-gray-900/70 text-white border border-white/20 shadow-sm"
-           : "bg-white/80 text-gray-800 border border-gray-200/50 shadow-sm"
-       } backdrop-blur-sm hover:scale-105 transition-transform`}
-              >
-                +{project.techLogos.length - 3}
-              </span>
-            )}
-          </div>
-        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <p
-          className={`text-sm mb-4 line-clamp-2 ${
-            isDark ? "text-gray-400" : "text-gray-600"
-          }`}
-        >
+      {/* Content body */}
+      <div className="p-4">
+        <p className="text-[13px] leading-relaxed line-clamp-2 mb-4" style={{ color: muted }}>
           {project.description}
         </p>
 
-        <div className="mt-4 pt-4 border-t border-gray-800/20 flex justify-between items-center">
-          <div className="flex gap-2">
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`p-2 rounded-full ${
-                isDark
-                  ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              } transition-colors`}
-              aria-label="View Source Code"
-            >
-              <Github size={18} />
+        {/* Tech chips */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {project.techLogos.slice(0, 4).map((tech, i) => (
+            <span key={i} className="text-[11px] px-2.5 py-1 rounded-full"
+              style={{
+                background: `rgba(${AR}, 0.07)`,
+                border: `1px solid rgba(${AR}, 0.2)`,
+                color: A,
+                fontFamily: "'DM Sans', sans-serif",
+              }}>
+              {tech}
+            </span>
+          ))}
+          {project.techLogos.length > 4 && (
+            <span className="text-[11px] px-2.5 py-1 rounded-full"
+              style={{ background: `rgba(${AR}, 0.07)`, border: `1px solid rgba(${AR}, 0.2)`, color: muted2 }}>
+              +{project.techLogos.length - 4}
+            </span>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: `rgba(${AR2}, 0.12)` }}>
+          <div className="flex gap-1.5">
+            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+              style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
+              <Github size={16} />
             </a>
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`p-2 rounded-full ${
-                isDark
-                  ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              } transition-colors`}
-              aria-label="View Live Demo"
-            >
-              <ExternalLink size={18} />
+            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+              style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
+              <ExternalLink size={16} />
             </a>
           </div>
-
-          <button
-            onClick={() => onOpenModal(project)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              isDark
-                ? "bg-primary/20 text-primary hover:bg-primary/30"
-                : "bg-primaryInLight/10 text-primaryInLight hover:bg-primaryInLight/20"
-            }`}
-          >
-            <Eye size={16} />
-            Details
+          <button onClick={e => { e.stopPropagation(); onOpenModal(project); }}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-200"
+            style={{
+              background: `linear-gradient(135deg, ${AD}, ${A})`,
+              color: "#fff",
+              fontFamily: "'DM Sans', sans-serif",
+              boxShadow: `0 0 16px rgba(${AR2 === "var(--ac2)" ? AR : AR2}, 0.35)`,
+            }}>
+            <Eye size={14} /> Details
           </button>
         </div>
       </div>
 
-      {/* Clickable overlay for entire card */}
-      <div
-        className="absolute inset-0 cursor-pointer"
-        onClick={() => onOpenModal(project)}
-        aria-hidden="true"
-      ></div>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
     </motion.div>
   );
 };

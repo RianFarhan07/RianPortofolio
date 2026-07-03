@@ -133,16 +133,20 @@ function IntroWrap({ children, isDark }) {
    Gradient bg → RF circle + 3 expanding rings → staggered text → progress bar
    ═══════════════════════════════════════════════════════════ */
 function IntroPulse({ isDark }) {
+  const bgEnd = isDark ? "#020817" : "#eef2ff";
+  const muted = isDark ? "rgba(255,255,255,0.5)" : "rgba(10,18,48,0.5)";
   return (
     <IntroWrap>
-      {/* Gradient background with subtle radial animation */}
+      {/* Gradient background */}
       <motion.div className="absolute inset-0"
-        style={{ background: `radial-gradient(ellipse 70% 60% at 50% 40%, ${A} 0%, ${AD} 45%, #020817 100%)` }}
+        style={{ background: isDark
+          ? `radial-gradient(ellipse 70% 60% at 50% 40%, rgba(${AR}, 0.35) 0%, rgba(${AR}, 0.15) 25%, ${bgEnd} 100%)`
+          : `radial-gradient(ellipse 70% 60% at 50% 40%, ${A} 0%, ${AD} 45%, ${bgEnd} 100%)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 1, 0.3], transition: { duration: D, times: [0, 0.15, 0.85, 1], ease: "easeOut" } }}
       />
 
-      {/* Expanding pulse rings from logo */}
+      {/* Expanding pulse rings */}
       {[0, 1, 2].map(i => (
         <motion.div key={`pr-${i}`}
           className="absolute rounded-full border-2 pointer-events-none"
@@ -152,42 +156,77 @@ function IntroPulse({ isDark }) {
         />
       ))}
 
-      {/* RF Logo — smooth bezier bounce */}
-      <motion.div className="relative w-20 h-20 rounded-full flex items-center justify-center"
+      {/* RF Logo */}
+      <motion.div className="w-20 h-20 rounded-full flex items-center justify-center mb-5"
         style={{ background: `linear-gradient(135deg, ${A}, ${AD})`, boxShadow: `0 0 80px rgba(${AR}, 0.5), 0 0 120px rgba(${AR}, 0.2)` }}
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: [0, 1.18, 0.92, 1.04, 0.98, 1], opacity: [0, 1, 1, 1, 1, 0],
-          transition: { duration: D, times: [0, 0.12, 0.2, 0.28, 0.36, 1], ease: [0.34, 1.56, 0.64, 1] } }}>
+        animate={{
+          scale: [0, 1.18, 0.92, 1.04, 0.98, 1, 1, 1, 1, 0.8],
+          opacity: [0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+          transition: { duration: D, times: [0, 0.08, 0.14, 0.2, 0.25, 0.55, 0.72, 0.85, 0.9, 1], ease: "easeInOut" },
+        }}>
         <span className="text-white text-2xl font-bold">{personalInfo.initials}</span>
       </motion.div>
 
-      {/* Text stack — each line with own stagger + spring-y feel */}
-      {[
-        { t: personalInfo.name,        c: "text-3xl md:text-5xl font-bold tracking-tight text-white mt-5 mb-1", dl: 0.26, st: "Syne" },
-        { t: personalInfo.title,       c: "text-lg md:text-xl font-light text-white/80", dl: 0.42, st: undefined },
-        { t: personalInfo.origin,      c: "text-sm text-white/45 tracking-wider mt-1.5", dl: 0.56, st: "DM Sans" },
-        { t: personalInfo.tagline,     c: "text-sm text-white/65 mt-3 max-w-xs text-center leading-relaxed", dl: 0.68, st: undefined },
-      ].map(({ t, c, dl, st }, i) => (
-        <motion.div key={i} className={c} style={{ fontFamily: st ? `'${st}', sans-serif` : undefined }}
-          initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-          animate={{ opacity: [0, 1, 1, 0], y: [16, 0, 0, -8], filter: ["blur(4px)", "blur(0px)", "blur(0px)", "blur(2px)"],
-            transition: { duration: D, times: [0, 0.13, 0.75, 1], delay: dl, ease: "easeOut" } }}>
-          {t}
-        </motion.div>
-      ))}
+      {/* Name — 1st */}
+      <motion.div className="text-3xl md:text-5xl font-bold tracking-tight mt-5 mb-1"
+        style={{ fontFamily: "'Syne', sans-serif", color: "#fff", textShadow: "0 0 30px rgba(0,0,0,0.4)" }}
+        initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
+        animate={{
+          opacity: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+          y: [14, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6],
+          filter: ["blur(4px)","blur(4px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(0px)","blur(2px)"],
+          transition: { duration: D, times: [0, 0.06, 0.13, 0.3, 0.45, 0.55, 0.65, 0.72, 0.78, 0.82, 0.88, 1], ease: "easeOut" },
+        }}>
+        {personalInfo.name}
+      </motion.div>
 
-      {/* Progress bar — smooth gradient fill */}
-      <motion.div className="absolute bottom-16 w-48 h-0.5 rounded-full overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.1)" }}
+      {/* Title — 2nd */}
+      <motion.div className="text-lg md:text-xl font-light"
+        style={{ color: "#fff", textShadow: "0 0 16px rgba(0,0,0,0.3)" }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{
+          opacity: [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+          y: [10, 10, 10, 0, 0, 0, 0, 0, 0, 0, -5],
+          transition: { duration: D, times: [0, 0.12, 0.18, 0.28, 0.45, 0.55, 0.65, 0.72, 0.82, 0.88, 1], ease: "easeOut" },
+        }}>
+        {personalInfo.title}
+      </motion.div>
+
+      {/* Origin — 3rd */}
+      <motion.div className="text-sm tracking-wider"
+        style={{ color: "rgba(255,255,255,0.5)" }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 1, 0], transition: { duration: D, times: [0, 0.15, 0.78, 1], delay: 0.8 } }}>
+        animate={{
+          opacity: [0, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+          transition: { duration: D, times: [0, 0.24, 0.3, 0.35, 0.45, 0.55, 0.65, 0.72, 0.82, 1], ease: "easeOut" },
+        }}>
+        {personalInfo.origin}
+      </motion.div>
+
+      {/* Tagline — 4th */}
+      <motion.div className="text-sm mt-1 max-w-xs text-center leading-relaxed"
+        style={{ color: "rgba(255,255,255,0.65)" }}
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: [0, 0, 0, 0, 0, 1, 1, 1, 0],
+          transition: { duration: D, times: [0, 0.36, 0.4, 0.44, 0.48, 0.55, 0.65, 0.72, 1], ease: "easeOut" },
+        }}>
+        {personalInfo.tagline}
+      </motion.div>
+
+      {/* Progress bar */}
+      <motion.div className="absolute bottom-16 w-48 h-0.5 rounded-full overflow-hidden"
+        style={{ background: isDark ? "rgba(255,255,255,0.1)" : "rgba(10,18,48,0.08)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0, 1, 1, 0], transition: { duration: D, times: [0, 0.7, 0.78, 0.94, 1] } }}>
         <motion.div className="h-full rounded-full"
           style={{ background: `linear-gradient(90deg, ${A}, ${AD})` }}
           initial={{ width: "0%" }}
-          animate={{ width: "100%", transition: { duration: D * 0.62, delay: 0.86, ease: [0.4, 0, 0.2, 1] } }} />
+          animate={{ width: "100%", transition: { duration: D * 0.18, delay: 0.72, ease: "easeInOut" } }} />
       </motion.div>
 
-      {/* Floating ambient dots */}
+      {/* Floating dots */}
       {Array.from({ length: 10 }, (_, i) => (
         <motion.div key={`pd-${i}`} className="absolute rounded-full"
           style={{ width: `${2 + Math.random() * 3}px`, height: `${2 + Math.random() * 3}px`, background: A,
@@ -205,6 +244,8 @@ function IntroPulse({ isDark }) {
    Name typed char-by-char with rAF → cursor bounce → title reveals with stagger
    ═══════════════════════════════════════════════════════════ */
 function IntroTypewriter({ isDark }) {
+  const bgEnd = isDark ? "#020817" : "#eef2ff";
+  const txt = isDark ? "#fff" : "#0a1230";
   const nameChars = [...personalInfo.name];
   const [visible, setVisible] = useState(0);
   const [typingDone, setTypingDone] = useState(false);
@@ -234,7 +275,7 @@ function IntroTypewriter({ isDark }) {
   return (
     <IntroWrap>
       <motion.div className="absolute inset-0"
-        style={{ background: `radial-gradient(ellipse 60% 50% at 50% 30%, ${AD} 0%, #020817 80%)` }}
+        style={{ background: `radial-gradient(ellipse 60% 50% at 50% 30%, ${AD} 0%, ${bgEnd} 80%)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
       />
@@ -242,11 +283,11 @@ function IntroTypewriter({ isDark }) {
       {/* Name — typed */}
       <div className="relative">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-center px-4"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#fff" }}>
+          style={{ fontFamily: "'Syne', sans-serif", color: txt }}>
           {nameChars.map((ch, i) => (
             <motion.span key={i}
               initial={{ opacity: 0.12 }}
-              animate={{ opacity: i < visible ? 1 : 0.12, color: i < visible ? (isDark ? "#fff" : "#fff") : `rgba(${AR}, 0.2)` }}
+              animate={{ opacity: i < visible ? 1 : 0.12, color: i < visible ? txt : `rgba(${AR}, 0.2)` }}
               transition={{ duration: 0.08 }}>
               {ch === " " ? "\u00A0" : ch}
             </motion.span>
@@ -303,12 +344,14 @@ function IntroTypewriter({ isDark }) {
    3 glass cards flip in with depth, glass morphism, spring timing
    ═══════════════════════════════════════════════════════════ */
 function IntroCards({ isDark }) {
-  const glassBg = `rgba(255,255,255,0.06)`;
+  const bgEnd = isDark ? "#020817" : "#eef2ff";
+  const txt = isDark ? "#fff" : "#0a1230";
+  const glassBg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
   const glassBorder = `rgba(${AR}, 0.3)`;
   return (
     <IntroWrap>
       <motion.div className="absolute inset-0"
-        style={{ background: `radial-gradient(ellipse 70% 55% at 50% 35%, ${AD} 0%, #020817 90%)` }}
+        style={{ background: `radial-gradient(ellipse 70% 55% at 50% 35%, ${AD} 0%, ${bgEnd} 90%)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
       />
@@ -335,7 +378,7 @@ function IntroCards({ isDark }) {
           animate={{ rotateY: [100, -6, 2, 0, 0, -100], opacity: [0, 1, 1, 1, 1, 0], scale: [0.85, 1.02, 0.99, 1, 1, 0.85],
             transition: { times: [0, 0.18, 0.26, 0.36, 0.75, 1], duration: D, delay: 0.04, ease: "easeInOut" } }}>
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%)" }} />
-          <h1 className="relative text-2xl md:text-4xl font-bold tracking-tight" style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#fff" }}>
+          <h1 className="relative text-2xl md:text-4xl font-bold tracking-tight" style={{ fontFamily: "'Syne', sans-serif", color: txt }}>
             {personalInfo.name}
           </h1>
         </motion.div>
@@ -348,7 +391,7 @@ function IntroCards({ isDark }) {
             transition: { times: [0, 0.25, 0.33, 0.43, 0.75, 1], duration: D, delay: 0.08, ease: "easeInOut" } }}>
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 60%)" }} />
           <p className="relative text-base md:text-lg font-light" style={{ color: A }}>{personalInfo.title}</p>
-          <p className="relative text-xs mt-1 opacity-50 tracking-wider">{personalInfo.origin}</p>
+          <p className="relative text-xs mt-1 opacity-50 tracking-wider" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(10,18,48,0.4)" }}>{personalInfo.origin}</p>
         </motion.div>
       </div>
 
@@ -367,6 +410,8 @@ function IntroCards({ isDark }) {
    60 particles terbang dari pinggir → nyatu jadi lingkaran → lingkaran bubar
    ═══════════════════════════════════════════════════════════ */
 function IntroParticles({ isDark }) {
+  const bgEnd = isDark ? "#020817" : "#eef2ff";
+  const txt = isDark ? "#fff" : "#0a1230";
   const COUNT = 60;
   const CIRCLE_R = 100; // radius lingkaran saat partikel nyatu
   const particles = Array.from({ length: COUNT }, (_, i) => {
@@ -390,7 +435,7 @@ function IntroParticles({ isDark }) {
   return (
     <IntroWrap>
       <motion.div className="absolute inset-0"
-        style={{ background: `radial-gradient(ellipse 60% 50% at 50% 50%, rgba(${AR}, 0.1) 0%, #020817 75%)` }}
+        style={{ background: `radial-gradient(ellipse 60% 50% at 50% 50%, rgba(${AR}, 0.1) 0%, ${bgEnd} 75%)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.6 } }}
       />
@@ -450,8 +495,8 @@ function IntroParticles({ isDark }) {
       </motion.div>
 
       {/* Text fade in setelah lingkaran stabil */}
-      <motion.h1 className="text-3xl md:text-5xl font-bold tracking-tight mt-5 text-white"
-        style={{ fontFamily: "'Syne', sans-serif", textShadow: `0 0 40px rgba(${AR}, 0.4)` }}
+      <motion.h1 className="text-3xl md:text-5xl font-bold tracking-tight mt-5"
+        style={{ fontFamily: "'Syne', sans-serif", color: txt, textShadow: isDark ? `0 0 40px rgba(${AR}, 0.4)` : undefined }}
         initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
         animate={{ opacity: [0, 0, 0, 1, 1, 0], y: [16, 16, 16, 0, 0, -8], filter: ["blur(4px)", "blur(4px)", "blur(4px)", "blur(0px)", "blur(0px)", "blur(2px)"],
           transition: { duration: D, times: [0, 0.32, 0.4, 0.5, 0.72, 1], ease: "easeOut" } }}>
@@ -474,13 +519,16 @@ function IntroParticles({ isDark }) {
    3..2..1 with ring-wave + glow → name reveal with scale
    ═══════════════════════════════════════════════════════════ */
 function IntroCountdown({ isDark }) {
+  const bgEnd = isDark ? "#020817" : "#eef2ff";
+  const txt = isDark ? "#fff" : "#0a1230";
+  const countNumColor = isDark ? "#fff" : "#0a1230";
   const numStyle = {
     fontFamily: "'Syne', sans-serif",
     fontWeight: 800,
     fontSize: "clamp(8rem, 20vw, 16rem)",
     lineHeight: 1,
-    color: "#fff",
-    textShadow: `0 0 60px rgba(${AR}, 0.7), 0 0 120px rgba(${AR}, 0.3)`,
+    color: countNumColor,
+    textShadow: isDark ? `0 0 60px rgba(${AR}, 0.7), 0 0 120px rgba(${AR}, 0.3)` : undefined,
   };
 
   const stepDur = D * 0.22; // ~660ms per number
@@ -500,7 +548,7 @@ function IntroCountdown({ isDark }) {
   return (
     <IntroWrap>
       <motion.div className="absolute inset-0"
-        style={{ background: `radial-gradient(ellipse 65% 55% at 50% 45%, ${AD} 0%, #020817 100%)` }}
+        style={{ background: `radial-gradient(ellipse 65% 55% at 50% 45%, ${AD} 0%, ${bgEnd} 100%)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
       />
@@ -534,11 +582,11 @@ function IntroCountdown({ isDark }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0, 0, 1, 1, 0], transition: { duration: D, times: [0, 0.63, 0.7, 0.82, 0.93, 1] } }}>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#fff", textShadow: `0 0 35px rgba(${AR}, 0.5)` }}>
+          style={{ fontFamily: "'Syne', sans-serif", color: txt, textShadow: isDark ? `0 0 35px rgba(${AR}, 0.5)` : undefined }}>
           {personalInfo.name}
         </h1>
         <p className="text-lg md:text-xl font-light mt-2" style={{ color: A }}>{personalInfo.title}</p>
-        <p className="text-sm mt-1 opacity-50 tracking-wide">{personalInfo.origin}</p>
+        <p className="text-sm mt-1 opacity-50 tracking-wide" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(10,18,48,0.4)" }}>{personalInfo.origin}</p>
       </motion.div>
     </IntroWrap>
   );
@@ -593,7 +641,7 @@ function CurtainRevealTransition({ pathname, isDark, pageName, pageCode }) {
 
 function FlipCardTransition({ pathname, isDark, pageName, pageCode }) {
   const dur = 1.3;
-  const bg = isDark ? "#020817" : "#f8fcff";
+  const bg = isDark ? "#020817" : "#eef2ff";
   return (
     <motion.div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center" style={{ perspective: "1500px" }}>
       <motion.div className="absolute inset-0" style={{ background: bg }}

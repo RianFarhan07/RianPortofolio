@@ -1,219 +1,93 @@
 import { motion } from "framer-motion";
-import {
-  Award,
-  Bookmark,
-  CheckCircle,
-  Clock,
-  ExternalLink,
-  Filter,
-  Shield,
-  Sparkles,
-  Tag,
-} from "lucide-react";
-
-const getCategoryColor = (category, isDark) => {
-  const colorMap = {
-    frontend: isDark
-      ? "from-purple-500 to-indigo-500"
-      : "from-purple-400 to-indigo-400",
-    fullstack: isDark
-      ? "from-blue-500 to-cyan-500"
-      : "from-blue-400 to-cyan-400",
-    cloud: isDark ? "from-teal-500 to-green-500" : "from-teal-400 to-green-400",
-    design: isDark ? "from-pink-500 to-rose-500" : "from-pink-400 to-rose-400",
-    data: isDark
-      ? "from-amber-500 to-orange-500"
-      : "from-amber-400 to-orange-400",
-    mobile: isDark
-      ? "from-green-500 to-emerald-500"
-      : "from-green-400 to-emerald-400",
-    other: isDark ? "from-slate-500 to-gray-500" : "from-slate-400 to-gray-400",
-  };
-
-  return (
-    colorMap[category] ||
-    (isDark ? "from-blue-500 to-indigo-500" : "from-blue-400 to-indigo-400")
-  );
-};
-
-const categories = [
-  { value: "all", label: "All Certificates", icon: <Shield size={18} /> },
-  {
-    value: "frontend",
-    label: "Frontend Development",
-    icon: <Award size={18} />,
-  },
-  {
-    value: "fullstack",
-    label: "Full Stack Development",
-    icon: <Sparkles size={18} />,
-  },
-  { value: "cloud", label: "Cloud Computing", icon: <Clock size={18} /> },
-  { value: "design", label: "Design", icon: <Tag size={18} /> },
-  { value: "data", label: "Data Science", icon: <Filter size={18} /> },
-  {
-    value: "mobile",
-    label: "Mobile Development",
-    icon: <Bookmark size={18} />,
-  },
-  { value: "other", label: "Other", icon: <CheckCircle size={18} /> },
-];
+const A = "var(--ac)";
+const AD = "var(--ac-deep)";
+const AR = "var(--ac1)";
+const AR2 = "var(--ac2)";
 
 export const CertificateCard = ({ certificate, isDark, onClick }) => {
-  const categoryColor = getCategoryColor(certificate.category, isDark);
+  const cardBg = isDark ? "rgba(4,8,28,0.96)" : "rgba(240,244,255,0.96)";
+  const cardBorder = `rgba(${AR2}, 0.18)`;
+  const muted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.45)";
+  const muted2 = isDark ? "rgba(220,230,255,0.28)" : "rgba(10,18,48,0.32)";
+  const txt = isDark ? "#f0f4ff" : "#0a1230";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 2 }}
+      transition={{ duration: 0.5, delay: 0.05 + (certificate.id % 10) * 0.05 }}
       onClick={onClick}
-      className="cursor-pointer"
+      className="cursor-pointer group"
     >
-      <div
-        className={`relative rounded-2xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 ${
-          isDark
-            ? "shadow-lg shadow-[rgba(var(--ac1),0.1)]"
-            : "shadow-xl shadow-[rgba(var(--ac1),0.1)]"
-        }`}
-      >
-        {/* Top gradient border */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${categoryColor} z-10`}
-        ></div>
+      <div className="relative rounded-[14px] overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]"
+        style={{ background: cardBg, border: `1px solid ${cardBorder}`, fontFamily: "'DM Sans', sans-serif" }}>
+        {/* Accent top bar */}
+        <div className="h-1" style={{ background: `linear-gradient(90deg, ${AD}, ${A})` }} />
 
-        {/* Card background with slight gradient */}
-        <div
-          className={`relative ${
-            isDark
-              ? "bg-gradient-to-b from-gray-900 to-gray-950"
-              : "bg-gradient-to-b from-gray-50 to-white"
-          }`}
-        >
-          {/* Certificate name area */}
-          <div className="relative p-5">
-            {/* Featured badge */}
-            {certificate.featured && (
-              <div className="absolute top-4 right-4">
-                <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                    isDark
-                      ? "bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/30"
-                      : "bg-gradient-to-r from-amber-500/10 to-yellow-500/10 text-amber-600 border border-amber-500/30"
-                  }`}
-                >
-                  <Award size={10} />
-                  <span>Featured</span>
-                </div>
-              </div>
-            )}
-
-            {/* Category pill */}
-            <div
-              className={`inline-flex items-center gap-1 mb-3 px-2.5 py-1 rounded-full text-xs ${
-                isDark
-                  ? "bg-gray-800 text-gray-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {categories.find((c) => c.value === certificate.category)
-                ?.icon || <Tag size={12} />}
-              <span>
-                {categories.find((c) => c.value === certificate.category)
-                  ?.label || certificate.category}
+        <div className="p-5">
+          {/* Featured badge */}
+          {certificate.featured && (
+            <div className="absolute top-5 right-5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] tracking-wider uppercase"
+                style={{ background: `linear-gradient(135deg, ${AD}, ${A})`, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, boxShadow: `0 0 12px rgba(${AR}, 0.35)` }}>
+                <div className="w-1.5 h-1.5 rounded-full bg-white" style={{ animation: "pulse 2s infinite" }} />
+                Featured
               </span>
             </div>
+          )}
 
-            {/* Certificate title */}
-            <h3
-              className={`text-lg font-bold mb-1 ${
-                isDark ? "text-white" : "text-gray-800"
-              }`}
-            >
-              {certificate.title}
-            </h3>
+          {/* Category pill */}
+          <span className="inline-flex items-center gap-1 mb-3 px-2.5 py-1 rounded-full text-[11px] tracking-wider uppercase"
+            style={{ background: `rgba(${AR}, 0.07)`, border: `1px solid rgba(${AR}, 0.2)`, color: A, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+            {certificate.category === "frontend" ? "Frontend" : certificate.category === "fullstack" ? "Full Stack" :
+             certificate.category === "cloud" ? "Cloud" : certificate.category === "design" ? "Design" :
+             certificate.category === "data" ? "Data" : certificate.category === "mobile" ? "Mobile" : "Other"}
+          </span>
 
-            {/* Issuer with logo */}
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                  isDark ? "bg-gray-800" : "bg-gray-100"
-                }`}
-              >
-                <span
-                  className={`text-xs font-bold ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  {certificate.issuer.charAt(0)}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-sm font-medium ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  {certificate.issuer}
-                </span>
-                <span
-                  className={`text-xs ${
-                    isDark ? "text-gray-500" : "text-gray-500"
-                  }`}
-                >
-                  • {certificate.issueDate}
-                </span>
-              </div>
-            </div>
+          {/* Title */}
+          <h3 className="text-base font-bold mb-1 pr-16" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: txt, letterSpacing: "-0.01em" }}>
+            {certificate.title}
+          </h3>
 
-            {/* Description */}
-            <p
-              className={`text-sm line-clamp-2 mb-4 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              {certificate.description}
-            </p>
-
-            {/* Skills chips */}
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {certificate.skills.slice(0, 3).map((skill, index) => (
-                <span
-                  key={index}
-                  className={`text-xs px-2 py-0.5 rounded-full border ${
-                    isDark
-                      ? "border-gray-800 bg-gray-800/50 text-gray-300"
-                      : "border-gray-200 bg-gray-100/50 text-gray-700"
-                  }`}
-                >
-                  {skill}
-                </span>
-              ))}
-              {certificate.skills.length > 3 && (
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full ${
-                    isDark ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  +{certificate.skills.length - 3}
-                </span>
-              )}
-            </div>
-
-            {/* View button */}
-            <div
-              className={`flex items-center justify-center gap-1.5 text-xs px-3 py-2 rounded-lg ${
-                isDark
-                  ? "bg-gradient-to-r from-gray-800 to-gray-900 hover:from-[var(--ac)] hover:to-[var(--ac)] text-gray-300 hover:text-white border border-gray-800"
-                  : "bg-gradient-to-r from-gray-100 to-gray-50 hover:from-[var(--ac)] hover:to-[var(--ac)] text-gray-700 hover:text-white border border-gray-200"
-              } transition-all duration-300`}
-            >
-              <ExternalLink size={12} />
-              View Certificate Details
-            </div>
+          {/* Issuer + date */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[13px] font-medium" style={{ color: A }}>{certificate.issuer}</span>
+            <span className="text-[11px]" style={{ color: muted2 }}>· {certificate.issueDate}</span>
           </div>
+
+          {/* Description */}
+          <p className="text-[13px] leading-relaxed line-clamp-2 mb-4" style={{ color: muted }}>
+            {certificate.description}
+          </p>
+
+          {/* Skills chips */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {certificate.skills.slice(0, 3).map((skill, i) => (
+              <span key={i} className="text-[11px] px-2.5 py-1 rounded-full"
+                style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.15)`, color: A }}>
+                {skill}
+              </span>
+            ))}
+            {certificate.skills.length > 3 && (
+              <span className="text-[11px] px-2.5 py-1 rounded-full" style={{ color: muted2 }}>+{certificate.skills.length - 3}</span>
+            )}
+          </div>
+
+          {/* View button */}
+          <button className="flex items-center justify-center gap-1.5 w-full text-xs px-3 py-2 rounded-full font-medium transition-all duration-200"
+            style={{
+              background: `rgba(${AR}, 0.06)`,
+              border: `1px solid rgba(${AR}, 0.18)`,
+              color: A,
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View Details
+          </button>
         </div>
       </div>
+
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
     </motion.div>
   );
 };
