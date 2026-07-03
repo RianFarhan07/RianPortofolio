@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Rian.dev – 5 Background Themes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── THEME SWITCHER UI ── */
+      .switcher {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .switcher-label {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.38);
+        margin-right: 4px;
+        white-space: nowrap;
+      }
+      .theme-btn {
+        padding: 7px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 12px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.18s;
+        white-space: nowrap;
+      }
+      .theme-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .theme-btn.active {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+      .current-theme-name {
+        margin-left: auto;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.04em;
+        transition: color 0.3s;
+      }
+
+      /* ── PAGE SHELL ── */
+      .page {
+        position: relative;
+        min-height: 100vh;
+        padding-top: 60px;
+        transition: background 0.5s;
+      }
+
+      /* ── FIXED LAYERS (theme-specific) ── */
+      .layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        transition: opacity 0.5s;
+      }
+
+      /* ════════════════════════════════════════
+   THEME 1 — CLEAN VOID (default / current)
+   Matte near-black, single top glow
+════════════════════════════════════════ */
+      body.t1 .page {
+        background: linear-gradient(
+          160deg,
+          #0b0d11 0%,
+          #0e1118 55%,
+          #090c13 100%
+        );
+      }
+      body.t1 .l1 {
+        background: radial-gradient(
+          ellipse 80% 40% at 50% -5%,
+          rgba(56, 170, 255, 0.1) 0%,
+          rgba(30, 100, 220, 0.05) 50%,
+          transparent 70%
+        );
+      }
+      body.t1 .l2 {
+        display: none;
+      }
+      body.t1 .l3 {
+        display: none;
+      }
+      body.t1 .badge-color {
+        background: rgba(56, 170, 255, 0.08);
+        border-color: rgba(56, 170, 255, 0.28);
+        color: #38aaff;
+      }
+      body.t1 .badge-dot {
+        background: #4dffb4;
+        box-shadow: 0 0 7px #4dffb4;
+      }
+      body.t1 .accent {
+        color: #38aaff;
+      }
+      body.t1 .stat-accent {
+        color: #38aaff;
+      }
+      body.t1 .btn-p {
+        background: #38aaff;
+        color: #07111e;
+      }
+      body.t1 .scroll-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(56, 170, 255, 0.6),
+          transparent
+        );
+      }
+
+      /* ════════════════════════════════════════
+   THEME 2 — AURORA DUSK
+   Deep navy-purple with green-teal northern lights sweep
+════════════════════════════════════════ */
+      body.t2 .page {
+        background: linear-gradient(
+          170deg,
+          #07091a 0%,
+          #0e0c28 40%,
+          #060a14 100%
+        );
+      }
+      body.t2 .l1 {
+        background:
+          radial-gradient(
+            ellipse 120% 35% at 20% 30%,
+            rgba(0, 255, 160, 0.07) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 100% 30% at 80% 20%,
+            rgba(120, 60, 255, 0.09) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 80% 25% at 50% 10%,
+            rgba(0, 200, 255, 0.05) 0%,
+            transparent 60%
+          );
+      }
+      body.t2 .l2 {
+        background: radial-gradient(
+          ellipse 40% 20% at 50% 0%,
+          rgba(80, 255, 180, 0.06),
+          transparent 60%
+        );
+      }
+      body.t2 .l3 {
+        display: none;
+      }
+      body.t2 .badge-color {
+        background: rgba(0, 255, 160, 0.07);
+        border-color: rgba(0, 255, 160, 0.25);
+        color: #00ffa0;
+      }
+      body.t2 .badge-dot {
+        background: #00ffa0;
+        box-shadow: 0 0 8px #00ffa0;
+      }
+      body.t2 .accent {
+        color: #00ffa0;
+      }
+      body.t2 .stat-accent {
+        color: #a78bfa;
+      }
+      body.t2 .btn-p {
+        background: #00ffa0;
+        color: #060e18;
+      }
+      body.t2 .scroll-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 255, 160, 0.5),
+          transparent
+        );
+      }
+
+      /* ════════════════════════════════════════
+   THEME 3 — OBSIDIAN EMBER
+   Pure black, warm amber-red accent — minimal & dramatic
+════════════════════════════════════════ */
+      body.t3 .page {
+        background: linear-gradient(
+          180deg,
+          #0a0806 0%,
+          #0d0a07 60%,
+          #080604 100%
+        );
+      }
+      body.t3 .l1 {
+        background: radial-gradient(
+          ellipse 60% 35% at 50% -2%,
+          rgba(255, 100, 30, 0.08) 0%,
+          rgba(200, 50, 10, 0.04) 45%,
+          transparent 70%
+        );
+      }
+      body.t3 .l2 {
+        display: none;
+      }
+      body.t3 .l3 {
+        display: none;
+      }
+      body.t3 .badge-color {
+        background: rgba(255, 100, 30, 0.07);
+        border-color: rgba(255, 100, 30, 0.25);
+        color: #ff7043;
+      }
+      body.t3 .badge-dot {
+        background: #ffb347;
+        box-shadow: 0 0 8px rgba(255, 150, 50, 0.8);
+      }
+      body.t3 .accent {
+        color: #ff7043;
+      }
+      body.t3 .stat-accent {
+        color: #ff7043;
+      }
+      body.t3 .btn-p {
+        background: linear-gradient(135deg, #ff7043, #e53935);
+        color: #fff;
+      }
+      body.t3 .scroll-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 100, 30, 0.6),
+          transparent
+        );
+      }
+
+      /* ════════════════════════════════════════
+   THEME 4 — MIDNIGHT PRISM
+   Dark charcoal, subtle rainbow refraction — sophisticated
+════════════════════════════════════════ */
+      body.t4 .page {
+        background: linear-gradient(
+          170deg,
+          #0c0c10 0%,
+          #10101a 50%,
+          #08080d 100%
+        );
+      }
+      body.t4 .l1 {
+        background:
+          radial-gradient(
+            ellipse 50% 30% at 15% 40%,
+            rgba(99, 102, 241, 0.07) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 25% at 85% 35%,
+            rgba(236, 72, 153, 0.06) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 55% 20% at 50% 5%,
+            rgba(56, 189, 248, 0.06) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 30% 15% at 50% 70%,
+            rgba(52, 211, 153, 0.04) 0%,
+            transparent 55%
+          );
+      }
+      body.t4 .l2 {
+        display: none;
+      }
+      body.t4 .l3 {
+        display: none;
+      }
+      body.t4 .badge-color {
+        background: rgba(99, 102, 241, 0.09);
+        border-color: rgba(99, 102, 241, 0.28);
+        color: #818cf8;
+      }
+      body.t4 .badge-dot {
+        background: #a5b4fc;
+        box-shadow: 0 0 8px rgba(139, 92, 246, 0.7);
+      }
+      body.t4 .accent {
+        color: #818cf8;
+      }
+      body.t4 .stat-accent {
+        color: #f472b6;
+      }
+      body.t4 .btn-p {
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        color: #fff;
+      }
+      body.t4 .scroll-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(99, 102, 241, 0.6),
+          transparent
+        );
+      }
+
+      /* ════════════════════════════════════════
+   THEME 5 — ARCTIC MIST  (Light)
+   Near-white with faint teal depth — clean, airy, pro
+════════════════════════════════════════ */
+      body.t5 .page {
+        background: linear-gradient(
+          160deg,
+          #f0f5f8 0%,
+          #e8f0f5 55%,
+          #f5f8fa 100%
+        );
+      }
+      body.t5 .l1 {
+        background: radial-gradient(
+          ellipse 80% 40% at 50% -5%,
+          rgba(14, 165, 233, 0.1) 0%,
+          rgba(20, 184, 166, 0.06) 45%,
+          transparent 70%
+        );
+      }
+      body.t5 .l2 {
+        display: none;
+      }
+      body.t5 .l3 {
+        display: none;
+      }
+
+      /* override text colors for light bg */
+      body.t5 .hero-title {
+        color: rgba(10, 20, 45, 0.9);
+      }
+      body.t5 .hero-title .dim {
+        color: rgba(10, 20, 45, 0.08);
+      }
+      body.t5 .hero-eyebrow {
+        color: rgba(10, 20, 45, 0.35);
+      }
+      body.t5 .hero-sub {
+        color: rgba(10, 20, 45, 0.5);
+      }
+      body.t5 .stat-num {
+        color: rgba(10, 20, 45, 0.88);
+      }
+      body.t5 .stat-label {
+        color: rgba(10, 20, 45, 0.32);
+      }
+      body.t5 .scroll-hint {
+        color: rgba(10, 20, 45, 0.22);
+      }
+      body.t5 nav {
+        border-bottom-color: rgba(0, 0, 0, 0.06);
+      }
+      body.t5 .nav-logo {
+        color: #0ea5e9;
+      }
+      body.t5 .nav-link {
+        color: rgba(10, 20, 45, 0.45);
+      }
+      body.t5 .nav-link:hover,
+      .nav-link.active-link {
+        color: rgba(10, 20, 45, 0.88);
+      }
+      body.t5 .nav-link.active-link {
+        border-bottom-color: #0ea5e9;
+        color: #0ea5e9;
+      }
+      body.t5 .badge-color {
+        background: rgba(14, 165, 233, 0.08);
+        border-color: rgba(14, 165, 233, 0.28);
+        color: #0284c7;
+      }
+      body.t5 .badge-dot {
+        background: #10b981;
+        box-shadow: 0 0 7px rgba(16, 185, 129, 0.7);
+      }
+      body.t5 .accent {
+        color: #0ea5e9;
+      }
+      body.t5 .stat-accent {
+        color: #0ea5e9;
+      }
+      body.t5 .btn-p {
+        background: #0ea5e9;
+        color: #fff;
+      }
+      body.t5 .btn-ghost {
+        border-color: rgba(0, 0, 0, 0.12);
+        color: rgba(10, 20, 45, 0.55);
+      }
+      body.t5 .scroll-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(14, 165, 233, 0.5),
+          transparent
+        );
+      }
+      body.t5 .switcher {
+        background: rgba(255, 255, 255, 0.65);
+        border-bottom-color: rgba(0, 0, 0, 0.07);
+      }
+      body.t5 .switcher-label {
+        color: rgba(10, 20, 45, 0.35);
+      }
+      body.t5 .theme-btn {
+        background: rgba(0, 0, 0, 0.04);
+        border-color: rgba(0, 0, 0, 0.12);
+        color: rgba(10, 20, 45, 0.55);
+      }
+      body.t5 .theme-btn:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: rgba(10, 20, 45, 0.9);
+      }
+      body.t5 .theme-btn.active {
+        background: rgba(14, 165, 233, 0.12);
+        color: #0284c7;
+        border-color: rgba(14, 165, 233, 0.35);
+      }
+      body.t5 .current-theme-name {
+        color: rgba(10, 20, 45, 0.38);
+      }
+
+      /* ── SHARED NAV ── */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 48px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        position: relative;
+        z-index: 10;
+      }
+      .nav-logo {
+        font-size: 18px;
+        font-weight: 700;
+        color: #38aaff;
+        letter-spacing: -0.3px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+      .nav-link {
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.48);
+        transition: color 0.2s;
+      }
+      .nav-link:hover {
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .nav-link.active-link {
+        color: #38aaff;
+        border-bottom: 1.5px solid #38aaff;
+        padding-bottom: 2px;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 88vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 56px 48px 40px;
+        position: relative;
+        z-index: 10;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid;
+        margin-bottom: 28px;
+        width: fit-content;
+        transition:
+          background 0.3s,
+          color 0.3s,
+          border-color 0.3s;
+      }
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        transition: background 0.3s;
+      }
+      .hero-eyebrow {
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.26);
+        margin-bottom: 14px;
+        transition: color 0.3s;
+      }
+      .hero-title {
+        font-size: clamp(54px, 8.5vw, 118px);
+        font-weight: 900;
+        line-height: 0.93;
+        letter-spacing: -0.03em;
+        color: rgba(255, 255, 255, 0.94);
+        margin-bottom: 4px;
+        transition: color 0.3s;
+      }
+      .hero-title .dim {
+        color: rgba(255, 255, 255, 0.13);
+        display: block;
+        transition: color 0.3s;
+      }
+      .hero-sub {
+        margin-top: 28px;
+        font-size: 16px;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.4);
+        max-width: 340px;
+        line-height: 1.65;
+        transition: color 0.3s;
+      }
+      .hero-cta {
+        margin-top: 36px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn-p {
+        padding: 12px 26px;
+        border-radius: 12px;
+        border: none;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          opacity 0.2s,
+          transform 0.15s,
+          background 0.3s;
+      }
+      .btn-p:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: transparent;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .btn-ghost:hover {
+        border-color: rgba(255, 255, 255, 0.24);
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* stats */
+      .hero-stats {
+        position: absolute;
+        bottom: 48px;
+        right: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 18px;
+        z-index: 10;
+      }
+      .stat {
+        text-align: right;
+      }
+      .stat-num {
+        font-size: 28px;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1;
+        transition: color 0.3s;
+      }
+      .stat-label {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.26);
+        margin-top: 3px;
+        transition: color 0.3s;
+      }
+
+      /* scroll hint */
+      .scroll-hint {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.18);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        z-index: 10;
+        transition: color 0.3s;
+      }
+      .scroll-line-el {
+        width: 1px;
+        height: 36px;
+        animation: sline 1.6s ease-in-out infinite;
+      }
+      @keyframes sline {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scaleY(0.3);
+          transform-origin: top;
+        }
+        50% {
+          opacity: 1;
+          transform: scaleY(1);
+        }
+      }
+
+      /* ── THEME INFO BADGE ── */
+      .theme-info {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        padding: 9px 20px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 0.06em;
+        pointer-events: none;
+        transition: opacity 0.4s;
+      }
+      body.t5 .theme-info {
+        background: rgba(255, 255, 255, 0.55);
+        color: rgba(10, 20, 45, 0.45);
+      }
+    </style>
+  </head>
+  <body class="t1">
+    <!-- ══ THEME SWITCHER ══ -->
+    <div class="switcher">
+      <span class="switcher-label">Background</span>
+      <button
+        class="theme-btn active"
+        onclick="setTheme(1, this, 'Clean Void')"
+      >
+        ① Clean Void
+      </button>
+      <button class="theme-btn" onclick="setTheme(2, this, 'Aurora Dusk')">
+        ② Aurora Dusk
+      </button>
+      <button class="theme-btn" onclick="setTheme(3, this, 'Obsidian Ember')">
+        ③ Obsidian Ember
+      </button>
+      <button class="theme-btn" onclick="setTheme(4, this, 'Midnight Prism')">
+        ④ Midnight Prism
+      </button>
+      <button class="theme-btn" onclick="setTheme(5, this, 'Arctic Mist')">
+        ⑤ Arctic Mist
+      </button>
+      <span class="current-theme-name" id="cname">Clean Void</span>
+    </div>
+
+    <!-- ══ FIXED BACKGROUND LAYERS ══ -->
+    <div class="layer l1"></div>
+    <div class="layer l2"></div>
+    <div class="layer l3"></div>
+
+    <!-- ══ PAGE ══ -->
+    <div class="page">
+      <!-- NAV -->
+      <nav>
+        <div class="nav-logo">Rian.dev</div>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active-link">Home</a></li>
+          <li><a href="#" class="nav-link">About</a></li>
+          <li><a href="#" class="nav-link">Projects</a></li>
+          <li><a href="#" class="nav-link">Certificates</a></li>
+          <li><a href="#" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="badge badge-color">
+          <span class="badge-dot"></span>
+          Available Now
+        </div>
+
+        <p class="hero-eyebrow">Jakarta, ID &nbsp;·&nbsp; Portfolio</p>
+
+        <h1 class="hero-title">
+          SOFTWARE
+          <span class="dim">ENGINEER</span>
+        </h1>
+
+        <p class="hero-sub">
+          Passionate about building products people love to use.
+        </p>
+
+        <div class="hero-cta">
+          <button class="btn-p">Hubungi Saya</button>
+          <button class="btn-ghost">Lihat Projects →</button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">50<span class="stat-accent">+</span></div>
+            <div class="stat-label">Project Done</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">4<span class="stat-accent">+</span></div>
+            <div class="stat-label">Years Exp</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">99<span class="stat-accent">%</span></div>
+            <div class="stat-label">Client Satisfaction</div>
+          </div>
+        </div>
+
+        <div class="scroll-hint">
+          SCROLL
+          <div class="scroll-line-el scroll-line"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- BOTTOM LABEL -->
+    <div class="theme-info" id="tinfo">
+      BASO RIAN FARHAN MALLANTI &nbsp;·&nbsp; Theme: <strong>Clean Void</strong>
+    </div>
+
+    <script>
+      function setTheme(n, btn, name) {
+        document.body.className = "t" + n;
+        document
+          .querySelectorAll(".theme-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("cname").textContent = name;
+        document.getElementById("tinfo").innerHTML =
+          "BASO RIAN FARHAN MALLANTI &nbsp;·&nbsp; Theme: <strong>" +
+          name +
+          "</strong>";
+      }
+    </script>
+  </body>
+</html>
