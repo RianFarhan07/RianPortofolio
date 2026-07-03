@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { IntroContext } from "./PageTransition6Clean";
 import { Terminal, Download, Github, Linkedin, Mail } from "lucide-react";
 import rianPhoto from "../assets/rian_animate.webp";
 
@@ -33,6 +34,15 @@ export default function About() {
   const [view, setView] = useState("terminal"); // 'terminal' | 'page'
   const [barsIn, setBarsIn] = useState(false);
 
+  const { introExited, pageTransitionDone } = useContext(IntroContext);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (introExited && pageTransitionDone) setVisible(true);
+    }, 120);
+    return () => clearTimeout(t);
+  }, [introExited, pageTransitionDone]);
+
   const bodyRef = useRef(null);
   const apiRef = useRef(null);
   const setViewRef = useRef(setView);
@@ -49,7 +59,7 @@ export default function About() {
 
   /* ── terminal engine ── */
   useEffect(() => {
-    if (view !== "terminal" || !bodyRef.current) return;
+    if (view !== "terminal" || !bodyRef.current || !visible) return;
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const term = bodyRef.current;
     let inputRow = null, cin = null, history = [], histIdx = 0, tabState = null;
@@ -184,7 +194,7 @@ export default function About() {
       let j = 0; (function t() { if (killed) return; if (j <= text.length) { c.textContent = text.slice(0, j); j++; timers.push(setTimeout(t, 24)); } else { cur.remove(); res(); } })();
     });
     const autoStep = async (cmd, html) => { await typeCmd(cmd); if (killed) return; await wait(150); const d = document.createElement("div"); d.className = "out"; d.innerHTML = html; term.appendChild(d); fillBars(d); scroll(); await wait(360); };
-    const run = async () => { await bootAnimated(); if (killed) return; await autoStep("whoami", whoami); if (killed) return; await autoStep("neofetch", neofetch); if (killed) return; await autoStep("help", help); if (killed) return; showInput(); };
+    const run = async () => { await bootAnimated(); if (killed) return; await autoStep("whoami", whoami); if (killed) return; await autoStep("neofetch", neofetch); if (killed) return; showInput(); };
     const renderAll = () => {
       clearTimers(); killed = true; term.innerHTML = ""; inputRow = null;
       [["whoami", whoami], ["neofetch", neofetch], ["help", help]].forEach((s) => {
@@ -201,7 +211,7 @@ export default function About() {
     term.addEventListener("click", clickFocus);
 
     return () => { killed = true; clearTimers(); term.removeEventListener("click", clickFocus); apiRef.current = null; };
-  }, [view]);
+  }, [view, visible]);
 
   /* ── theme tokens ── */
   const tv = isDark
@@ -218,7 +228,7 @@ export default function About() {
     const line = isDark ? "rgba(120,160,220,.14)" : "rgba(16,120,100,.16)";
     const strk = isDark ? "rgba(255,255,255,.16)" : "rgba(10,18,48,.16)";
     return (
-      <div className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,4vw,40px) 60px", maxWidth: 1160, margin: "0 auto" }}>
+      <div className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,4vw,40px) 60px", maxWidth: 1160, margin: "0 auto", opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
         <style>{bpCss}</style>
 
         <div className="bp-top">
@@ -313,7 +323,7 @@ export default function About() {
 
   /* ── TERMINAL VIEW (default) ── */
   return (
-    <div className="bt" style={{ ...tv, "--mono": mono, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "90px 16px 40px", fontFamily: mono }}>
+    <div className="bt" style={{ ...tv, "--mono": mono, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "90px 16px 40px", fontFamily: mono, opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
       <style>{btCss}</style>
       <div className="term-win">
         <div className="term-bar">

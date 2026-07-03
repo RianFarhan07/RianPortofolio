@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback, useContext } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { IntroContext } from "./PageTransition6Clean";
 import fotoRianDark from "../assets/foto_rian_nobg.webp";
 import fotoRianLight from "../assets/foto_rian_nobg_light.webp";
 
@@ -36,7 +37,18 @@ export default function Hero3() {
   const photoRef = useRef(null);
   const photoImgRef = useRef(null);
 
+  const location = useLocation();
+  const { introExited, pageTransitionDone } = useContext(IntroContext);
   const [entered, setEntered] = useState(false);
+
+  // Animate after intro (first load) or after page transition (navigating back)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (introExited && pageTransitionDone) setEntered(true);
+    }, 10);
+    return () => clearTimeout(t);
+  }, [introExited, pageTransitionDone, location.pathname]);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -44,11 +56,6 @@ export default function Hero3() {
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
-  }, []);
-
-  useEffect(() => {
-    const t = setTimeout(() => setEntered(true), 100);
-    return () => clearTimeout(t);
   }, []);
 
   const handleMouseMove = useCallback((e) => {

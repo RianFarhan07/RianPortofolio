@@ -231,7 +231,7 @@ export default function ContactPreview() {
   const textFaint = isDark ? "rgba(220,230,255,.28)" : "rgba(10,18,48,.28)";
   const borderColor = "rgba(var(--ac2),.12)";
   const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
-  const sectionBg = isDark ? "#04081c" : "#f0f4ff";
+
 
   return (
     <>
@@ -348,7 +348,6 @@ export default function ContactPreview() {
         ref={ref}
         style={{
           position: "relative",
-          background: sectionBg,
           fontFamily: "'DM Sans', sans-serif",
         }}
       >

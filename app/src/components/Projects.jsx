@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { IntroContext } from "./PageTransition6Clean";
 import {
   Globe,
   Search,
@@ -60,6 +61,22 @@ export default function Projects() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+
+  const { introExited, pageTransitionDone } = useContext(IntroContext);
+  const [visible, setVisible] = useState(false);
+  const [visibleKey, setVisibleKey] = useState(0);
+  const prevPTDone = useRef(pageTransitionDone);
+  useEffect(() => {
+    if (introExited && pageTransitionDone) {
+      const isTransition = !prevPTDone.current && pageTransitionDone;
+      const delay = isTransition ? 40 : 600;
+      if (!isTransition) setVisibleKey(k => k + 1);
+      const t = setTimeout(() => setVisible(true), delay);
+      prevPTDone.current = pageTransitionDone;
+      return () => clearTimeout(t);
+    }
+    prevPTDone.current = pageTransitionDone;
+  }, [introExited, pageTransitionDone]);
   const ITEMS_PER_PAGE = isMobile ? 6 : 12;
 
   useEffect(() => {
@@ -132,32 +149,10 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className={`py-16 md:py-24 relative overflow-hidden ${
-        isDark ? "bg-bgDarkSection" : "bg-bgLight"
-      }`}
+      className="py-16 md:py-24 relative overflow-hidden"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}
+      key={visibleKey}
     >
-      {/* Background decor */}
-      <motion.div
-        className="absolute inset-0 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-primary" : "bg-primaryInLight"
-          } opacity-5 -top-48 -left-48`}
-        />
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -bottom-48 -right-48`}
-        />
-        <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-      </motion.div>
-
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <motion.div

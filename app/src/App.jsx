@@ -19,6 +19,7 @@ import ContactPreview from "./components/ContactPreview2";
 import ProjectPreview from "./components/ProjectPreview";
 import Hero2 from "./components/Hero2";
 import PageTransition5Tech from "./components/PageTransition5Tech";
+import PageTransition6Clean from "./components/PageTransition6Clean";
 import Hero3 from "./components/Hero3";
 
 class ErrorBoundary extends Component {
@@ -56,7 +57,13 @@ const AppContent = () => {
     <MainLayout>
       <Navbar />
       <ScrollToTop />
-      <PageTransition5Tech>
+      {/* INTRO VARIANTS: pulse | typewriter | cards | particles | countdown | random */}
+      {/* <PageTransition6Clean variant="slide-strips" introVariant="pulse"> */}
+      {/* <PageTransition6Clean variant="slide-strips" introVariant="typewriter"> */}
+      {/* <PageTransition6Clean variant="slide-strips" introVariant="cards"> */}
+      {/* <PageTransition6Clean variant="slide-strips" introVariant="particles"> */}
+      {/* <PageTransition6Clean variant="slide-strips" introVariant="countdown"> */}
+      <PageTransition6Clean variant="slide-strips" introVariant="random">
         <Routes location={location}>
           <Route
             path="/"
@@ -77,7 +84,7 @@ const AppContent = () => {
           <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-      </PageTransition5Tech>
+      </PageTransition6Clean>
       <Footer />
     </MainLayout>
   );

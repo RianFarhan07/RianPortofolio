@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { IntroContext } from "./PageTransition6Clean";
 import emailjs from "@emailjs/browser";
 import {
   Send,
@@ -31,6 +32,20 @@ export default function Contact() {
   });
   const [formStatus, setFormStatus] = useState(null);
   const [errors, setErrors] = useState({});
+
+  const { introExited, pageTransitionDone } = useContext(IntroContext);
+  const [visible, setVisible] = useState(false);
+  const prevPTD = useRef(pageTransitionDone);
+  useEffect(() => {
+    if (introExited && pageTransitionDone) {
+      const isTransition = !prevPTD.current && pageTransitionDone;
+      const delay = isTransition ? 40 : 600;
+      const t = setTimeout(() => setVisible(true), delay);
+      prevPTD.current = pageTransitionDone;
+      return () => clearTimeout(t);
+    }
+    prevPTD.current = pageTransitionDone;
+  }, [introExited, pageTransitionDone]);
 
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -165,26 +180,10 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className={`py-16 md:py-24 ${
-        isDark ? "bg-bgDark" : "bg-bgLight"
-      } min-h-screen`}
+      className="py-16 md:py-24 min-h-screen"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}
       ref={ref}
     >
-      {/* Background decor */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -top-48 -left-48`}
-        />
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl bg-[var(--ac)] opacity-5 -bottom-48 -right-48`}
-        />
-        <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           className="text-center mb-12"

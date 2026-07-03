@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { IntroContext } from "./PageTransition6Clean";
 import {
   Award,
   ExternalLink,
@@ -57,6 +58,20 @@ export default function Certificates() {
     useState(certificatesData);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
+  const { introExited, pageTransitionDone } = useContext(IntroContext);
+  const [visible, setVisible] = useState(false);
+  const prevPTD = useRef(pageTransitionDone);
+  useEffect(() => {
+    if (introExited && pageTransitionDone) {
+      const isTransition = !prevPTD.current && pageTransitionDone;
+      const delay = isTransition ? 40 : 600;
+      const t = setTimeout(() => setVisible(true), delay);
+      prevPTD.current = pageTransitionDone;
+      return () => clearTimeout(t);
+    }
+    prevPTD.current = pageTransitionDone;
+  }, [introExited, pageTransitionDone]);
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -108,37 +123,10 @@ export default function Certificates() {
   return (
     <section
       id="certificates"
-      className={`py-16 md:py-24 relative ${
-        isDark ? "bg-bgDarkSection" : "bg-gray-50"
-      } min-h-screen`}
+      className="py-16 md:py-24 relative min-h-screen"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}
       ref={ref}
     >
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-blue-900" : "bg-blue-200"
-          } opacity-10 -top-48 -left-48 animate-pulse`}
-          style={{ animationDuration: "15s" }}
-        />
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl ${
-            isDark ? "bg-purple-900" : "bg-purple-200"
-          } opacity-10 -bottom-48 -right-48 animate-pulse`}
-          style={{ animationDuration: "20s" }}
-        />
-        <div
-          className={`absolute w-64 h-64 rounded-full blur-3xl ${
-            isDark ? "bg-emerald-900" : "bg-emerald-200"
-          } opacity-5 top-1/4 right-1/4 animate-pulse`}
-          style={{ animationDuration: "25s" }}
-        />
-        <div
-          className={`absolute inset-0 opacity-10 ${
-            isDark ? "bg-grid-white/5" : "bg-grid-black/5"
-          }`}
-        ></div>
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Page Header  */}
         <motion.div
