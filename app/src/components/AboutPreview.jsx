@@ -307,7 +307,7 @@ export default function AboutPreview() {
                 "--ed-line": isDark ? "#16233c" : "#dde8e2",
                 "--ed-txt": isDark ? "#c4d2ea" : "#1e2a3b",
                 "--ed-muted": isDark ? "#5d6f8e" : "#7c8aa0",
-                "--ed-kw": isDark ? "#00d4ff" : "#0d9488",
+                "--ed-kw": isDark ? "var(--ac)" : "#0d9488",
                 "--ed-str": isDark ? "#3ddc97" : "#0f9d6b",
                 "--ed-num": isDark ? "#ffb27a" : "#c2683a",
                 "--ed-prop": isDark ? "#9ec9ff" : "#2563a8",

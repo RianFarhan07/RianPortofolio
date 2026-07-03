@@ -14,12 +14,13 @@
   --text-dark: #eeeeee;
   --accent-dark: #00adb5;
 
-  /* Accent fallback (defaults to dark/blue until a theme class mounts) */
-  --ac: #00d4ff;
-  --ac-deep: #0066ff;
-  --ac1: 0, 212, 255;
-  --ac2: 0, 180, 255;
-  --ac-glow: 0, 100, 255;
+  /* Accent fallback (defaults to dark/teal until a theme class mounts) */
+  /* ─── DARK COLOR VARIANT: blue-400 ─── */
+  --ac: #60a5fa;
+  --ac-deep: #3b82f6;
+  --ac1: 96, 165, 250;
+  --ac2: 70, 140, 245;
+  --ac-glow: 50, 120, 220;
 }
 
 body.light-theme {
@@ -27,10 +28,10 @@ body.light-theme {
   color: var(--text-light);
 
   /* Accent (light = green / teal, from palette) */
-  --ac: #14b8a6;        /* bright accent (solid)        */
-  --ac-deep: #0d9488;   /* deep accent (gradient stops) */
-  --ac1: 20, 184, 166;  /* bright accent as rgb triplet */
-  --ac2: 16, 185, 129;  /* secondary / glow rgb         */
+  --ac: #14b8a6; /* bright accent (solid)        */
+  --ac-deep: #0d9488; /* deep accent (gradient stops) */
+  --ac1: 20, 184, 166; /* bright accent as rgb triplet */
+  --ac2: 16, 185, 129; /* secondary / glow rgb         */
   --ac-glow: 16, 185, 129;
 }
 
@@ -38,12 +39,21 @@ body.dark-theme {
   background-color: #0f1115;
   color: var(--text-dark);
 
-  /* Accent (dark = blue / cyan) */
-  --ac: #00d4ff;
-  --ac-deep: #0066ff;
-  --ac1: 0, 212, 255;
-  --ac2: 0, 180, 255;
-  --ac-glow: 0, 100, 255;
+  /* ─── DARK COLOR VARIANT — pilih salah satu ─── */
+
+  /* teal (sebelumnya) */
+  --ac: #00adb5;
+  --ac-deep: #00838a;
+  --ac1: 0, 173, 181;
+  --ac2: 0, 140, 147;
+  --ac-glow: 0, 120, 128;
+
+  /* blue-400 (sekarang) */
+  /* --ac: #60a5fa;
+  --ac-deep: #3b82f6;
+  --ac1: 96, 165, 250;
+  --ac2: 70, 140, 245;
+  --ac-glow: 50, 120, 220; */
 }
 
 /* Additional theme-specific styles */

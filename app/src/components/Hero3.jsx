@@ -150,11 +150,6 @@ export default function Hero3() {
             flexDirection: "column",
             fontFamily: "'DM Sans', sans-serif",
             background: "transparent",
-            "--ac": isDark ? "#00d4ff" : "#14b8a6",
-            "--ac-deep": isDark ? "#0066ff" : "#0d9488",
-            "--ac1": isDark ? "0,212,255" : "20,184,166",
-            "--ac2": isDark ? "0,180,255" : "16,185,129",
-            "--ac-glow": isDark ? "0,100,255" : "16,185,129",
           }}
         >
           <div className="mob-scan" />
@@ -564,11 +559,6 @@ export default function Hero3() {
           flexDirection: "column",
           fontFamily: "'DM Sans', sans-serif",
           background: "transparent",
-          "--ac": isDark ? "#00d4ff" : "#14b8a6",
-          "--ac-deep": isDark ? "#0066ff" : "#0d9488",
-          "--ac1": isDark ? "0,212,255" : "20,184,166",
-          "--ac2": isDark ? "0,180,255" : "16,185,129",
-          "--ac-glow": isDark ? "0,100,255" : "16,185,129",
         }}
       >
         <div className="h2-scan" />
