@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
-import fotoRianDark from "../assets/foto_rian_nobg.webp";
+import fotoRianDark from "../assets/foto_rian_nobg2.webp";
 import fotoRianLight from "../assets/foto_rian_nobg_light.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */

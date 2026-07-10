@@ -32,12 +32,8 @@ export default function ContactPreview() {
   });
 
   const [isMobile, setIsMobile] = useState(null);
-  const [reduced] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  // Animasi selalu jalan — abaikan prefers-reduced-motion dari OS
+  const reduced = false;
   const trackRef = useRef(null);
   const introRef = useRef(null);
   const l1Ref = useRef(null);

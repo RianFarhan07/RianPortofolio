@@ -60,7 +60,7 @@ export default function About() {
   /* ── terminal engine ── */
   useEffect(() => {
     if (view !== "terminal" || !bodyRef.current || !visible) return;
-    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = false; // Animasi selalu jalan — abaikan prefers-reduced-motion dari OS
     const term = bodyRef.current;
     let inputRow = null, cin = null, history = [], histIdx = 0, tabState = null;
     let timers = [], killed = false;
@@ -361,7 +361,6 @@ const btCss = `
 .bt .term-body{position:relative;padding:18px 20px;font-size:13.5px;line-height:1.7;min-height:56vh;max-height:64vh;overflow:auto;scrollbar-width:thin;cursor:text}
 .bt .term-body::-webkit-scrollbar{width:8px}.bt .term-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
 .bt .crt{position:absolute;inset:0;z-index:4;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.05) 0,rgba(0,0,0,.05) 1px,transparent 1px,transparent 3px);mix-blend-mode:overlay;opacity:.6;animation:bt-flick 5s infinite}
-@media (prefers-reduced-motion:reduce){.bt .crt{animation:none}}
 .bt .qchips{display:none}
 @media (max-width:768px){.bt .qchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 12px;border-top:1px solid var(--line);background:var(--chrome);flex-shrink:0}.bt .qchips::-webkit-scrollbar{display:none}.bt .term-body{max-height:none}}
 .bt .qchips button{flex-shrink:0;font-family:var(--mono);font-size:11.5px;color:var(--ac);background:rgba(var(--ac2),.08);border:1px solid rgba(var(--ac2),.3);border-radius:7px;padding:6px 11px;cursor:pointer}

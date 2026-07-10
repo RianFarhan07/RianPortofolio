@@ -61,7 +61,7 @@ const AppContent = () => {
       {/* INTRO: pulse | typewriter | cards | particles | countdown | random */}
       {/* TRANSITION: slide-strips | curtain-reveal | flip-card | radial-expand */}
       {/* ═══════════════════════════════════════════════════════ */}
-      <PageTransition6Clean variant="slide-strips" introVariant="pulse">
+      <PageTransition6Clean variant="slide-strips" introVariant="random">
         <Routes location={location}>
           <Route
             path="/"

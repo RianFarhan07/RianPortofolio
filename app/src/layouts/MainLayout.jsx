@@ -609,11 +609,6 @@ const MainLayout = ({ children }) => {
       {/* ── Main content ── */}
       <div style={{ position: "relative", zIndex: 10 }}>{children}</div>
 
-      <style>{`
-        @media (prefers-reduced-motion: reduce) {
-          canvas { display: none !important; }
-        }
-      `}</style>
     </div>
   );
 };

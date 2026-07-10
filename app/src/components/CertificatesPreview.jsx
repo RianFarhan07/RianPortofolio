@@ -25,12 +25,8 @@ export default function CertificatesPreview() {
   const [autoplay, setAutoplay] = useState(true);
   const [entered, setEntered] = useState(false);
   const [isMobile, setIsMobile] = useState(null);
-  const [reduced] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  // Animasi selalu jalan — abaikan prefers-reduced-motion dari OS
+  const reduced = false;
 
   const autoplayRef = useRef(null);
   const wrapperRef = useRef(null);

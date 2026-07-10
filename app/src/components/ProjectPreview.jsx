@@ -84,13 +84,8 @@ export default function ProjectPreview() {
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
 
-  // prefers-reduced-motion (sekali baca saja saat mount)
-  const [reduced] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  // Animasi selalu jalan — abaikan prefers-reduced-motion dari OS
+  const reduced = false;
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
 
