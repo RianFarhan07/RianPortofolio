@@ -39,10 +39,10 @@ export default function CertificatesPreview() {
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
 
-  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
-  const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
+  const textPrimary = isDark ? "#e7edf5" : "#10233f";
+  const textMuted = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
   const borderColor = "rgba(var(--ac2),.18)";
-  const cardBg = isDark ? "rgba(4,8,28,.96)" : "rgba(240,244,255,.96)";
+  const cardBg = isDark ? "rgba(10,20,32,.96)" : "rgba(232,236,241,.96)";
 
   /* ── Responsive ── */
   useEffect(() => {
@@ -177,10 +177,11 @@ export default function CertificatesPreview() {
           .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
           .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
           .cp-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.68rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.05em}
-          .cp-verify-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(var(--ac-glow),.35);text-decoration:none}
+          .cp-verify-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:var(--ac-deep);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:${isDark ? "#10233f" : "white"};text-decoration:none;transition:background .2s}
+          .cp-verify-btn:hover{background:var(--ac)}
           .cp-mob-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.12);background:rgba(var(--ac2),.04);margin-bottom:6px;transition:border-color .2s,background .2s}
           .cp-mob-item.active{border-color:rgba(var(--ac1),.5);background:rgba(var(--ac2),.1)}
-          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none}
+          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(210,222,235,.72);text-decoration:none}
         `}</style>
 
         <section
@@ -288,7 +289,7 @@ export default function CertificatesPreview() {
                   color: "transparent",
                   WebkitTextStroke: isDark
                     ? "1.5px rgba(255,255,255,.15)"
-                    : "1.5px rgba(10,18,48,.15)",
+                    : "1.5px rgba(16,35,63,.15)",
                 }}
               >
                 SKILLS
@@ -341,7 +342,7 @@ export default function CertificatesPreview() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(to top, rgba(4,8,28,.85) 0%, transparent 60%)",
+                    "linear-gradient(to top, rgba(10,20,32,.85) 0%, transparent 60%)",
                 }}
               />
               {/* Issuer badge */}
@@ -350,8 +351,7 @@ export default function CertificatesPreview() {
                   position: "absolute",
                   bottom: 10,
                   right: 12,
-                  background: "rgba(4,8,28,.8)",
-                  backdropFilter: "blur(8px)",
+                  background: "#0a1420",
                   borderRadius: 8,
                   padding: "4px 10px",
                   display: "flex",
@@ -361,7 +361,7 @@ export default function CertificatesPreview() {
                 }}
               >
                 <span
-                  style={{ fontSize: ".65rem", color: "rgba(220,230,255,.6)" }}
+                  style={{ fontSize: ".65rem", color: "rgba(210,222,235,.6)" }}
                 >
                   Issued by
                 </span>
@@ -535,7 +535,7 @@ export default function CertificatesPreview() {
                   <Award
                     size={15}
                     color={
-                      i === activeIndex ? "var(--ac)" : "rgba(220,230,255,.4)"
+                      i === activeIndex ? "var(--ac)" : "rgba(210,222,235,.4)"
                     }
                   />
                 </div>
@@ -589,10 +589,10 @@ export default function CertificatesPreview() {
         .cp-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.7rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.06em;transition:border-color .2s,background .2s}
         .cp-chip:hover{border-color:rgba(var(--ac2),.45);background:rgba(var(--ac2),.13)}
 
-        .cp-verify{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:white;box-shadow:0 0 28px rgba(var(--ac-glow),.4);text-decoration:none;transition:transform .22s,box-shadow .22s;white-space:nowrap}
-        .cp-verify:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(var(--ac-glow),.65)}
+        .cp-verify{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:var(--ac-deep);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:${isDark ? "#10233f" : "white"};text-decoration:none;transition:transform .22s,background .22s;white-space:nowrap}
+        .cp-verify:hover{transform:translateY(-2px);background:var(--ac)}
 
-        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:rgba(220,230,255,.72);text-decoration:none;transition:transform .22s,border-color .22s}
+        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:rgba(210,222,235,.72);text-decoration:none;transition:transform .22s,border-color .22s}
         .cp-view-all:hover{transform:translateY(-2px);border-color:rgba(var(--ac2),.5)}
 
         .cp-list-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.08);background:transparent;transition:border-color .2s,background .2s,transform .2s;margin-bottom:6px}
@@ -700,7 +700,7 @@ export default function CertificatesPreview() {
                     color: "transparent",
                     WebkitTextStroke: isDark
                       ? "2px rgba(255,255,255,.18)"
-                      : "2px rgba(10,18,48,.18)",
+                      : "2px rgba(16,35,63,.18)",
                   }}
                 >
                   SKILLS
@@ -767,7 +767,7 @@ export default function CertificatesPreview() {
                   color: "transparent",
                   WebkitTextStroke: isDark
                     ? "2px rgba(255,255,255,.15)"
-                    : "2px rgba(10,18,48,.15)",
+                    : "2px rgba(16,35,63,.15)",
                 }}
               >
                 SKILLS
@@ -806,7 +806,7 @@ export default function CertificatesPreview() {
                 fontSize: ".62rem",
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(220,230,255,.25)" : "rgba(10,18,48,.3)",
+                color: isDark ? "rgba(210,222,235,.25)" : "rgba(16,35,63,.3)",
               }}
             >
               <div className="cp-scroll-arrow" />
@@ -914,7 +914,7 @@ export default function CertificatesPreview() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(to top, rgba(4,8,28,.75) 0%, transparent 55%)",
+                    "linear-gradient(to top, rgba(10,20,32,.75) 0%, transparent 55%)",
                 }}
               />
               <div
@@ -922,7 +922,7 @@ export default function CertificatesPreview() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(to right, rgba(4,8,28,.1) 0%, transparent 40%)",
+                    "linear-gradient(to right, rgba(10,20,32,.1) 0%, transparent 40%)",
                 }}
               />
 
@@ -932,9 +932,7 @@ export default function CertificatesPreview() {
                   position: "absolute",
                   bottom: 14,
                   right: 16,
-                  background: "rgba(4,8,28,.82)",
-                  backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)",
+                  background: "#0a1420",
                   borderRadius: 9,
                   padding: "6px 12px",
                   display: "flex",
@@ -944,7 +942,7 @@ export default function CertificatesPreview() {
                 }}
               >
                 <span
-                  style={{ fontSize: ".65rem", color: "rgba(220,230,255,.55)" }}
+                  style={{ fontSize: ".65rem", color: "rgba(210,222,235,.55)" }}
                 >
                   Issued by
                 </span>
@@ -1179,7 +1177,7 @@ export default function CertificatesPreview() {
                     <Award
                       size={16}
                       color={
-                        i === activeIndex ? "var(--ac)" : "rgba(220,230,255,.35)"
+                        i === activeIndex ? "var(--ac)" : "rgba(210,222,235,.35)"
                       }
                     />
                   </div>
@@ -1194,7 +1192,7 @@ export default function CertificatesPreview() {
                         color:
                           i === activeIndex
                             ? textPrimary
-                            : "rgba(220,230,255,.65)",
+                            : "rgba(210,222,235,.65)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",

@@ -256,10 +256,10 @@ export default function ProjectPreview() {
 
   const currentProject = projects[activeIndex];
 
-  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
-  const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
+  const textPrimary = isDark ? "#e7edf5" : "#10233f";
+  const textMuted = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
   const borderColor = "rgba(var(--ac2),.18)";
-  const cardBg = isDark ? "rgba(4,8,28,.96)" : "rgba(240,244,255,.96)";
+  const cardBg = isDark ? "rgba(10,20,32,.96)" : "rgba(232,236,241,.96)";
 
   /* ══════════════════════════════════════════
      MOBILE LAYOUT
@@ -297,20 +297,21 @@ export default function ProjectPreview() {
           .pp-mob-cta {
             display:inline-flex; align-items:center; gap:7px;
             padding:10px 22px;
-            background:linear-gradient(135deg,var(--ac-deep),var(--ac));
+            background:var(--ac-deep);
             border:none; border-radius:100px; cursor:pointer;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
-            font-weight:500; color:white;
-            box-shadow:0 0 24px rgba(var(--ac-glow),.35);
+            font-weight:500; color:${isDark ? "#10233f" : "white"};
             text-decoration:none;
+            transition:background .2s;
           }
+          .pp-mob-cta:hover { background:var(--ac); }
           .pp-mob-ghost {
             display:inline-flex; align-items:center; gap:7px;
             padding:10px 22px;
             background:rgba(var(--ac2),.06);
             border:1px solid rgba(var(--ac2),.22); border-radius:100px;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
-            font-weight:500; color:rgba(220,230,255,.72);
+            font-weight:500; color:rgba(210,222,235,.72);
             text-decoration:none;
           }
         `}</style>
@@ -365,39 +366,6 @@ export default function ProjectPreview() {
             />
           ))}
 
-          {/* Section label */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 8,
-              opacity: entered ? 1 : 0,
-              transform: entered ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity .6s ease, transform .6s ease",
-            }}
-          >
-            <div
-              style={{
-                width: 28,
-                height: 1,
-                background: "linear-gradient(90deg,var(--ac),transparent)",
-              }}
-            />
-            <span
-              style={{
-                fontSize: ".65rem",
-                letterSpacing: ".2em",
-                textTransform: "uppercase",
-                color: "rgba(var(--ac1),.7)",
-                fontFamily: "Syne,sans-serif",
-                fontWeight: 700,
-              }}
-            >
-              Featured Projects
-            </span>
-          </div>
-
           {/* Title */}
           <div
             style={{
@@ -419,7 +387,7 @@ export default function ProjectPreview() {
                 color: "transparent",
                 WebkitTextStroke: isDark
                   ? "1.5px rgba(255,255,255,.15)"
-                  : "1.5px rgba(10,18,48,.15)",
+                  : "1.5px rgba(16,35,63,.15)",
               }}
             >
               WORKS
@@ -515,7 +483,7 @@ export default function ProjectPreview() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(to top, rgba(4,8,28,.85) 0%, transparent 60%)",
+                    "linear-gradient(to top, rgba(10,20,32,.85) 0%, transparent 60%)",
                 }}
               />
 
@@ -660,13 +628,12 @@ export default function ProjectPreview() {
                 alignItems: "center",
                 gap: 8,
                 padding: "12px 28px",
-                background: "linear-gradient(135deg,var(--ac-deep),var(--ac))",
+                background: "var(--ac-deep)",
                 borderRadius: 100,
                 fontSize: ".83rem",
                 fontWeight: 500,
-                color: "white",
+                color: isDark ? "#10233f" : "white",
                 textDecoration: "none",
-                boxShadow: "0 0 28px rgba(var(--ac-glow),.35)",
               }}
             >
               View All Projects <ArrowRight size={14} />
@@ -729,16 +696,15 @@ export default function ProjectPreview() {
         .pp-cta {
           display:inline-flex; align-items:center; gap:7px;
           padding:11px 26px;
-          background:linear-gradient(135deg,var(--ac-deep),var(--ac));
+          background:var(--ac-deep);
           border:none; border-radius:100px; cursor:pointer;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
-          font-weight:500; color:white;
-          box-shadow:0 0 28px rgba(var(--ac-glow),.4);
+          font-weight:500; color:${isDark ? "#10233f" : "white"};
           text-decoration:none;
-          transition:transform .22s, box-shadow .22s;
+          transition:transform .22s, background .22s;
           white-space:nowrap;
         }
-        .pp-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(var(--ac-glow),.65); }
+        .pp-cta:hover { transform:translateY(-2px); background:var(--ac); }
 
         .pp-ghost {
           display:inline-flex; align-items:center; gap:7px;
@@ -746,7 +712,7 @@ export default function ProjectPreview() {
           background:rgba(var(--ac2),.06);
           border:1px solid rgba(var(--ac2),.22); border-radius:100px;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
-          font-weight:500; color:rgba(220,230,255,.72);
+          font-weight:500; color:rgba(210,222,235,.72);
           text-decoration:none;
           transition:transform .22s, border-color .22s;
           white-space:nowrap;
@@ -802,16 +768,6 @@ export default function ProjectPreview() {
           will-change:transform,opacity;
           transform-origin:center center;
         }
-        .pp-intro-label {
-          display:flex; align-items:center; justify-content:center; gap:12px;
-          font-family:Syne,sans-serif; font-weight:700;
-          font-size:.72rem; letter-spacing:.3em; text-transform:uppercase;
-          color:rgba(var(--ac1),.72); margin-bottom:20px;
-        }
-        .pp-intro-dash {
-          width:46px; height:1px;
-          background:linear-gradient(90deg,transparent,var(--ac),transparent);
-        }
         .pp-intro-title {
           font-family:Syne,sans-serif; font-weight:800;
           font-size:clamp(3.5rem,11vw,9rem); line-height:.84;
@@ -830,7 +786,7 @@ export default function ProjectPreview() {
           position: "relative",
           width: "100%",
           // track tinggi → ruang scroll buat scrub. Sticky inner yang "nge-pin".
-          height: reduced ? "auto" : "240vh",
+          height: reduced ? "auto" : "150vh",
           fontFamily: "'DM Sans',sans-serif",
         }}
         onMouseEnter={() => setHovered(true)}
@@ -895,10 +851,6 @@ export default function ProjectPreview() {
         {/* ── INTRO OVERLAY (scroll-morph) ── */}
         <div className="pp-intro" aria-hidden="true">
           <div ref={introRef} className="pp-intro-inner">
-            <div className="pp-intro-label">
-              <span className="pp-intro-dash" />
-              Featured Projects
-            </div>
             <div className="pp-intro-title">
               <div className="pp-mask">
                 <div ref={line1Ref} style={{ color: textPrimary }}>
@@ -912,7 +864,7 @@ export default function ProjectPreview() {
                     color: "transparent",
                     WebkitTextStroke: isDark
                       ? "2px rgba(255,255,255,.18)"
-                      : "2px rgba(10,18,48,.18)",
+                      : "2px rgba(16,35,63,.18)",
                   }}
                 >
                   WORKS
@@ -935,36 +887,6 @@ export default function ProjectPreview() {
           }}
         >
           <div>
-            {/* Label */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 10,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 1,
-                  background: "linear-gradient(90deg,var(--ac),transparent)",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: ".65rem",
-                  letterSpacing: ".22em",
-                  textTransform: "uppercase",
-                  color: "rgba(var(--ac1),.7)",
-                  fontFamily: "Syne,sans-serif",
-                  fontWeight: 700,
-                }}
-              >
-                Featured Projects
-              </span>
-            </div>
-
             {/* Big title */}
             <div
               style={{
@@ -982,7 +904,7 @@ export default function ProjectPreview() {
                   color: "transparent",
                   WebkitTextStroke: isDark
                     ? "2px rgba(255,255,255,.15)"
-                    : "2px rgba(10,18,48,.15)",
+                    : "2px rgba(16,35,63,.15)",
                 }}
               >
                 WORKS
@@ -1090,7 +1012,7 @@ export default function ProjectPreview() {
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to top, rgba(4,8,28,.85) 0%, rgba(4,8,28,.1) 60%, transparent 100%)",
+                  "linear-gradient(to top, rgba(10,20,32,.85) 0%, rgba(10,20,32,.1) 60%, transparent 100%)",
               }}
             />
             <div
@@ -1098,7 +1020,7 @@ export default function ProjectPreview() {
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to right, rgba(4,8,28,.15) 0%, transparent 40%)",
+                  "linear-gradient(to right, rgba(10,20,32,.15) 0%, transparent 40%)",
               }}
             />
 
@@ -1158,7 +1080,7 @@ export default function ProjectPreview() {
                   fontSize: "clamp(1.4rem,2.5vw,2.2rem)",
                   fontWeight: 800,
                   letterSpacing: "-0.03em",
-                  color: "#f0f4ff",
+                  color: "#e7edf5",
                   marginBottom: 10,
                 }}
               >
@@ -1338,7 +1260,7 @@ export default function ProjectPreview() {
                         color: "var(--ac)",
                       }}
                     >
-                      {descOpen ? "Tutup ↑" : "Baca selengkapnya →"}
+                      {descOpen ? "Close ↑" : "Read more →"}
                     </button>
                   )}
 
@@ -1470,7 +1392,7 @@ export default function ProjectPreview() {
                 fontSize: ".62rem",
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(220,230,255,.25)" : "rgba(10,18,48,.3)",
+                color: isDark ? "rgba(210,222,235,.25)" : "rgba(16,35,63,.3)",
               }}
             >
               <div className="pp-scroll-arrow" />

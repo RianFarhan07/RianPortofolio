@@ -32,14 +32,14 @@ export default function Contact() {
     prevPTD.current = pageTransitionDone;
   }, [introExited, pageTransitionDone]);
 
-  const txt = isDark ? "#f0f4ff" : "#0a1230";
-  const muted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.45)";
-  const muted2 = isDark ? "rgba(220,230,255,0.28)" : "rgba(10,18,48,0.32)";
-  const cardBg = isDark ? "rgba(4,8,28,0.96)" : "rgba(240,244,255,0.96)";
+  const txt = isDark ? "#e7edf5" : "#10233f";
+  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
+  const muted2 = isDark ? "rgba(210,222,235,0.28)" : "rgba(16,35,63,0.32)";
+  const cardBg = isDark ? "rgba(10,20,32,0.96)" : "rgba(232,236,241,0.96)";
   const cardBorder = `rgba(${AR2}, 0.18)`;
   const chipBg = `rgba(${AR}, 0.06)`;
   const chipBorder = `rgba(${AR}, 0.2)`;
-  const inputBg = isDark ? "rgba(4,8,28,0.7)" : "rgba(255,255,255,0.7)";
+  const inputBg = isDark ? "rgba(10,20,32,0.7)" : "rgba(255,255,255,0.7)";
 
   const contactInfo = [
     { icon: <Phone size={18} />, title: "Phone", value: "+62 822 8037 2670", link: "https://wa.me/6282280372670" },
@@ -130,7 +130,7 @@ export default function Contact() {
           </motion.div>
           <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(3rem, 6vw, 6.5rem)", lineHeight: 0.92, letterSpacing: "-0.04em", textTransform: "uppercase", margin: 0, color: txt }}>
             <motion.span className="block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}>Let's</motion.span>
-            <motion.span className="block" style={{ color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(10,18,48,0.15)", WebkitTextFillColor: "transparent" }}
+            <motion.span className="block" style={{ color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(16,35,63,0.15)", WebkitTextFillColor: "transparent" }}
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}>Connect</motion.span>
           </h1>
         </div>
@@ -217,7 +217,7 @@ export default function Contact() {
 
                 <button type="submit" disabled={formStatus === "submitting"}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all duration-200"
-                  style={{ background: `linear-gradient(135deg, ${AD}, ${A})`, color: "#fff", fontFamily: "'DM Sans', sans-serif", boxShadow: `0 0 20px rgba(${AR}, 0.35)`, opacity: formStatus === "submitting" ? 0.7 : 1 }}>
+                  style={{ background: `linear-gradient(135deg, ${AD}, ${A})`, color: isDark ? "#10233f" : "#fff", fontFamily: "'DM Sans', sans-serif", boxShadow: `0 0 20px rgba(${AR}, 0.35)`, opacity: formStatus === "submitting" ? 0.7 : 1 }}>
                   {formStatus === "submitting" ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : <><Send size={16} /> Send Message</>}
                 </button>
               </form>

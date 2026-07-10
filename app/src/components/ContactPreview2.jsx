@@ -183,7 +183,7 @@ export default function ContactPreview() {
     {
       icon: <MapPin size={16} />,
       label: "Location",
-      value: "Sulawesi Selatan, ID",
+      value: "Makassar, ID",
       href: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z",
       external: true,
     },
@@ -214,17 +214,11 @@ export default function ContactPreview() {
     },
   ];
 
-  const stats = [
-    { label: "Projects Done", value: "50+", pct: 85 },
-    { label: "Response Rate", value: "~24h", pct: 92 },
-    { label: "Client Satisfaction", value: "99%", pct: 99 },
-  ];
-
   /* ── Shared tokens ── */
   const accent = "var(--ac)";
-  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
-  const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
-  const textFaint = isDark ? "rgba(220,230,255,.28)" : "rgba(10,18,48,.28)";
+  const textPrimary = isDark ? "#e7edf5" : "#10233f";
+  const textMuted = isDark ? "rgba(210,222,235,.62)" : "rgba(16,35,63,.6)";
+  const textFaint = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
   const borderColor = "rgba(var(--ac2),.12)";
   const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
 
@@ -234,34 +228,11 @@ export default function ContactPreview() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-        @keyframes cp-scan {
-          0%  { top: 0;    opacity: 0; }
-          5%  { opacity: 1; }
-          95% { opacity: 1; }
-          100%{ top: 100%; opacity: 0; }
-        }
-        @keyframes cp-pdot {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),.7); }
-          50%       { box-shadow: 0 0 0 5px rgba(var(--ac1),0); }
-        }
         @keyframes cp-fadein {
           from { opacity: 0; transform: translateY(24px); }
           to   { opacity: 1; transform: translateY(0); }
         }
 
-        .cp-scan {
-          position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(var(--ac2),.3), transparent);
-          animation: cp-scan 7s ease-in-out infinite;
-          pointer-events: none; z-index: 1; top: 0;
-        }
-        .cp-corner {
-          position: absolute; width: 18px; height: 18px; z-index: 2; pointer-events: none;
-        }
-        .cp-pdot {
-          width: 6px; height: 6px; border-radius: 50%; background: var(--ac);
-          flex-shrink: 0; animation: cp-pdot 2s infinite; display: inline-block;
-        }
         .cp-col-label {
           font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
           color: var(--ac); display: flex; align-items: center; gap: 8px;
@@ -300,7 +271,7 @@ export default function ContactPreview() {
         }
         .cp-social-btn:hover { border-color: var(--ac); color: var(--ac); }
         .cp-social-btn-light {
-          border-color: rgba(10,18,48,.15); color: rgba(10,18,48,.35);
+          border-color: rgba(16,35,63,.15); color: rgba(16,35,63,.35);
         }
         .cp-social-btn-light:hover { border-color: var(--ac); color: var(--ac); }
         .cp-stat-bar-bg {
@@ -308,7 +279,7 @@ export default function ContactPreview() {
           background: rgba(255,255,255,.08); margin-top: 5px;
         }
         .cp-stat-bar-bg-light {
-          background: rgba(10,18,48,.08);
+          background: rgba(16,35,63,.08);
         }
         .cp-stat-bar-fill {
           height: 2px; border-radius: 2px;
@@ -317,16 +288,15 @@ export default function ContactPreview() {
         .cp-cta {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 11px 28px;
-          background: linear-gradient(135deg, var(--ac-deep), var(--ac));
+          background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: .82rem;
-          font-weight: 500; color: white; text-decoration: none;
-          box-shadow: 0 0 24px rgba(var(--ac-glow),.35);
-          transition: transform .2s, box-shadow .2s;
+          font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+          transition: transform .2s, background .2s;
         }
         .cp-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 40px rgba(var(--ac-glow),.55);
+          background: var(--ac);
         }
         .cp-animate {
           animation: cp-fadein .7s ease both;
@@ -347,93 +317,7 @@ export default function ContactPreview() {
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        {/* ── CURTAIN INTRO (desktop, non-reduced) ── */}
-        {isMobile === false && !reduced && (
-          <div
-            ref={trackRef}
-            style={{
-              position: "relative",
-              height: "170vh",
-              marginBottom: "-100vh",
-            }}
-          >
-            <div
-              style={{
-                position: "sticky",
-                top: 0,
-                height: "100vh",
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                pointerEvents: "none",
-              }}
-            >
-              <div className="cp-scan" />
-              {[
-                {
-                  top: 14,
-                  left: 14,
-                  borderTop: "1px solid rgba(var(--ac2),.35)",
-                  borderLeft: "1px solid rgba(var(--ac2),.35)",
-                },
-                {
-                  top: 14,
-                  right: 14,
-                  borderTop: "1px solid rgba(var(--ac2),.35)",
-                  borderRight: "1px solid rgba(var(--ac2),.35)",
-                },
-                {
-                  bottom: 14,
-                  left: 14,
-                  borderBottom: "1px solid rgba(var(--ac2),.35)",
-                  borderLeft: "1px solid rgba(var(--ac2),.35)",
-                },
-                {
-                  bottom: 14,
-                  right: 14,
-                  borderBottom: "1px solid rgba(var(--ac2),.35)",
-                  borderRight: "1px solid rgba(var(--ac2),.35)",
-                },
-              ].map((s, i) => (
-                <div key={i} className="cp-corner" style={s} />
-              ))}
-
-              <div ref={introRef} className="ct-intro-inner">
-                <div className="ct-intro-label">
-                  <MessageSquare size={11} /> Get in touch
-                </div>
-                <div className="ct-intro-title">
-                  <div className="ct-mask">
-                    <div ref={l1Ref} style={{ color: textPrimary }}>
-                      LET'S
-                    </div>
-                  </div>
-                  <div className="ct-mask">
-                    <div ref={l2Ref} style={{ color: textPrimary }}>
-                      BUILD
-                    </div>
-                  </div>
-                  <div className="ct-mask">
-                    <div
-                      ref={l3Ref}
-                      style={{
-                        color: "transparent",
-                        WebkitTextStroke: isDark
-                          ? "2px rgba(255,255,255,.18)"
-                          : "2px rgba(10,18,48,.18)",
-                      }}
-                    >
-                      TOGETHER
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── CONTENT (flow normal, scrollable) ── */}
+        {/* ── CONTENT (flows in normally — no scroll-jack) ── */}
         <div
           ref={contentRef}
           style={{
@@ -442,57 +326,18 @@ export default function ContactPreview() {
             padding: "72px clamp(24px, 5vw, 80px)",
           }}
         >
-          {/* Scan line */}
-          <div className="cp-scan" />
-
-          {/* Corner marks */}
-          {[
-            {
-              top: 14,
-              left: 14,
-              borderTop: "1px solid rgba(var(--ac2),.35)",
-              borderLeft: "1px solid rgba(var(--ac2),.35)",
-            },
-            {
-              top: 14,
-              right: 14,
-              borderTop: "1px solid rgba(var(--ac2),.35)",
-              borderRight: "1px solid rgba(var(--ac2),.35)",
-            },
-            {
-              bottom: 14,
-              left: 14,
-              borderBottom: "1px solid rgba(var(--ac2),.35)",
-              borderLeft: "1px solid rgba(var(--ac2),.35)",
-            },
-            {
-              bottom: 14,
-              right: 14,
-              borderBottom: "1px solid rgba(var(--ac2),.35)",
-              borderRight: "1px solid rgba(var(--ac2),.35)",
-            },
-          ].map((s, i) => (
-            <div key={i} className="cp-corner" style={s} />
-          ))}
-
           <div
             style={{
               position: "relative",
               zIndex: 2,
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "1.15fr 1fr",
               gap: "clamp(28px, 5vw, 64px)",
               alignItems: "start",
             }}
           >
             {/* ══ LEFT COLUMN ══ */}
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-              {/* Section label */}
-              <div className="cp-col-label">
-                <MessageSquare size={11} />
-                Get in touch
-              </div>
-
               {/* Big title */}
               <div
                 style={{
@@ -517,7 +362,7 @@ export default function ContactPreview() {
                     color: "transparent",
                     WebkitTextStroke: isDark
                       ? "2px rgba(255,255,255,.15)"
-                      : "2px rgba(10,18,48,.15)",
+                      : "2px rgba(16,35,63,.15)",
                   }}
                 >
                   TOGETHER
@@ -537,28 +382,6 @@ export default function ContactPreview() {
                 Open to freelance projects, collaborations, and new
                 opportunities. Drop a message — I'll get back to you.
               </p>
-
-              {/* Available badge */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "rgba(var(--ac2),.07)",
-                  border: "1px solid rgba(var(--ac2),.2)",
-                  borderRadius: 100,
-                  padding: "6px 14px",
-                  fontSize: ".68rem",
-                  letterSpacing: ".1em",
-                  textTransform: "uppercase",
-                  color: accent,
-                  width: "fit-content",
-                  marginBottom: 28,
-                }}
-              >
-                <span className="cp-pdot" />
-                Available Now · Freelance
-              </div>
 
               {/* Contact cards grid */}
               <div
@@ -716,62 +539,9 @@ export default function ContactPreview() {
                       margin: 0,
                     }}
                   >
-                    Login dengan GitHub untuk berkomentar. Jangan lupa kasih
-                    reaksi ❤️ atau ⭐ dan star repo-nya ya! 🙌
+                    Sign in with GitHub to comment. Drop a reaction ❤️ or ⭐
+                    and star the repo if you find it useful.
                   </p>
-                </div>
-              </div>
-
-              {/* Quick stats block */}
-              <div
-                style={{
-                  border: `1px solid ${borderColor}`,
-                  borderRadius: 9,
-                  background: cardBg,
-                  padding: "18px 22px",
-                }}
-              >
-                <div className="cp-col-label">
-                  <BarChart2 size={11} />
-                  Quick stats
-                </div>
-
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 13 }}
-                >
-                  {stats.map(({ label, value, pct }) => (
-                    <div key={label}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "baseline",
-                        }}
-                      >
-                        <span style={{ fontSize: ".78rem", color: textMuted }}>
-                          {label}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: "Syne, sans-serif",
-                            fontWeight: 700,
-                            fontSize: ".82rem",
-                            color: accent,
-                          }}
-                        >
-                          {value}
-                        </span>
-                      </div>
-                      <div
-                        className={`cp-stat-bar-bg${!isDark ? " cp-stat-bar-bg-light" : ""}`}
-                      >
-                        <div
-                          className="cp-stat-bar-fill"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
 
@@ -789,7 +559,7 @@ export default function ContactPreview() {
                     letterSpacing: ".08em",
                   }}
                 >
-                  or use the form above
+                  or leave a comment above
                 </span>
               </div>
             </div>

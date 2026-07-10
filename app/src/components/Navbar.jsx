@@ -50,19 +50,17 @@ export default function Navbar() {
             maxWidth: isScrolled ? 760 : 1200,
             backgroundColor: isScrolled
               ? isDark
-                ? "rgba(17,24,39,0.9)"
-                : "rgba(255,255,255,0.9)"
+                ? "#111d2c"
+                : "#f7f9fb"
               : "transparent",
-            backdropFilter: isScrolled ? "blur(10px)" : "none",
-            WebkitBackdropFilter: isScrolled ? "blur(10px)" : "none",
             boxShadow: isScrolled ? "0 10px 30px -12px rgba(0,0,0,0.35)" : "none",
             transition:
-              "max-width .45s cubic-bezier(.4,0,.2,1), background-color .35s ease, box-shadow .35s ease, backdrop-filter .35s ease",
+              "max-width .45s cubic-bezier(.4,0,.2,1), background-color .35s ease, box-shadow .35s ease",
             willChange: "max-width",
           }}
         >
           <Link to="/" className="text-xl font-bold">
-            <span className="text-2xl font-bold bg-gradient-to-r from-[var(--ac)] to-[var(--ac-deep)] bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-[var(--ac)]">
               Rian.dev
             </span>
           </Link>
@@ -108,11 +106,11 @@ export default function Navbar() {
       {/* Mobile  */}
       <nav
         className={`md:hidden fixed bottom-0 left-0 right-0 z-40 ${
-          isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"
+          isDark ? "bg-[#111d2c] border-gray-800" : "bg-[#f7f9fb] border-gray-200"
         } border-t shadow-lg border-0`}
         style={{
           borderTopWidth: "1px",
-          borderTopColor: isDark ? "#374151" : "#e5e7eb",
+          borderTopColor: isDark ? "rgba(184,134,11,0.25)" : "rgba(125,84,16,0.18)",
           borderLeft: 0,
           borderRight: 0,
           borderBottom: 0,

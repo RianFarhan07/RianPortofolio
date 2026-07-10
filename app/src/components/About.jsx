@@ -16,10 +16,10 @@ const EDUCATION = [
   { degree: "B.Sc Informatics", org: "Universitas Negeri Makassar", period: "2020 → 24", desc: "Computer science, software development & IT fundamentals." },
   { degree: "Fullstack JS Bootcamp", org: "Hacktiv8", period: "2024 → 25", desc: "React, Node.js, Express, MongoDB — intensive fullstack track." },
 ];
-const SKILLS = [
-  { name: "React / Next.js", pct: 90 }, { name: "TypeScript", pct: 85 },
-  { name: "React Native", pct: 80 }, { name: "Node / API", pct: 85 },
-  { name: "Kotlin / Flutter", pct: 75 }, { name: "PHP", pct: 75 },
+const SKILL_GROUPS = [
+  { cat: "Frontend", items: ["React / Next.js", "TypeScript", "HTML / CSS"] },
+  { cat: "Mobile", items: ["React Native", "Kotlin", "Flutter"] },
+  { cat: "Backend & Design", items: ["Node / API", "PHP", "Figma / UI"] },
 ];
 const STACK = ["React", "Next.js", "React Native", "Flutter", "TypeScript", "JavaScript", "Kotlin", "PHP", "Node.js", "Express", "MongoDB", "PostgreSQL", "Tailwind", "Figma", "Apps Script", "Git"];
 const SOCIALS = { github: "https://github.com", linkedin: "https://linkedin.com", mail: "mailto:rian.mallanti@gmail.com" };
@@ -32,7 +32,6 @@ export default function About() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
   const [view, setView] = useState("terminal"); // 'terminal' | 'page'
-  const [barsIn, setBarsIn] = useState(false);
 
   const { introExited, pageTransitionDone } = useContext(IntroContext);
   const [visible, setVisible] = useState(false);
@@ -49,13 +48,6 @@ export default function About() {
   const toggleThemeRef = useRef(toggleTheme);
   setViewRef.current = setView;
   toggleThemeRef.current = toggleTheme;
-
-  /* page-view skill bars reveal */
-  useEffect(() => {
-    if (view !== "page") { setBarsIn(false); return; }
-    const t = setTimeout(() => setBarsIn(true), 140);
-    return () => clearTimeout(t);
-  }, [view]);
 
   /* ── terminal engine ── */
   useEffect(() => {
@@ -76,15 +68,15 @@ export default function About() {
     const neofetch = '<div class="nf"><div class="nf-ava">RF</div><div class="nf-info">'
       + '<div><span class="k">host</span> rian@portfolio</div><div><span class="k">role</span> Full Stack Developer</div>'
       + '<div><span class="k">company</span> Carbonethics</div><div><span class="k">location</span> Makassar, ID</div>'
-      + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 50+</div>'
+      + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 20+</div>'
       + '<div><span class="k">status</span> <span class="ok">● open_to_work</span></div></div></div>';
     const bio = '<span class="muted">"""</span> Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences. <span class="muted">"""</span>';
     const exp = EXPERIENCES.map((e) => `<div class="rec"><span class="ok">▸ ${e.period}</span>  ${e.role} · <span class="hl">${e.org}</span><div class="sub">${e.desc}</div></div>`).join("");
     const edu = EDUCATION.map((e) => `<div class="rec"><span class="ok">🎓 ${e.period}</span>  ${e.degree} · <span class="hl">${e.org}</span></div>`).join("");
-    const bar = (l, n) => `<div class="sk"><span class="lbl">${l}</span><span class="bar"><i data-w="${n}"></i></span><span class="pc">${n}</span></div>`;
-    const skills = '<div class="skcat"># frontend</div>' + bar("react / next", 90) + bar("typescript", 85) + bar("html / css", 95)
-      + '<div class="skcat"># mobile</div>' + bar("react native", 80) + bar("kotlin", 75) + bar("flutter", 70)
-      + '<div class="skcat"># backend &amp; design</div>' + bar("node / api", 85) + bar("php", 75) + bar("figma / ui", 85);
+    const chipRow = (items) => '<div class="chips">' + items.map((t) => `<span class="chip"><span class="k">▸</span> ${t}</span>`).join("") + "</div>";
+    const skills = '<div class="skcat"># frontend</div>' + chipRow(["react / next", "typescript", "html / css"])
+      + '<div class="skcat"># mobile</div>' + chipRow(["react native", "kotlin", "flutter"])
+      + '<div class="skcat"># backend &amp; design</div>' + chipRow(["node / api", "php", "figma / ui"]);
     const stack = '<div class="chips">' + STACK.map((t) => `<span class="chip"><span class="k">▸</span> ${t}</span>`).join("") + "</div>";
     const projects = '<div class="rec"><span class="ok">▸</span> Portfolio — React + Vite <span class="muted">(this site)</span></div>'
       + '<div class="rec"><span class="ok">▸</span> Carbonethics Platform — Fullstack web</div>'
@@ -221,12 +213,12 @@ export default function About() {
 
   /* ── PAGE VIEW (readable, mirip hero) ── */
   if (view === "page") {
-    const soft = isDark ? "rgba(220,230,255,.7)" : "rgba(10,18,48,.7)";
-    const muted = isDark ? "rgba(220,230,255,.5)" : "rgba(10,18,48,.5)";
-    const txt = isDark ? "#eaf1fb" : "#0a1230";
+    const soft = isDark ? "rgba(210,222,235,.7)" : "rgba(16,35,63,.7)";
+    const muted = isDark ? "rgba(210,222,235,.5)" : "rgba(16,35,63,.5)";
+    const txt = isDark ? "#eaf1fb" : "#10233f";
     const card = isDark ? "rgba(255,255,255,.03)" : "rgba(255,255,255,.55)";
     const line = isDark ? "rgba(120,160,220,.14)" : "rgba(16,120,100,.16)";
-    const strk = isDark ? "rgba(255,255,255,.16)" : "rgba(10,18,48,.16)";
+    const strk = isDark ? "rgba(255,255,255,.16)" : "rgba(16,35,63,.16)";
     return (
       <div className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,4vw,40px) 60px", maxWidth: 1160, margin: "0 auto", opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
         <style>{bpCss}</style>
@@ -255,7 +247,7 @@ export default function About() {
 
         {/* STATS */}
         <div className="bp-stats" style={{ borderColor: line }}>
-          {[["50", "+", "Projects Done"], ["4", "+", "Years Exp"], ["99", "%", "Satisfaction"]].map(([n, s, l]) => (
+          {[["20", "+", "Projects Done"], ["4", "+", "Years Exp"], ["2", "", "Web + Mobile"]].map(([n, s, l]) => (
             <div className="bp-stat" key={l}><div className="n" style={{ color: txt }}>{n}<em>{s}</em></div><div className="l" style={{ color: muted }}>{l}</div></div>
           ))}
         </div>
@@ -289,15 +281,11 @@ export default function About() {
         {/* SKILLS */}
         <section className="bp-s" style={{ borderColor: line }}>
           <div className="bp-label"><span className="no" style={{ color: strk }}>03</span> Skills</div>
-          <div className="bp-grid2">
-            {[SKILLS.slice(0, 3), SKILLS.slice(3)].map((col, ci) => (
-              <div key={ci}>
-                {col.map((s) => (
-                  <div className="bp-skill" key={s.name}>
-                    <div className="top"><span style={{ color: soft }}>{s.name}</span><span className="pc">{s.pct}%</span></div>
-                    <div className="track" style={{ background: line }}><i style={{ width: barsIn ? `${s.pct}%` : "0%" }} /></div>
-                  </div>
-                ))}
+          <div className="bp-skillgroups">
+            {SKILL_GROUPS.map((g) => (
+              <div key={g.cat}>
+                <div className="bp-skillcat">{g.cat}</div>
+                <div className="bp-chips">{g.items.map((t) => <span className="bp-chip" key={t} style={{ background: card }}>{t}</span>)}</div>
               </div>
             ))}
           </div>
@@ -381,19 +369,15 @@ const btCss = `
 .bt .bt-input::placeholder{color:var(--muted);opacity:.75}
 .bt .help div{line-height:1.6}.bt .help .cn{color:var(--ac);min-width:104px;display:inline-block}
 .bt .nf{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-.bt .nf-ava{width:84px;height:84px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;letter-spacing:1px;color:#04121a;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 50%,var(--ok)));box-shadow:0 0 26px rgba(var(--ac2),.4)}
+.bt .nf-ava{width:84px;height:84px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;letter-spacing:1px;color:#04121a;background:var(--ac)}
 .bt .nf-info>div{display:flex;gap:10px}.bt .nf-info .k{color:var(--ac);min-width:78px;display:inline-block}
 .bt .rec{margin-bottom:11px}.bt .rec .sub{color:var(--muted);font-size:12px;padding-left:16px;line-height:1.5}
 .bt .skcat{color:var(--mag);margin:10px 0 5px;font-size:12px}
-.bt .sk{display:grid;grid-template-columns:130px 1fr 36px;align-items:center;gap:12px;margin:5px 0 5px 14px;font-size:12.5px}
-.bt .sk .lbl{color:var(--hl)}.bt .sk .bar{height:7px;border-radius:6px;background:var(--line);overflow:hidden}
-.bt .sk .bar>i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--ac),var(--ok));width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
-.bt .sk .pc{color:var(--ac);text-align:right;font-variant-numeric:tabular-nums}
 .bt .chips{display:flex;flex-wrap:wrap;gap:7px}
 .bt .chip{font-size:11.5px;color:var(--txt);background:rgba(var(--ac2),.08);border:1px solid rgba(var(--ac2),.25);border-radius:7px;padding:5px 10px}.bt .chip .k{color:var(--ac)}
 .bt .cta{display:flex;flex-wrap:wrap;gap:9px;margin:6px 0 12px}
 .bt .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-size:12.5px;text-decoration:none;cursor:pointer}
-.bt .btn.primary{background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 55%,var(--ok)));color:#04121a;font-weight:600}
+.bt .btn.primary{background:var(--ac);color:#04121a;font-weight:600}
 .bt .btn.ghost{background:transparent;border:1px solid rgba(var(--ac2),.35);color:var(--txt)}
 .bt .cta-line{font-size:13px}
 .bt .cf-box{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:7}
@@ -414,11 +398,12 @@ const bpCss = `
 .bp-title{font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-.03em;line-height:.9;margin:0;font-size:clamp(3rem,8vw,6rem)}
 .bp-title .l1{display:block}.bp-title .l2{display:block;color:transparent}
 .bp-role{font-family:ui-monospace,Menlo,monospace;font-size:clamp(1rem,2vw,1.25rem);margin:16px 0 0}
-.bp-badge{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:7px 15px;border-radius:100px;font-size:13px;background:rgba(var(--ac1),.1);border:1px solid rgba(var(--ac1),.32);color:var(--ac)}
+.bp-badge{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:13px;color:var(--ac)}
 .bp-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);animation:bp-pulse 2s infinite}
 .bp-lead{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.7;max-width:52ch;margin:20px 0 0}
 .bp-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
-.bp-cv{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-weight:500;font-size:.9rem;color:#04121a;background:linear-gradient(135deg,var(--ac-deep,#0066ff),var(--ac));box-shadow:0 0 30px rgba(var(--ac1),.4);text-decoration:none;border:none;cursor:pointer}
+.bp-cv{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-weight:500;font-size:.9rem;color:#04121a;background:var(--ac);text-decoration:none;border:none;cursor:pointer;transition:transform .2s}
+.bp-cv:hover{transform:translateY(-2px)}
 .bp-soc{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(var(--ac1),.06);border:1px solid rgba(var(--ac1),.2);color:inherit;text-decoration:none}
 .bp-soc:hover{border-color:var(--ac);color:var(--ac)}
 .bp-photo{justify-self:center}
@@ -433,16 +418,13 @@ const bpCss = `
 .bp-label .no{font-family:'Syne',sans-serif;font-weight:800;font-size:22px}
 .bp-grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,40px)}
 @media (max-width:820px){.bp-grid2{grid-template-columns:1fr;gap:26px}}
-.bp-card{border:1px solid;border-radius:14px;padding:16px 18px;backdrop-filter:blur(8px)}
+.bp-card{border:1px solid;border-radius:14px;padding:16px 18px}
 .bp-card+.bp-card{margin-top:14px}
 .bp-card .h{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}.bp-card .h .ac{color:var(--ac)}
 .bp-card .meta{font-family:ui-monospace,Menlo,monospace;font-size:12px;margin:4px 0 8px}
 .bp-card .d{font-size:.86rem;line-height:1.6}
-.bp-skill{margin:0 0 14px}
-.bp-skill .top{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:7px}
-.bp-skill .top .pc{font-family:'Syne',sans-serif;font-weight:700;color:var(--ac)}
-.bp-skill .track{height:8px;border-radius:5px;overflow:hidden}
-.bp-skill .track>i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--ac-deep,#0066ff),var(--ac));transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.bp-skillgroups{display:flex;flex-direction:column;gap:20px}
+.bp-skillcat{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin:0 0 10px}
 .bp-chips{display:flex;flex-wrap:wrap;gap:9px}
 .bp-chip{font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:8px 14px;border-radius:9px;color:var(--ac);border:1px solid rgba(var(--ac1),.28)}
 .bp-cta{text-align:center;max-width:680px;margin:0 auto}

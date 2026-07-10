@@ -5,64 +5,54 @@
 /* In your main CSS file (e.g., index.css) */
 :root {
   /* Light theme variables */
-  --bg-light: #f5f5f5;
-  --text-light: #333333;
-  --accent-light: #5f6fff;
+  --bg-light: #f2f4f7;
+  --text-light: #10233f;
+  --accent-light: #9c6a12;
 
   /* Dark theme variables */
-  --bg-dark: #222831;
-  --text-dark: #eeeeee;
-  --accent-dark: #00adb5;
+  --bg-dark: #0d1520;
+  --text-dark: #e7edf5;
+  --accent-dark: #e0a83a;
 
-  /* Accent fallback (defaults to dark/teal until a theme class mounts) */
-  /* ─── DARK COLOR VARIANT: blue-400 ─── */
-  --ac: #60a5fa;
-  --ac-deep: #3b82f6;
-  --ac1: 96, 165, 250;
-  --ac2: 70, 140, 245;
-  --ac-glow: 50, 120, 220;
+  /* Accent fallback (defaults to dark/blueprint until a theme class mounts) */
+  --ac: #e0a83a;
+  --ac-deep: #b8860b;
+  --ac1: 224, 168, 58;
+  --ac2: 184, 134, 11;
+  --ac-glow: 224, 168, 58;
 }
 
 body.light-theme {
-  background-color: #ffffff;
+  background-color: #f2f4f7;
   color: var(--text-light);
 
-  /* Accent (light = green / teal, from palette) */
-  --ac: #14b8a6; /* bright accent (solid)        */
-  --ac-deep: #0d9488; /* deep accent (gradient stops) */
-  --ac1: 20, 184, 166; /* bright accent as rgb triplet */
-  --ac2: 16, 185, 129; /* secondary / glow rgb         */
-  --ac-glow: 16, 185, 129;
+  /* Accent — Blueprint Schematic (ochre revision-stamp on vellum) */
+  --ac: #9c6a12; /* ochre accent (solid)        */
+  --ac-deep: #7d5410; /* deep ochre (gradient stops) */
+  --ac1: 156, 106, 18; /* ochre accent as rgb triplet */
+  --ac2: 125, 84, 16; /* secondary / border rgb      */
+  --ac-glow: 156, 106, 18;
 }
 
 body.dark-theme {
-  background-color: #0f1115;
+  background-color: #0d1520;
   color: var(--text-dark);
 
-  /* ─── DARK COLOR VARIANT — pilih salah satu ─── */
-
-  /* teal (sebelumnya) */
-  --ac: #00adb5;
-  --ac-deep: #00838a;
-  --ac1: 0, 173, 181;
-  --ac2: 0, 140, 147;
-  --ac-glow: 0, 120, 128;
-
-  /* blue-400 (sekarang) */
-  /* --ac: #60a5fa;
-  --ac-deep: #3b82f6;
-  --ac1: 96, 165, 250;
-  --ac2: 70, 140, 245;
-  --ac-glow: 50, 120, 220; */
+  /* Accent — Blueprint Schematic (brighter ochre for dark-navy contrast) */
+  --ac: #e0a83a;
+  --ac-deep: #b8860b;
+  --ac1: 224, 168, 58;
+  --ac2: 184, 134, 11;
+  --ac-glow: 224, 168, 58;
 }
 
 /* Additional theme-specific styles */
 .light-theme .special-element {
-  background: linear-gradient(to right, #5f6fff, #3b82f6);
+  background: linear-gradient(to right, #9c6a12, #7d5410);
 }
 
 .dark-theme .special-element {
-  background: linear-gradient(to right, #00adb5, #3b82f6);
+  background: linear-gradient(to right, #b8860b, #e0a83a);
 }
 
 /* Sembunyikan scrollbar tetapi tetap bisa scroll */

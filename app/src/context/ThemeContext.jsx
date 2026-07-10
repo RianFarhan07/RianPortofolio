@@ -49,7 +49,7 @@ export const ThemeProvider = ({ children }) => {
     targetScale: Math.random() * 3 + 1.5,
   }));
 
-  const transitionBg = theme === "dark" ? "#0f1115" : "#ffffff";
+  const transitionBg = theme === "dark" ? "#0d1520" : "#f2f4f7";
 
   return (
     <ThemeContext.Provider value={value}>

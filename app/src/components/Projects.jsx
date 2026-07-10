@@ -91,12 +91,12 @@ export default function Projects() {
     document.getElementById("projects")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const txt = isDark ? "#f0f4ff" : "#0a1230";
-  const muted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.45)";
-  const muted2 = isDark ? "rgba(220,230,255,0.28)" : "rgba(10,18,48,0.32)";
+  const txt = isDark ? "#e7edf5" : "#10233f";
+  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
+  const muted2 = isDark ? "rgba(210,222,235,0.28)" : "rgba(16,35,63,0.32)";
   const chipBg = `rgba(${AR}, 0.07)`;
   const chipBorder = `rgba(${AR}, 0.22)`;
-  const pageBg = isDark ? "rgba(4,8,28,0.96)" : "rgba(240,244,255,0.96)";
+  const pageBg = isDark ? "rgba(10,20,32,0.96)" : "rgba(232,236,241,0.96)";
   const pageBorder = `rgba(${AR2}, 0.18)`;
 
   return (
@@ -174,7 +174,7 @@ export default function Projects() {
             </motion.span>
             <motion.span className="block" style={{
               color: "transparent",
-              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(10,18,48,0.15)",
+              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(16,35,63,0.15)",
               WebkitTextFillColor: "transparent",
             }}
               initial={{ opacity: 0, y: 30 }}

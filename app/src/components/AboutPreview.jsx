@@ -47,8 +47,8 @@ export default function AboutPreview() {
   const cardRef = useRef(null);
   const prevMobileRef = useRef(null);
 
-  const textPrimary = isDark ? "#f0f4ff" : "#0a1230";
-  const textMuted = isDark ? "rgba(220,230,255,.45)" : "rgba(10,18,48,.45)";
+  const textPrimary = isDark ? "#e7edf5" : "#10233f";
+  const textMuted = isDark ? "rgba(210,222,235,.62)" : "rgba(16,35,63,.6)";
 
   useEffect(() => {
     const check = () => {
@@ -84,7 +84,7 @@ export default function AboutPreview() {
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: "top top",
-          end: "+=300%",
+          end: "+=120%",
           pin: true,
           anticipatePin: 1,
           scrub: 0.6,
@@ -115,26 +115,27 @@ export default function AboutPreview() {
           @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
           @keyframes ap-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}}
           .m-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:ap-pdot 2s infinite}
-          .m-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,var(--ac-deep),var(--ac));border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:white;box-shadow:0 0 24px rgba(var(--ac-glow),.4);text-decoration:none}
-          .m-cta-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:rgba(255,255,255,.05);border:1px solid rgba(var(--ac2),.22);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(220,230,255,.7);text-decoration:none}
+          .m-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--ac-deep);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:${isDark ? "#10233f" : "white"};text-decoration:none;transition:background .2s}
+          .m-cta:hover{background:var(--ac)}
+          .m-cta-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:rgba(255,255,255,.05);border:1px solid rgba(var(--ac2),.22);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(210,222,235,.7);text-decoration:none}
         `}</style>
         <section id="about" style={{ padding: "72px 24px", fontFamily: "'DM Sans',sans-serif" }}>
           <div style={{ marginBottom: 40, fontFamily: "Syne,sans-serif", fontSize: "clamp(2rem,9.5vw,3.2rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.92, textTransform: "uppercase" }}>
-            <div style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}>TURNING</div>
-            <div style={{ color: isDark ? "#f0f4ff" : "#0a1230" }}>IDEAS INTO</div>
+            <div style={{ color: isDark ? "#e7edf5" : "#10233f" }}>TURNING</div>
+            <div style={{ color: isDark ? "#e7edf5" : "#10233f" }}>IDEAS INTO</div>
             <div style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,.15)" }}>DIGITAL REALITY</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <p style={{ fontSize: "1rem", lineHeight: 1.7, color: isDark ? "rgba(220,230,255,.55)" : "rgba(10,18,48,.55)", margin: 0 }}>
-              I'm a passionate Full Stack Developer with a strong focus on creating clean, efficient code and intuitive user experiences.
+            <p style={{ fontSize: "1rem", lineHeight: 1.7, color: isDark ? "rgba(210,222,235,.62)" : "rgba(16,35,63,.6)", margin: 0 }}>
+              I build the whole product — web with React &amp; Node, mobile with Kotlin &amp; React Native — and take it all the way to production.
             </p>
-            <div style={{ display: "flex", gap: 32 }}>
-              {[{ to: 50, suf: "+", label: "Projects" }, { to: 4, suf: "+", label: "Years Exp" }, { to: 99, suf: "%", label: "Satisfaction" }].map(({ to, suf, label }) => (
-                <div key={label}>
-                  <div style={{ fontFamily: "Syne,sans-serif", fontSize: "1.8rem", fontWeight: 700, color: textPrimary }}><AnimCounter to={to} suffix={suf} /></div>
-                  <div style={{ fontSize: ".62rem", letterSpacing: ".08em", textTransform: "uppercase", color: textMuted, marginTop: 2 }}>{label}</div>
-                </div>
-              ))}
+            <div>
+              <div style={{ fontSize: ".62rem", letterSpacing: ".14em", textTransform: "uppercase", color: textMuted, marginBottom: 10 }}>Worked with</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {["Carbonethics", "Hacktiv8", "Disnaker Makassar", "UNM"].map((org) => (
+                  <span key={org} style={{ fontSize: ".72rem", padding: "5px 11px", borderRadius: 7, color: "var(--ac)", background: "rgba(var(--ac1),.1)", border: "1px solid rgba(var(--ac1),.28)" }}>{org}</span>
+                ))}
+              </div>
             </div>
             <div style={{ display: "flex", gap: 12 }}>
               <Link to="/about" className="m-cta">Read More <ArrowRight size={14} /></Link>
@@ -170,13 +171,13 @@ export default function AboutPreview() {
         }
         .b-cta {
           display:inline-flex; align-items:center; gap:7px; padding:10px 22px;
-          background:linear-gradient(135deg,var(--ac-deep),var(--ac));
+          background:var(--ac-deep);
           border:none; border-radius:100px; cursor:pointer;
           font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:500;
-          color:white; box-shadow:0 0 28px rgba(var(--ac-glow),.4);
-          text-decoration:none; transition:transform .2s,box-shadow .2s; white-space:nowrap;
+          color:${isDark ? "#10233f" : "white"};
+          text-decoration:none; transition:transform .2s,background .2s; white-space:nowrap;
         }
-        .b-cta:hover { transform:translateY(-2px); box-shadow:0 0 44px rgba(var(--ac-glow),.65); }
+        .b-cta:hover { transform:translateY(-2px); background:var(--ac); }
 
         /* ── Terminal / IDE editor ── */
         .ed-win {
@@ -237,7 +238,7 @@ export default function AboutPreview() {
         .ed-chips { display:flex; flex-wrap:wrap; gap:7px; }
         .ed-chip { font-size:11.5px; color:var(--ed-txt); background:rgba(var(--ac2),.08); border:1px solid rgba(var(--ac2),.25); border-radius:7px; padding:5px 10px; }
         .ed-chip .k { color:var(--ac); }
-        .ed-edu { display:flex; align-items:center; gap:10px; margin-top:14px; background:linear-gradient(135deg,var(--ac-deep),var(--ac)); color:#fff; border-radius:10px; padding:11px 14px; box-shadow:0 0 24px rgba(var(--ac-glow),.3); }
+        .ed-edu { display:flex; align-items:center; gap:10px; margin-top:14px; background:var(--ac-deep); color:${isDark ? "#10233f" : "#fff"}; border-radius:10px; padding:11px 14px; }
 
         .ed-footer { display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:11px 16px; border-top:1px solid var(--ed-line); background:var(--ed-chrome); }
         .ed-ident { display:flex; align-items:center; gap:10px; min-width:0; flex-wrap:wrap; }
@@ -272,7 +273,7 @@ export default function AboutPreview() {
           <div style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(3.2rem,8vw,8rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.88, textTransform: "uppercase", textAlign: "left", padding: "0 clamp(24px,5vw,80px)", maxWidth: "100%" }}>
             <div ref={line1Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: textPrimary }}>TURNING</span></div>
             <div ref={line2Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: textPrimary }}>IDEAS INTO</span></div>
-            <div ref={line3Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,.15)" : "2px rgba(10,18,48,.15)" }}>DIGITAL REALITY</span></div>
+            <div ref={line3Ref} style={{ overflow: "hidden" }}><span style={{ display: "block", color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,.15)" : "2px rgba(16,35,63,.15)" }}>DIGITAL REALITY</span></div>
           </div>
         </div>
 
@@ -284,7 +285,7 @@ export default function AboutPreview() {
           <div
             style={{
               height: "100vh",
-              background: isDark ? "#04081c" : "#eaf4ef",
+              background: isDark ? "#0a1420" : "#e8ecf1",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -301,13 +302,13 @@ export default function AboutPreview() {
               className="ed-win"
               style={{
                 "--ed-mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
-                "--ed-bg": isDark ? "#0a1322" : "#f6faf8",
-                "--ed-chrome": isDark ? "#0c1526" : "#ffffff",
-                "--ed-gutter": isDark ? "#08101e" : "#eef4f1",
-                "--ed-line": isDark ? "#16233c" : "#dde8e2",
-                "--ed-txt": isDark ? "#c4d2ea" : "#1e2a3b",
+                "--ed-bg": isDark ? "#0e1826" : "#eef1f5",
+                "--ed-chrome": isDark ? "#101d2c" : "#f7f9fb",
+                "--ed-gutter": isDark ? "#0a1420" : "#e6eaef",
+                "--ed-line": isDark ? "#1c2a3f" : "#d8dee6",
+                "--ed-txt": isDark ? "#cdd8ea" : "#17263d",
                 "--ed-muted": isDark ? "#5d6f8e" : "#7c8aa0",
-                "--ed-kw": isDark ? "var(--ac)" : "#0d9488",
+                "--ed-kw": "var(--ac)",
                 "--ed-str": isDark ? "#3ddc97" : "#0f9d6b",
                 "--ed-num": isDark ? "#ffb27a" : "#c2683a",
                 "--ed-prop": isDark ? "#9ec9ff" : "#2563a8",
@@ -345,7 +346,7 @@ export default function AboutPreview() {
                         <div>{"  "}<span className="ed-prop">born</span><span className="ed-punc">:</span> <span className="ed-str">"2002-07-07"</span><span className="ed-punc">,</span></div>
                         <div>{"  "}<span className="ed-prop">languages</span><span className="ed-punc">:</span> <span className="ed-punc">[</span><span className="ed-str">"ID"</span><span className="ed-punc">,</span> <span className="ed-str">"EN"</span><span className="ed-punc">],</span></div>
                         <div>{"  "}<span className="ed-prop">status</span><span className="ed-punc">:</span> <span className="ed-str">"open_to_work"</span><span className="ed-punc">,</span>{"   "}<span className="ed-com"><span className="ed-pulse" />// available for freelance</span></div>
-                        <div>{"  "}<span className="ed-prop">projects</span><span className="ed-punc">:</span> <span className="ed-num">50</span><span className="ed-punc">,</span> <span className="ed-prop">years</span><span className="ed-punc">:</span> <span className="ed-num">4</span><span className="ed-punc">,</span> <span className="ed-prop">satisfaction</span><span className="ed-punc">:</span> <span className="ed-num">99</span><span className="ed-punc">,</span></div>
+                        <div>{"  "}<span className="ed-prop">projects</span><span className="ed-punc">:</span> <span className="ed-num">20</span><span className="ed-punc">,</span> <span className="ed-prop">years</span><span className="ed-punc">:</span> <span className="ed-num">4</span><span className="ed-punc">,</span> <span className="ed-prop">stack</span><span className="ed-punc">:</span> <span className="ed-str">"web + mobile"</span><span className="ed-punc">,</span></div>
                         <div><span className="ed-punc">{'}'}</span></div>
                         <div>{" "}</div>
                         <div><span className="ed-com">// "It always seems impossible, until it's done." — Mandela</span></div>
@@ -353,9 +354,9 @@ export default function AboutPreview() {
                     </div>
                     <div className="ed-avail">
                       <div><span className="ed-com">// available_for</span></div>
-                      <div className="on">▸ freelance_projects <span className="b-pdot-sm" /></div>
-                      <div className="off">▸ full_time_positions</div>
-                      <div className="off">▸ contract</div>
+                      <div className="on">▸ full_time_positions <span className="b-pdot-sm" /></div>
+                      <div className="on">▸ freelance_projects</div>
+                      <div className="on">▸ contract</div>
                     </div>
                   </div>
                 )}
@@ -383,9 +384,9 @@ export default function AboutPreview() {
                   <div className="ed-file"><div className="ed-pad">
                     <p className="ed-label">journey.log</p>
                     <div className="ed-log">
-                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2023 — NOW</div><div className="ed-t">Full Stack Developer<span className="ed-cursor" /></div><div className="ed-d">Freelance &amp; open source</div></div></div>
-                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2022 — NOW</div><div className="ed-t">BE Computer Science</div><div className="ed-d">State University of Makassar — algorithms, data structures, software engineering</div></div></div>
-                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2021</div><div className="ed-t">Started coding</div><div className="ed-d">First line of code, never looked back</div></div></div>
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2024 — NOW</div><div className="ed-t">Fullstack Developer · Carbonethics<span className="ed-cursor" /></div><div className="ed-d">End-to-end web solutions for sustainability initiatives</div></div></div>
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2024 — 25</div><div className="ed-t">Fullstack JS Bootcamp · Hacktiv8</div><div className="ed-d">React, Node.js, Express, MongoDB — intensive fullstack track</div></div></div>
+                      <div className="ed-entry"><div className="ed-rail" /><div><div className="ed-yr">2020 — 24</div><div className="ed-t">B.Sc Informatics · UNM</div><div className="ed-d">Universitas Negeri Makassar — software development &amp; IT fundamentals</div></div></div>
                     </div>
                   </div></div>
                 )}
@@ -402,8 +403,8 @@ export default function AboutPreview() {
                     <div className="ed-edu">
                       <Award size={16} style={{ fill: "#fde047", color: "#fde047", flexShrink: 0 }} />
                       <div>
-                        <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".85rem", fontWeight: 700 }}>BE in Computer Science</div>
-                        <div style={{ fontSize: ".72rem", opacity: 0.85 }}>State University of Makassar · since 2021</div>
+                        <div style={{ fontFamily: "Syne,sans-serif", fontSize: ".85rem", fontWeight: 700 }}>B.Sc Informatics</div>
+                        <div style={{ fontSize: ".72rem", opacity: 0.85 }}>Universitas Negeri Makassar · 2020 – 2024</div>
                       </div>
                     </div>
                   </div></div>
@@ -427,9 +428,9 @@ export default function AboutPreview() {
               {/* Status bar */}
               <div className="ed-status">
                 <span>⎇ main</span>
-                <span>50+ projects</span>
+                <span>20+ projects</span>
                 <span>· 4+ yrs</span>
-                <span>· 99% satisfaction</span>
+                <span>· web + mobile</span>
                 <span className="sp">TSX · UTF-8</span>
               </div>
             </div>

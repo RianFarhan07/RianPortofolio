@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
-import fotoRianDark from "../assets/foto_rian_nobg2.webp";
-import fotoRianLight from "../assets/foto_rian_nobg_light.webp";
+import fotoRianDark from "../assets/foto_rian_nobg3.webp.png";
+// import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
+import fotoRianLight from "../assets/foto_rian_nobg_light2.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {
@@ -126,16 +127,15 @@ export default function Hero3() {
           .mob-cta {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 13px 32px;
-            background: linear-gradient(135deg, var(--ac-deep), var(--ac));
+            background: var(--ac-deep);
             border: none; border-radius: 100px; cursor: pointer;
             font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
-            font-weight: 500; color: white; text-decoration: none;
-            box-shadow: 0 0 28px rgba(var(--ac-glow),0.45);
-            transition: transform 0.25s, box-shadow 0.25s;
+            font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+            transition: transform 0.25s, background 0.25s;
           }
           .mob-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 45px rgba(var(--ac-glow),0.65);
+            background: var(--ac);
           }
         `}</style>
 
@@ -237,25 +237,8 @@ export default function Hero3() {
               right: 0,
               height: "45%",
               background:
-                "linear-gradient(to top, rgba(4,8,28,0.98) 0%, rgba(4,8,28,0.90) 45%, transparent 100%)",
+                "linear-gradient(to top, rgba(10,20,32,0.98) 0%, rgba(10,20,32,0.90) 45%, transparent 100%)",
               zIndex: 3,
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Bottom glow */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: -20,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "60%",
-              height: 180,
-              background:
-                "radial-gradient(ellipse, rgba(var(--ac-glow),0.3) 0%, transparent 70%)",
-              filter: "blur(18px)",
-              zIndex: 4,
               pointerEvents: "none",
             }}
           />
@@ -286,7 +269,7 @@ export default function Hero3() {
                 letterSpacing: "-0.03em",
                 lineHeight: 0.95,
                 textTransform: "uppercase",
-                color: isDark ? "rgba(240,244,255,0.9)" : "#0a1230",
+                color: isDark ? "rgba(232,236,241,0.9)" : "#10233f",
               }}
             >
               SOFTWARE
@@ -302,7 +285,7 @@ export default function Hero3() {
                 color: "transparent",
                 WebkitTextStroke: isDark
                   ? "1.5px rgba(255,255,255,0.2)"
-                  : "1.5px rgba(10,18,48,0.18)",
+                  : "1.5px rgba(16,35,63,0.18)",
               }}
             >
               ENGINEER
@@ -354,31 +337,28 @@ export default function Hero3() {
                   textTransform: "uppercase",
                   color: isDark
                     ? "rgba(255,255,255,0.75)"
-                    : "rgba(10,18,48,0.7)",
+                    : "rgba(16,35,63,0.7)",
                 }}
               >
                 BASO RIAN FARHAN MALLANTI
               </div>
             </div>
 
-            {/* Available Now badge */}
+            {/* Availability readout */}
             <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                background: "rgba(var(--ac2),0.08)",
-                border: "1px solid rgba(var(--ac2),0.22)",
-                borderRadius: 100,
-                padding: "5px 14px",
-                fontSize: "0.7rem",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: blue,
-              }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               <div className="mob-pdot" />
-              Available Now
+              <span
+                style={{
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: blue,
+                }}
+              >
+                Open to work
+              </span>
             </div>
 
             {/* Description */}
@@ -387,7 +367,7 @@ export default function Hero3() {
                 fontSize: "0.83rem",
                 lineHeight: 1.6,
                 textAlign: "center",
-                color: isDark ? "rgba(220,230,255,0.5)" : "rgba(10,18,48,0.55)",
+                color: isDark ? "rgba(210,222,235,0.62)" : "rgba(16,35,63,0.6)",
                 margin: 0,
                 maxWidth: 280,
               }}
@@ -405,9 +385,9 @@ export default function Hero3() {
               }}
             >
               {[
-                { to: 50, suf: "+", label: "Projects", delay: 1300 },
-                { to: 4, suf: "+", label: "Years Exp", delay: 1400 },
-                { to: 99, suf: "%", label: "Satisfaction", delay: 1500 },
+                { to: 20, suf: "+", label: "Projects", delay: 1300 },
+                { to: 4, suf: "+", label: "Years", delay: 1400 },
+                { to: 2, suf: "", label: "Web + Mobile", delay: 1500 },
               ].map(({ to, suf, label, delay }) => (
                 <div key={label} style={{ textAlign: "center" }}>
                   <div
@@ -416,7 +396,7 @@ export default function Hero3() {
                       fontSize: "1.5rem",
                       fontWeight: 700,
                       lineHeight: 1,
-                      color: isDark ? "#f0f4ff" : "#0a1230",
+                      color: isDark ? "#e7edf5" : "#10233f",
                     }}
                   >
                     <AnimCounter to={to} suffix={suf} delay={delay} />
@@ -427,8 +407,8 @@ export default function Hero3() {
                       letterSpacing: "0.07em",
                       textTransform: "uppercase",
                       color: isDark
-                        ? "rgba(220,230,255,0.35)"
-                        : "rgba(10,18,48,0.4)",
+                        ? "rgba(210,222,235,0.35)"
+                        : "rgba(16,35,63,0.4)",
                       marginTop: 2,
                     }}
                   >
@@ -463,7 +443,7 @@ export default function Hero3() {
                 fontSize: "0.62rem",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(220,230,255,0.25)" : "rgba(10,18,48,0.3)",
+                color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
               }}
             >
               <div className="mob-scroll-arrow" />
@@ -519,25 +499,24 @@ export default function Hero3() {
         .h2-cta {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 12px 28px;
-          background: linear-gradient(135deg, var(--ac-deep), var(--ac));
+          background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-          font-weight: 500; color: white; text-decoration: none;
-          box-shadow: 0 0 28px rgba(var(--ac-glow),0.45);
-          transition: transform 0.25s, box-shadow 0.25s;
+          font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+          transition: transform 0.25s, background 0.25s;
           white-space: nowrap;
         }
         .h2-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 45px rgba(var(--ac-glow),0.65);
+          background: var(--ac);
         }
         .h2-nav-link {
-          font-size: 0.72rem; color: rgba(220,230,255,0.35);
+          font-size: 0.72rem; color: rgba(210,222,235,0.35);
           letter-spacing: 0.12em; text-transform: uppercase;
           text-decoration: none; transition: color 0.2s;
           font-family: 'DM Sans', sans-serif;
         }
-        .h2-nav-link:hover { color: #f0f4ff; }
+        .h2-nav-link:hover { color: #e7edf5; }
         .h2-social {
           width: 34px; height: 34px;
           border: 1px solid rgba(255,255,255,0.12); border-radius: 50%;
@@ -630,7 +609,7 @@ export default function Hero3() {
               lineHeight: 0.92,
               textTransform: "uppercase",
               whiteSpace: "nowrap",
-              color: isDark ? "#f0f4ff" : "#0a1230",
+              color: isDark ? "#e7edf5" : "#10233f",
               opacity: entered ? 1 : 0,
               transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
               transform: entered ? "translateY(0)" : "translateY(-30px)",
@@ -650,7 +629,7 @@ export default function Hero3() {
               color: "transparent",
               WebkitTextStroke: isDark
                 ? "2px rgba(255,255,255,0.18)"
-                : "2px rgba(10,18,48,0.15)",
+                : "2px rgba(16,35,63,0.15)",
               opacity: entered ? 1 : 0,
               transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
               transform: entered ? "translateY(0)" : "translateY(30px)",
@@ -677,20 +656,6 @@ export default function Hero3() {
             transition: "opacity 1.1s ease 0.1s",
           }}
         >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "50%",
-              height: 160,
-              background:
-                "radial-gradient(ellipse, rgba(var(--ac2),0.12) 0%, transparent 70%)",
-              filter: "blur(24px)",
-              pointerEvents: "none",
-            }}
-          />
           <img
             ref={photoImgRef}
             src={isDark ? fotoRianDark : fotoRianLight}
@@ -711,23 +676,6 @@ export default function Hero3() {
             }}
           />
         </div>
-
-        {/* Bottom glow under photo */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: -20,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "28%",
-            height: 200,
-            background:
-              "radial-gradient(ellipse, rgba(var(--ac-glow),0.35) 0%, transparent 70%)",
-            filter: "blur(22px)",
-            zIndex: 4,
-            pointerEvents: "none",
-          }}
-        />
 
         {/* ── SIDE LEFT ── */}
         <div
@@ -751,7 +699,7 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(220,230,255,0.25)" : "rgba(10,18,48,0.3)",
+              color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
             }}
           >
             Portfolio 2025
@@ -772,10 +720,10 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(220,230,255,0.25)" : "rgba(10,18,48,0.3)",
+              color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
             }}
           >
-            Jakarta — ID
+            Makassar — ID
           </span>
         </div>
 
@@ -809,28 +757,27 @@ export default function Hero3() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: "rgba(var(--ac2),0.08)",
-                border: "1px solid rgba(var(--ac2),0.22)",
-                borderRadius: 100,
-                padding: "6px 14px",
-                fontSize: "0.72rem",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: blue,
                 width: "fit-content",
               }}
             >
               <div className="h2-role-dot" />
-              Available Now
+              <span
+                style={{
+                  fontSize: "0.72rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: blue,
+                }}
+              >
+                Open to work
+              </span>
             </div>
             <p
               style={{
                 fontSize: "0.85rem",
                 lineHeight: 1.65,
                 maxWidth: 260,
-                color: isDark
-                  ? "rgba(220,230,255,0.45)"
-                  : "rgba(10,18,48,0.55)",
+                color: isDark ? "rgba(210,222,235,0.62)" : "rgba(16,35,63,0.6)",
                 margin: 0,
               }}
             >
@@ -852,7 +799,7 @@ export default function Hero3() {
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
                 <path d="M1 1l22 22" />
               </svg>
-              Hubungi Saya
+              Contact Me
             </Link>
           </div>
 
@@ -866,9 +813,9 @@ export default function Hero3() {
             }}
           >
             {[
-              { to: 50, suf: "+", label: "Project Done", delay: 1300 },
-              { to: 4, suf: "+", label: "Years Exp", delay: 1400 },
-              { to: 99, suf: "%", label: "Client Satisfaction", delay: 1500 },
+              { to: 20, suf: "+", label: "Projects", delay: 1300 },
+              { to: 4, suf: "+", label: "Years", delay: 1400 },
+              { to: 2, suf: "", label: "Web + Mobile", delay: 1500 },
             ].map(({ to, suf, label, delay }) => (
               <div key={label} style={{ textAlign: "right" }}>
                 <div
@@ -877,7 +824,7 @@ export default function Hero3() {
                     fontSize: "1.9rem",
                     fontWeight: 700,
                     lineHeight: 1,
-                    color: isDark ? "#f0f4ff" : "#0a1230",
+                    color: isDark ? "#e7edf5" : "#10233f",
                   }}
                 >
                   <AnimCounter to={to} suffix={suf} delay={delay} />
@@ -888,8 +835,8 @@ export default function Hero3() {
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     color: isDark
-                      ? "rgba(220,230,255,0.35)"
-                      : "rgba(10,18,48,0.4)",
+                      ? "rgba(210,222,235,0.35)"
+                      : "rgba(16,35,63,0.4)",
                   }}
                 >
                   {label}
@@ -930,7 +877,7 @@ export default function Hero3() {
               fontWeight: 600,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(255,255,255,0.85)" : "rgba(10,18,48,0.7)",
+              color: isDark ? "rgba(255,255,255,0.85)" : "rgba(16,35,63,0.7)",
               whiteSpace: "nowrap",
             }}
           >
@@ -941,7 +888,7 @@ export default function Hero3() {
               fontSize: "0.68rem",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(220,230,255,0.3)" : "rgba(10,18,48,0.35)",
+              color: isDark ? "rgba(210,222,235,0.3)" : "rgba(16,35,63,0.35)",
               display: "flex",
               alignItems: "center",
               gap: 6,

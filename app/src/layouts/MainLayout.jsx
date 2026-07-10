@@ -219,12 +219,12 @@ const THEME_11 = {
 const THEME_12 = {
   effect: "none",
   pageBg: {
-    dark: "linear-gradient(160deg,#0f1115 0%,#13161e 55%,#0c0e12 100%)",
-    light: "#ffffff",
+    dark: "linear-gradient(160deg,#0d1520 0%,#111d2c 55%,#0a121c 100%)",
+    light: "#f2f4f7",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 70% 35% at 50% -5%,rgba(186,230,255,0.06),transparent 65%)",
-    light: `radial-gradient(ellipse 80% 45% at 50% -10%,rgba(186,230,255,0.40),rgba(224,242,254,0.20) 45%,transparent 70%)`,
+    dark: "radial-gradient(ellipse 70% 35% at 50% -5%,rgba(224,168,58,0.06),transparent 65%)",
+    light: `radial-gradient(ellipse 80% 45% at 50% -10%,rgba(156,106,18,0.14),rgba(232,236,241,0.25) 45%,transparent 70%)`,
   },
   orb: { dark: null, light: null },
 };

@@ -12,9 +12,9 @@ export default function Footer() {
   const isDark = theme === "dark";
   const currentYear = new Date().getFullYear();
 
-  const txt = isDark ? "#f0f4ff" : "#0a1230";
-  const muted = isDark ? "rgba(220,230,255,0.45)" : "rgba(10,18,48,0.45)";
-  const muted2 = isDark ? "rgba(220,230,255,0.25)" : "rgba(10,18,48,0.28)";
+  const txt = isDark ? "#e7edf5" : "#10233f";
+  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
+  const muted2 = isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.28)";
 
   const navItems = ["Home", "About", "Projects", "Certificates", "Contact"];
   const socialLinks = [

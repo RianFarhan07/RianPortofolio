@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#00adb5",
-        primaryInLight: "#14b8a6",
-        bgDark: "#222831",
-        bgDarkSection: "#030712",
-        bgLight: "#f5f5f5",
+        primary: "#e0a83a",
+        primaryInLight: "#9c6a12",
+        bgDark: "#0d1520",
+        bgDarkSection: "#060d18",
+        bgLight: "#f2f4f7",
       },
       //buat warna nama ubah ubah
       keyframes: {
