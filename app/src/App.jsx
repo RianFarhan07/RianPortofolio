@@ -21,6 +21,7 @@ import Hero2 from "./components/Hero2";
 import PageTransition5Tech from "./components/PageTransition5Tech";
 import PageTransition6Clean from "./components/PageTransition6Clean";
 import Hero3 from "./components/Hero3";
+import CustomCursor from "./components/CustomCursor";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -55,6 +56,7 @@ const AppContent = () => {
 
   return (
     <MainLayout>
+      <CustomCursor />
       <Navbar />
       <ScrollToTop />
       {/* ═══ VARIANTS ═══════════════════════════════════════ */}

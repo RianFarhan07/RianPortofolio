@@ -4,7 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
 import fotoRianDark from "../assets/foto_rian_nobg3.webp.png";
 // import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
-import fotoRianLight from "../assets/foto_rian_nobg_light2.webp";
+import fotoRianLight from "../assets/foto_rian_putih.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {
@@ -237,7 +237,9 @@ export default function Hero3() {
               right: 0,
               height: "45%",
               background:
-                "linear-gradient(to top, rgba(10,20,32,0.98) 0%, rgba(10,20,32,0.90) 45%, transparent 100%)",
+                isDark
+                  ? "linear-gradient(to top, rgba(10,20,32,0.98) 0%, rgba(10,20,32,0.90) 45%, transparent 100%)"
+                  : "linear-gradient(to top, rgba(242,244,247,0.98) 0%, rgba(242,244,247,0.90) 45%, transparent 100%)",
               zIndex: 3,
               pointerEvents: "none",
             }}

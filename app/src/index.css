@@ -68,3 +68,15 @@ html {
 html {
   scroll-behavior: smooth;
 }
+
+/* Sembunyikan cursor bawaan — dikelola oleh CustomCursor */
+* {
+  cursor: none !important;
+}
+
+/* Kembalikan cursor default untuk touch device (mobile) */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+}
