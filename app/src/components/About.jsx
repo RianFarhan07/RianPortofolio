@@ -31,7 +31,22 @@ const CV = "/rianCV.pdf";
 export default function About() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
-  const [view, setView] = useState("terminal"); // 'terminal' | 'page'
+  // Mobile skips the split picker entirely — page view only, no terminal.
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
+  const [view, setView] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 768 ? "page" : "picker"
+  ); // 'picker' | 'terminal' | 'page'
+  const [selecting, setSelecting] = useState(null); // null | 'terminal' | 'page' — drives the expand transition
+
+  useEffect(() => {
+    const c = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", c);
+    return () => window.removeEventListener("resize", c);
+  }, []);
+  // If we shrink to mobile while sitting on the picker, drop straight to page.
+  useEffect(() => {
+    if (isMobile && view === "picker") setView("page");
+  }, [isMobile, view]);
 
   const { introExited, pageTransitionDone } = useContext(IntroContext);
   const [visible, setVisible] = useState(false);
@@ -41,6 +56,12 @@ export default function About() {
     }, 120);
     return () => clearTimeout(t);
   }, [introExited, pageTransitionDone]);
+
+  const choose = (target) => {
+    if (selecting) return;
+    setSelecting(target);
+    setTimeout(() => setView(target), 560);
+  };
 
   const bodyRef = useRef(null);
   const apiRef = useRef(null);
@@ -207,12 +228,50 @@ export default function About() {
 
   /* ── theme tokens ── */
   const tv = isDark
-    ? { "--term": "#0a1322", "--chrome": "#0c1526", "--line": "#16233c", "--txt": "#c5d4e8", "--muted": "#5d6f8e", "--ok": "#3ddc97", "--path": "#ffcf6a", "--hl": "#9ec9ff", "--mag": "#c792ea", "--err": "#ff7a7a" }
-    : { "--term": "#f6faf8", "--chrome": "#ffffff", "--line": "#dde8e2", "--txt": "#1e2a3b", "--muted": "#7c8aa0", "--ok": "#0f9d6b", "--path": "#b5862a", "--hl": "#2563a8", "--mag": "#8b5cf6", "--err": "#d4453b" };
+    ? { "--term": "#0e1826", "--chrome": "#101d2c", "--line": "#1c2a3f", "--txt": "#cdd8ea", "--muted": "#5d6f8e", "--ok": "#3ddc97", "--path": "#e0a83a", "--hl": "#9ec9ff", "--mag": "#c792ea", "--err": "#ff7a7a" }
+    : { "--term": "#eef1f5", "--chrome": "#f7f9fb", "--line": "#d8dee6", "--txt": "#17263d", "--muted": "#7c8aa0", "--ok": "#0f9d6b", "--path": "#9c6a12", "--hl": "#2563a8", "--mag": "#8b5cf6", "--err": "#d4453b" };
   const mono = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
-  /* ── PAGE VIEW (readable, mirip hero) ── */
-  if (view === "page") {
+  /* ── static boot snapshot shown in the terminal PREVIEW (no live engine) ── */
+  const bootPreview = (
+    <>
+      <div className="line boot"><span className="ac">rian@portfolio</span> <span className="muted">·</span> booting profile…</div>
+      <div className="line boot"><span className="ok">[ ok ]</span> mounting <span className="hl">/about</span></div>
+      <div className="line boot"><span className="ok">[ ok ]</span> loading modules <span className="pbar"><i style={{ width: "100%" }} /></span> <span className="muted">100%</span></div>
+      <div className="line boot"><span className="ok">[ ok ]</span> theme synced <span className="muted">·</span> status: <span className="ok">open_to_work</span></div>
+      <div className="line boot"><span className="muted">──────────────────────────────</span></div>
+      <div className="line"><span className="prompt"><span className="u">rian@portfolio</span><span className="s">:</span><span className="p">~/about</span><span className="s">$</span></span> <span className="cur" style={{ marginLeft: 2 }} /></div>
+    </>
+  );
+
+  /* ── terminal window (live = real engine boots; preview = static snapshot) ── */
+  const renderTerminal = ({ live, outerStyle }) => (
+    <div className="bt" style={{ ...tv, "--mono": mono, ...outerStyle }}>
+      <style>{btCss}</style>
+      <div className="term-win">
+        <div className="term-bar">
+          <div className="dots"><span className="dot" style={{ background: "#ff5f57" }} /><span className="dot" style={{ background: "#febc2e" }} /><span className="dot" style={{ background: "#28c840" }} /></div>
+          <div className="term-title"><b>rian@portfolio</b> : ~/about — zsh</div>
+          {live && <button className="vbtn" onClick={() => setView("page")}>▦ read as page</button>}
+        </div>
+        {live
+          ? <div className="term-body" ref={bodyRef} />
+          : <div className="term-body" style={{ pointerEvents: "none" }}>{bootPreview}</div>}
+        {live && (
+          <div className="qchips">
+            {["help", "whoami", "experience", "skills", "projects", "contact"].map((c) => (
+              <button key={c} onClick={() => apiRef.current && apiRef.current.run(c)}>{c}</button>
+            ))}
+          </div>
+        )}
+        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Makassar, ID</span><span className="sp">TSX · UTF-8</span></div>
+        <div className="crt" />
+      </div>
+    </div>
+  );
+
+  /* ── readable page (used full-screen AND clipped in the picker preview) ── */
+  const renderPage = ({ preview } = {}) => {
     const soft = isDark ? "rgba(210,222,235,.7)" : "rgba(16,35,63,.7)";
     const muted = isDark ? "rgba(210,222,235,.5)" : "rgba(16,35,63,.5)";
     const txt = isDark ? "#eaf1fb" : "#10233f";
@@ -223,9 +282,11 @@ export default function About() {
       <div className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,4vw,40px) 60px", maxWidth: 1160, margin: "0 auto", opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
         <style>{bpCss}</style>
 
-        <div className="bp-top">
-          <button className="bp-tbtn" onClick={() => setView("terminal")}><Terminal size={14} /> view as terminal</button>
-        </div>
+        {!preview && !isMobile && (
+          <div className="bp-top">
+            <button className="bp-tbtn" onClick={() => setView("terminal")}><Terminal size={14} /> view as terminal</button>
+          </div>
+        )}
 
         {/* HERO */}
         <div className="bp-hero">
@@ -307,29 +368,72 @@ export default function About() {
         </section>
       </div>
     );
+  };
+
+  /* ── PICKER VIEW (split choice, default) ──
+     Both real views sit in place at half-width from the start (not mockup
+     cards) with a dark scrim prompting a choice. Picking one lifts its
+     scrim and expands it to full width; only then does the real view
+     mount (and, for terminal, its boot sequence start). */
+  if (view === "picker") {
+    const entered = visible;
+    const halfStyle = (key) => ({
+      flex: selecting ? (selecting === key ? "1 0 100%" : "0 0 0%") : 1,
+      opacity: selecting ? (selecting === key ? 1 : 0) : entered ? 1 : 0,
+      transform: `scale(${entered || selecting ? 1 : 0.98})`,
+      transition: "flex .55s cubic-bezier(.4,0,.2,1), opacity .45s ease, transform .5s ease",
+      transitionDelay: !selecting && key === "page" ? "0.06s" : "0s",
+      position: "relative",
+      overflow: "hidden",
+      cursor: selecting ? "default" : "pointer",
+      minHeight: 0,
+    });
+    const scrimStyle = (key) => ({
+      opacity: selecting === key ? 0 : 1,
+      pointerEvents: selecting ? "none" : "auto",
+    });
+    return (
+      <div style={{ height: "100vh", overflow: "hidden" }}>
+        <style>{pkCss}</style>
+        <div className="pk-row">
+          {/* TERMINAL half — the real window, static boot snapshot (engine runs on pick) */}
+          <div
+            style={halfStyle("terminal")}
+            onClick={() => choose("terminal")}
+            role="button"
+            tabIndex={0}
+            aria-label="Open terminal view"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose("terminal"); } }}
+          >
+            {renderTerminal({ live: false, outerStyle: { width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "clamp(16px,3vw,44px)" } })}
+            <div className="pk-scrim" style={scrimStyle("terminal")}><span className="pk-badge">▸ Terminal</span></div>
+          </div>
+
+          {/* PAGE half — the real readable page, clipped to half width */}
+          <div
+            style={halfStyle("page")}
+            onClick={() => choose("page")}
+            role="button"
+            tabIndex={0}
+            aria-label="Open readable page view"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose("page"); } }}
+          >
+            <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>{renderPage({ preview: true })}</div>
+            <div className="pk-scrim" style={scrimStyle("page")}><span className="pk-badge">▸ Page</span></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  /* ── TERMINAL VIEW (default) ── */
-  return (
-    <div className="bt" style={{ ...tv, "--mono": mono, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "90px 16px 40px", fontFamily: mono, opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
-      <style>{btCss}</style>
-      <div className="term-win">
-        <div className="term-bar">
-          <div className="dots"><span className="dot" style={{ background: "#ff5f57" }} /><span className="dot" style={{ background: "#febc2e" }} /><span className="dot" style={{ background: "#28c840" }} /></div>
-          <div className="term-title"><b>rian@portfolio</b> : ~/about — zsh</div>
-          <button className="vbtn" onClick={() => setView("page")}>▦ read as page</button>
-        </div>
-        <div className="term-body" ref={bodyRef} />
-        <div className="qchips">
-          {["help", "whoami", "experience", "skills", "projects", "contact"].map((c) => (
-            <button key={c} onClick={() => apiRef.current && apiRef.current.run(c)}>{c}</button>
-          ))}
-        </div>
-        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Makassar, ID</span><span className="sp">TSX · UTF-8</span></div>
-        <div className="crt" />
-      </div>
-    </div>
-  );
+  /* ── PAGE VIEW (readable, full-screen) ── */
+  if (view === "page") return renderPage();
+
+  /* ── TERMINAL VIEW (full-screen, live engine boots) ── */
+  return renderTerminal({
+    live: true,
+    outerStyle: { minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "90px 16px 40px", fontFamily: mono, opacity: visible ? 1 : 0, transition: "opacity 0.4s" },
+  });
 }
 
 /* ──────────────────────────────────────────────
@@ -431,4 +535,15 @@ const bpCss = `
 .bp-cta h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,3rem);margin:0 0 14px;text-wrap:balance}
 .bp-cta h2 .ac{color:var(--ac)}
 .bp-cta p{line-height:1.7;margin:0 0 26px}
+`;
+
+const pkCss = `
+.pk-row{display:flex;flex-direction:row;height:100%;min-height:0}
+@media (max-width:768px){.pk-row{flex-direction:column}}
+.pk-row > div:focus-visible{outline:none}
+.pk-row > div:focus-visible .pk-scrim{background:rgba(0,0,0,.30);box-shadow:inset 0 0 0 2px var(--ac)}
+.pk-scrim{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);transition:opacity .4s ease,background .3s ease}
+.pk-row > div:hover .pk-scrim{background:rgba(0,0,0,.28)}
+.pk-badge{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#10233f;background:var(--ac);padding:9px 20px;border-radius:100px;box-shadow:0 12px 36px rgba(0,0,0,.5);transition:transform .25s ease}
+.pk-row > div:hover .pk-badge{transform:scale(1.06)}
 `;

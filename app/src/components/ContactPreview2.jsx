@@ -331,7 +331,7 @@ export default function ContactPreview() {
               position: "relative",
               zIndex: 2,
               display: "grid",
-              gridTemplateColumns: "1.15fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1.15fr 1fr",
               gap: "clamp(28px, 5vw, 64px)",
               alignItems: "start",
             }}
@@ -387,7 +387,7 @@ export default function ContactPreview() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                   gap: 10,
                   marginBottom: 24,
                 }}
