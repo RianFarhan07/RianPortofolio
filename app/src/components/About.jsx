@@ -393,7 +393,7 @@ export default function About() {
       pointerEvents: selecting ? "none" : "auto",
     });
     return (
-      <div style={{ height: "100vh", overflow: "hidden" }}>
+      <div style={{ height: "100vh", overflow: "hidden", position: "relative" }}>
         <style>{pkCss}</style>
         <div className="pk-row">
           {/* TERMINAL half — the real window, static boot snapshot (engine runs on pick) */}
@@ -422,6 +422,12 @@ export default function About() {
             <div className="pk-scrim" style={scrimStyle("page")}><span className="pk-badge">▸ Page</span></div>
           </div>
         </div>
+        {!selecting && (
+          <div className="pk-hint">
+            <span className="pk-hint-title">Pick a view to explore</span>
+            <span className="pk-hint-sub">click either side to continue</span>
+          </div>
+        )}
       </div>
     );
   }
@@ -546,4 +552,10 @@ const pkCss = `
 .pk-row > div:hover .pk-scrim{background:rgba(0,0,0,.28)}
 .pk-badge{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#10233f;background:var(--ac);padding:9px 20px;border-radius:100px;box-shadow:0 12px 36px rgba(0,0,0,.5);transition:transform .25s ease}
 .pk-row > div:hover .pk-badge{transform:scale(1.06)}
+.pk-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;pointer-events:none;animation:pk-hint-in .7s ease both}
+@keyframes pk-hint-in{from{opacity:0;transform:translate(-50%,-44%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.pk-hint-title{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:clamp(16px,2.4vw,24px);letter-spacing:.1em;text-transform:uppercase;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.pk-hint-sub{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.78);text-shadow:0 1px 10px rgba(0,0,0,.8)}
+.pk-hint-sub::after{content:'▸';margin-left:8px;animation:pk-hint-blink 1.2s step-end infinite}
+@keyframes pk-hint-blink{50%{opacity:0}}
 `;

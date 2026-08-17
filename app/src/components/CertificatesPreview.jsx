@@ -31,6 +31,7 @@ export default function CertificatesPreview() {
   const autoplayRef = useRef(null);
   const wrapperRef = useRef(null);
   const headerRef = useRef(null);
+  const headerSideRef = useRef(null);
   const contentRef = useRef(null);
   const stickyRef = useRef(null);
   const introRef = useRef(null);
@@ -63,28 +64,75 @@ export default function CertificatesPreview() {
   }, [autoplay]);
 
   /* ── Scroll-morph intro (desktop only) ──────────────────────
-     "VERIFIED SKILLS" muncul gede di tengah → morph ke kiri-atas →
-     header + konten fade-in. "Pin" via CSS sticky (bukan GSAP pin) +
-     ScrollTrigger scrub. Robust: no pin-spacer, no race, no crash. */
+     "VERIFIED SKILLS" (judul header, elemen SAMA) di-transform ke tengah
+     layar → morf balik ke posisi header → konten fade-in. Tidak ada intro
+     duplikat yang hilang lalu header baru muncul. "Pin" via CSS sticky
+     (bukan GSAP pin) + ScrollTrigger scrub. Robust: no pin-spacer,
+     no race, no crash. */
   useLayoutEffect(() => {
     if (isMobile !== false) return;
     const section = wrapperRef.current;
     if (!section) return;
 
     if (reduced) {
-      gsap.set([headerRef.current, contentRef.current], {
-        clearProps: "all",
-        autoAlpha: 1,
-        y: 0,
-      });
-      if (introRef.current && introRef.current.parentElement)
-        introRef.current.parentElement.style.display = "none";
+      gsap.set(
+        [introRef.current, headerSideRef.current, contentRef.current],
+        {
+          clearProps: "all",
+          autoAlpha: 1,
+          y: 0,
+        },
+      );
       return;
     }
 
     const ctx = gsap.context(() => {
-      gsap.set(introRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
-      gsap.set(headerRef.current, { autoAlpha: 0, y: 24 });
+      // Offset layout judul terhadap sticky container (scroll-independent):
+      // pas sticky top:0, offset ini = posisi layar judul di header.
+      const leftOf = (el) => {
+        let v = 0;
+        while (el && el !== stickyRef.current && el !== document.body) {
+          v += el.offsetLeft;
+          el = el.offsetParent;
+        }
+        return v;
+      };
+      const topOf = (el) => {
+        let v = 0;
+        while (el && el !== stickyRef.current && el !== document.body) {
+          v += el.offsetTop;
+          el = el.offsetParent;
+        }
+        return v;
+      };
+
+      // State awal: judul header (elemen SAMA) di-transform ke tengah layar.
+      // Dipisah ke fungsi supaya bisa di-re-evaluate pada refresh (font load,
+      // resize) — kalau cuma gsap.set sekali, ukuran kehitung dengan font
+      // fallback dan judul melenceng/overflow ke kanan.
+      const positionIntro = () => {
+        gsap.set(introRef.current, {
+          x: () => {
+            const el = introRef.current;
+            return window.innerWidth / 2 - (leftOf(el) + el.offsetWidth / 2);
+          },
+          y: () => {
+            const el = introRef.current;
+            return window.innerHeight / 2 - (topOf(el) + el.offsetHeight / 2);
+          },
+          scale: () => {
+            const fs = parseFloat(
+              getComputedStyle(
+                introRef.current.querySelector(".cp-intro-title"),
+              ).fontSize,
+            );
+            return Math.min(window.innerWidth * 0.11, 144) / fs;
+          },
+          transformOrigin: "50% 50%",
+        });
+      };
+      positionIntro();
+      gsap.set(headerSideRef.current, { autoAlpha: 0, y: 24 });
       gsap.set(contentRef.current, { autoAlpha: 0, y: 60 });
 
       const tl = gsap.timeline({
@@ -95,6 +143,7 @@ export default function CertificatesPreview() {
           end: "bottom bottom",
           scrub: 0.6,
           invalidateOnRefresh: true,
+          onRefresh: positionIntro,
         },
       });
 
@@ -112,23 +161,23 @@ export default function CertificatesPreview() {
         0.05,
       );
 
-      // Fase 2 — morph: mengecil + geser kiri-atas + fade out
+      // Fase 2 — MORPH ASLI: judul yang sama terbang dari tengah layar
+      // ke posisi header-nya (scale→1, translate→0). Tidak pernah hilang.
       tl.to(
         introRef.current,
         {
-          scale: 0.3,
-          x: () => -window.innerWidth * 0.3,
-          y: () => -window.innerHeight * 0.32,
-          autoAlpha: 0,
+          x: 0,
+          y: 0,
+          scale: 1,
           ease: "power2.inOut",
           duration: 0.26,
         },
         0.45,
       );
 
-      // Fase 3 — header + konten fade-in di tempatnya
+      // Fase 3 — elemen yang memang baru (sisi kanan header + konten) fade-in
       tl.to(
-        headerRef.current,
+        headerSideRef.current,
         { autoAlpha: 1, y: 0, duration: 0.16, ease: "power3.out" },
         0.5,
       ).to(
@@ -139,13 +188,14 @@ export default function CertificatesPreview() {
 
       // Tail kosong → jeda settle sebelum sticky lepas
       tl.to({}, { duration: 0.18 }, 0.82);
-    }, section);
 
-    const refresh = () => ScrollTrigger.refresh();
-    const raf = requestAnimationFrame(refresh);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(refresh).catch(() => {});
-    }
+      // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
+      const refresh = () => ScrollTrigger.refresh();
+      const raf = requestAnimationFrame(refresh);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refresh).catch(() => {});
+      }
+    }, section);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -181,7 +231,7 @@ export default function CertificatesPreview() {
           .cp-verify-btn:hover{background:var(--ac)}
           .cp-mob-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.12);background:rgba(var(--ac2),.04);margin-bottom:6px;transition:border-color .2s,background .2s}
           .cp-mob-item.active{border-color:rgba(var(--ac1),.5);background:rgba(var(--ac2),.1)}
-          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:rgba(210,222,235,.72);text-decoration:none}
+          .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:${isDark ? "rgba(210,222,235,.72)" : "rgba(16,35,63,.72)"};text-decoration:none}
         `}</style>
 
         <section
@@ -535,7 +585,7 @@ export default function CertificatesPreview() {
                   <Award
                     size={15}
                     color={
-                      i === activeIndex ? "var(--ac)" : "rgba(210,222,235,.4)"
+                      i === activeIndex ? "var(--ac)" : isDark ? "rgba(210,222,235,.4)" : "rgba(16,35,63,.4)"
                     }
                   />
                 </div>
@@ -592,7 +642,7 @@ export default function CertificatesPreview() {
         .cp-verify{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:var(--ac-deep);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:${isDark ? "#10233f" : "white"};text-decoration:none;transition:transform .22s,background .22s;white-space:nowrap}
         .cp-verify:hover{transform:translateY(-2px);background:var(--ac)}
 
-        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:rgba(210,222,235,.72);text-decoration:none;transition:transform .22s,border-color .22s}
+        .cp-view-all{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:rgba(var(--ac2),.06);border:1px solid rgba(var(--ac2),.22);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:${isDark ? "rgba(210,222,235,.72)" : "rgba(16,35,63,.72)"};text-decoration:none;transition:transform .22s,border-color .22s}
         .cp-view-all:hover{transform:translateY(-2px);border-color:rgba(var(--ac2),.5)}
 
         .cp-list-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:1px solid rgba(var(--ac2),.08);background:transparent;transition:border-color .2s,background .2s,transform .2s;margin-bottom:6px}
@@ -601,13 +651,10 @@ export default function CertificatesPreview() {
 
         .cp-scroll-arrow{width:12px;height:12px;border-right:1px solid rgba(var(--ac2),.5);border-bottom:1px solid rgba(var(--ac2),.5);transform:rotate(45deg);animation:cp-arr 1.5s ease-in-out infinite}
 
-        /* ── Intro overlay (scroll-morph) ── */
-        .cp-intro{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;pointer-events:none}
-        .cp-intro-inner{text-align:center;will-change:transform,opacity;transform-origin:center center}
-        .cp-intro-label{display:flex;align-items:center;justify-content:center;gap:12px;font-family:Syne,sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(var(--ac1),.72);margin-bottom:20px}
-        .cp-intro-dash{width:46px;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent)}
-        .cp-intro-title{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(3.5rem,11vw,9rem);line-height:.84;letter-spacing:-.04em;text-transform:uppercase}
-        .cp-intro .cp-mask{overflow:hidden;padding:0 .05em}
+        /* ── Judul header = intro (morph asli: elemen sama, tanpa duplikat) ── */
+        .cp-intro-inner{will-change:transform,opacity;transform-origin:center center}
+        .cp-intro-title{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(3rem,6vw,6.5rem);line-height:.88;letter-spacing:-.04em;text-transform:uppercase}
+        .cp-mask{overflow:hidden;padding:0 .05em}
       `}</style>
 
       <section
@@ -680,37 +727,7 @@ export default function CertificatesPreview() {
           />
         ))}
 
-        {/* ── INTRO OVERLAY (scroll-morph) ── */}
-        <div className="cp-intro" aria-hidden="true">
-          <div ref={introRef} className="cp-intro-inner">
-            <div className="cp-intro-label">
-              <span className="cp-intro-dash" />
-              Certifications
-            </div>
-            <div className="cp-intro-title">
-              <div className="cp-mask">
-                <div ref={line1Ref} style={{ color: textPrimary }}>
-                  VERIFIED
-                </div>
-              </div>
-              <div className="cp-mask">
-                <div
-                  ref={line2Ref}
-                  style={{
-                    color: "transparent",
-                    WebkitTextStroke: isDark
-                      ? "2px rgba(255,255,255,.18)"
-                      : "2px rgba(16,35,63,.18)",
-                  }}
-                >
-                  SKILLS
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── HEADER ── */}
+        {/* ── HEADER ── label + judul di sini JUGA intro-nya (morph asli) */}
         <div
           ref={headerRef}
           style={{
@@ -722,7 +739,14 @@ export default function CertificatesPreview() {
             zIndex: 2,
           }}
         >
-          <div>
+          {/* Label + judul = intro: di-transform ke tengah layar saat masuk
+              section, lalu morf kembali ke posisi ini. Satu elemen, tidak
+              ada duplikat. */}
+          <div
+            ref={introRef}
+            className="cp-intro-inner"
+            style={{ position: "relative", zIndex: 30 }}
+          >
             <div
               style={{
                 display: "flex",
@@ -751,32 +775,31 @@ export default function CertificatesPreview() {
                 Certifications
               </span>
             </div>
-            <div
-              style={{
-                fontFamily: "Syne,sans-serif",
-                fontSize: "clamp(3rem,6vw,6.5rem)",
-                fontWeight: 800,
-                letterSpacing: "-0.04em",
-                lineHeight: 0.88,
-                textTransform: "uppercase",
-              }}
-            >
-              <div style={{ color: textPrimary }}>VERIFIED</div>
-              <div
-                style={{
-                  color: "transparent",
-                  WebkitTextStroke: isDark
-                    ? "2px rgba(255,255,255,.15)"
-                    : "2px rgba(16,35,63,.15)",
-                }}
-              >
-                SKILLS
+            <div className="cp-intro-title">
+              <div className="cp-mask">
+                <div ref={line1Ref} style={{ color: textPrimary }}>
+                  VERIFIED
+                </div>
+              </div>
+              <div className="cp-mask">
+                <div
+                  ref={line2Ref}
+                  style={{
+                    color: "transparent",
+                    WebkitTextStroke: isDark
+                      ? "2px rgba(255,255,255,.15)"
+                      : "2px rgba(16,35,63,.15)",
+                  }}
+                >
+                  SKILLS
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Counter + scroll hint */}
+          {/* Right side — counter + scroll hint (elemen baru, fade-in wajar) */}
           <div
+            ref={headerSideRef}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -1177,7 +1200,7 @@ export default function CertificatesPreview() {
                     <Award
                       size={16}
                       color={
-                        i === activeIndex ? "var(--ac)" : "rgba(210,222,235,.35)"
+                        i === activeIndex ? "var(--ac)" : isDark ? "rgba(210,222,235,.35)" : "rgba(16,35,63,.35)"
                       }
                     />
                   </div>
@@ -1192,7 +1215,9 @@ export default function CertificatesPreview() {
                         color:
                           i === activeIndex
                             ? textPrimary
-                            : "rgba(210,222,235,.65)",
+                            : isDark
+                              ? "rgba(210,222,235,.65)"
+                              : "rgba(16,35,63,.6)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",

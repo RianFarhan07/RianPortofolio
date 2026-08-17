@@ -77,6 +77,7 @@ export default function ProjectPreview() {
 
   const wrapperRef = useRef(null);
   const headerRef = useRef(null);
+  const headerSideRef = useRef(null);
   const sliderRef = useRef(null);
   const footerRef = useRef(null);
   const stickyRef = useRef(null);
@@ -98,9 +99,12 @@ export default function ProjectPreview() {
   }, []);
 
   /* ── Scroll-morph intro (desktop only) ──────────────────────
-     Fase 1: "SELECTED WORKS" muncul gede & di tengah (masked reveal)
-     Fase 2: scroll lagi → morph mengecil + geser kiri-atas + fade
-     Fase 3: header/slider/footer fade-in di tempatnya
+     Fase 1: judul header "SELECTED WORKS" di-transform ke tengah layar
+             (masked reveal). Ini elemen yang SAMA, bukan duplikat intro.
+     Fase 2: scroll → judul yang sama morf (scale→1, translate→0) kembali
+             ke posisi header-nya. Tidak ada fade-out + fade-in elemen baru.
+     Fase 3: elemen yang memang baru (sisi kanan header/slider/footer)
+             fade-in di tempatnya.
 
      NB: TANPA ScrollTrigger pin. "Pin" dilakukan via CSS position:sticky
      pada stickyRef (section = track tinggi 240vh). ScrollTrigger cuma
@@ -112,22 +116,67 @@ export default function ProjectPreview() {
     const section = wrapperRef.current;
     if (!section) return;
 
-    // Reduced-motion: tampilkan semua statis, sembunyikan overlay intro
+    // Reduced-motion: tampilkan semua statis, tanpa transform intro
     if (reduced) {
-      gsap.set([headerRef.current, sliderRef.current, footerRef.current], {
-        clearProps: "all",
-        autoAlpha: 1,
-        y: 0,
-      });
-      if (introRef.current && introRef.current.parentElement)
-        introRef.current.parentElement.style.display = "none";
+      gsap.set(
+        [introRef.current, headerSideRef.current, sliderRef.current, footerRef.current],
+        {
+          clearProps: "all",
+          autoAlpha: 1,
+          y: 0,
+        },
+      );
       return;
     }
 
     const ctx = gsap.context(() => {
-      // State awal: konten ke-hide, judul intro besar di tengah
-      gsap.set(introRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
-      gsap.set(headerRef.current, { autoAlpha: 0, y: 24 });
+      // Offset layout judul terhadap sticky container (scroll-independent):
+      // pas sticky top:0, offset ini = posisi layar judul di header.
+      const leftOf = (el) => {
+        let v = 0;
+        while (el && el !== stickyRef.current && el !== document.body) {
+          v += el.offsetLeft;
+          el = el.offsetParent;
+        }
+        return v;
+      };
+      const topOf = (el) => {
+        let v = 0;
+        while (el && el !== stickyRef.current && el !== document.body) {
+          v += el.offsetTop;
+          el = el.offsetParent;
+        }
+        return v;
+      };
+
+      // State awal: judul header (elemen SAMA) di-transform ke tengah layar.
+      // Bukan intro terpisah — ini yang nanti morf balik ke posisinya.
+      // Dipisah ke fungsi supaya bisa di-re-evaluate pada refresh (font load,
+      // resize) — kalau cuma gsap.set sekali, ukuran kehitung dengan font
+      // fallback dan judul melenceng/overflow ke kanan.
+      const positionIntro = () => {
+        gsap.set(introRef.current, {
+          x: () => {
+            const el = introRef.current;
+            return window.innerWidth / 2 - (leftOf(el) + el.offsetWidth / 2);
+          },
+          y: () => {
+            const el = introRef.current;
+            return window.innerHeight / 2 - (topOf(el) + el.offsetHeight / 2);
+          },
+          scale: () => {
+            const fs = parseFloat(
+              getComputedStyle(
+                introRef.current.querySelector(".pp-intro-title"),
+              ).fontSize,
+            );
+            return Math.min(window.innerWidth * 0.11, 144) / fs;
+          },
+          transformOrigin: "50% 50%",
+        });
+      };
+      positionIntro();
+      gsap.set(headerSideRef.current, { autoAlpha: 0, y: 24 });
       gsap.set(sliderRef.current, { autoAlpha: 0, y: 60 });
       gsap.set(footerRef.current, { autoAlpha: 0, y: 30 });
 
@@ -139,6 +188,7 @@ export default function ProjectPreview() {
           end: "bottom bottom",
           scrub: 0.6,
           invalidateOnRefresh: true,
+          onRefresh: positionIntro,
         },
       });
 
@@ -158,23 +208,24 @@ export default function ProjectPreview() {
 
       // (hold ~0.35 → 0.45 — judul "diam" sejenak biar kebaca)
 
-      // Fase 2 — morph: mengecil + geser ke kiri-atas + fade out
+      // Fase 2 — MORPH ASLI: judul yang sama terbang dari tengah layar
+      // ke posisi header-nya (scale→1, translate→0 = kembali ke posisi
+      // natural). Elemen tidak pernah hilang, tidak ada penggantinya.
       tl.to(
         introRef.current,
         {
-          scale: 0.3,
-          x: () => -window.innerWidth * 0.3,
-          y: () => -window.innerHeight * 0.32,
-          autoAlpha: 0,
+          x: 0,
+          y: 0,
+          scale: 1,
           ease: "power2.inOut",
           duration: 0.26,
         },
         0.45,
       );
 
-      // Fase 3 — konten asli fade-in di tempatnya (selesai sebelum un-stick)
+      // Fase 3 — elemen yang memang baru fade-in di tempatnya
       tl.to(
-        headerRef.current,
+        headerSideRef.current,
         { autoAlpha: 1, y: 0, duration: 0.16, ease: "power3.out" },
         0.5,
       )
@@ -191,14 +242,14 @@ export default function ProjectPreview() {
 
       // Tail kosong → kasih jeda "settle" sebelum sticky lepas
       tl.to({}, { duration: 0.18 }, 0.82);
-    }, section);
 
-    // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
-    const refresh = () => ScrollTrigger.refresh();
-    const raf = requestAnimationFrame(refresh);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(refresh).catch(() => {});
-    }
+      // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
+      const refresh = () => ScrollTrigger.refresh();
+      const raf = requestAnimationFrame(refresh);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refresh).catch(() => {});
+      }
+    }, section);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -757,23 +808,17 @@ export default function ProjectPreview() {
           animation:pp-arr 1.5s ease-in-out infinite;
         }
 
-        /* ── Intro overlay (scroll-morph) ── */
-        .pp-intro {
-          position:absolute; inset:0; z-index:30;
-          display:flex; align-items:center; justify-content:center;
-          pointer-events:none;
-        }
+        /* ── Judul header = intro (morph asli: elemen sama, tanpa duplikat) ── */
         .pp-intro-inner {
-          text-align:center;
           will-change:transform,opacity;
           transform-origin:center center;
         }
         .pp-intro-title {
           font-family:Syne,sans-serif; font-weight:800;
-          font-size:clamp(3.5rem,11vw,9rem); line-height:.84;
+          font-size:clamp(3rem,6vw,6.5rem); line-height:.88;
           letter-spacing:-.04em; text-transform:uppercase;
         }
-        .pp-intro .pp-mask { overflow:hidden; padding:0 .05em; }
+        .pp-mask { overflow:hidden; padding:0 .05em; }
       `}</style>
 
       <section
@@ -848,9 +893,25 @@ export default function ProjectPreview() {
           />
         ))}
 
-        {/* ── INTRO OVERLAY (scroll-morph) ── */}
-        <div className="pp-intro" aria-hidden="true">
-          <div ref={introRef} className="pp-intro-inner">
+        {/* ── HEADER ── judul di sini JUGA intro-nya (morph asli) */}
+        <div
+          ref={headerRef}
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            marginBottom: 40,
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          {/* Judul = intro: di-transform ke tengah layar saat masuk section,
+              lalu morf kembali ke posisi ini. Satu elemen, tidak ada duplikat. */}
+          <div
+            ref={introRef}
+            className="pp-intro-inner"
+            style={{ position: "relative", zIndex: 30 }}
+          >
             <div className="pp-intro-title">
               <div className="pp-mask">
                 <div ref={line1Ref} style={{ color: textPrimary }}>
@@ -863,8 +924,8 @@ export default function ProjectPreview() {
                   style={{
                     color: "transparent",
                     WebkitTextStroke: isDark
-                      ? "2px rgba(255,255,255,.18)"
-                      : "2px rgba(16,35,63,.18)",
+                      ? "2px rgba(255,255,255,.15)"
+                      : "2px rgba(16,35,63,.15)",
                   }}
                 >
                   WORKS
@@ -872,48 +933,10 @@ export default function ProjectPreview() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* ── SECTION HEADER ── */}
-        <div
-          ref={headerRef}
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            marginBottom: 40,
-            position: "relative",
-            zIndex: 2,
-          }}
-        >
-          <div>
-            {/* Big title */}
-            <div
-              style={{
-                fontFamily: "Syne,sans-serif",
-                fontSize: "clamp(3rem,6vw,6.5rem)",
-                fontWeight: 800,
-                letterSpacing: "-0.04em",
-                lineHeight: 0.88,
-                textTransform: "uppercase",
-              }}
-            >
-              <div style={{ color: textPrimary }}>SELECTED</div>
-              <div
-                style={{
-                  color: "transparent",
-                  WebkitTextStroke: isDark
-                    ? "2px rgba(255,255,255,.15)"
-                    : "2px rgba(16,35,63,.15)",
-                }}
-              >
-                WORKS
-              </div>
-            </div>
-          </div>
-
-          {/* Right side — counter + nav */}
+          {/* Right side — counter + nav (elemen baru, fade-in wajar) */}
           <div
+            ref={headerSideRef}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -961,6 +984,7 @@ export default function ProjectPreview() {
             flex: 1,
             display: "grid",
             gridTemplateColumns: "1fr 420px",
+            gridTemplateRows: "minmax(0, 1fr)",
             gap: 20,
             position: "relative",
             zIndex: 2,
@@ -976,8 +1000,9 @@ export default function ProjectPreview() {
               overflow: "hidden",
               cursor: "grab",
               userSelect: "none",
-              height: 460,
-              maxHeight: "55vh",
+              height: "100%",
+              maxHeight: "min(460px, 55vh)",
+              minHeight: 0,
               flexShrink: 0,
             }}
             onMouseDown={handleMouseDown}
@@ -1140,8 +1165,9 @@ export default function ProjectPreview() {
               borderRadius: 14,
               background: cardBg,
               overflow: "hidden",
-              height: 460,
-              maxHeight: "55vh",
+              height: "100%",
+              maxHeight: "min(460px, 55vh)",
+              minHeight: 0,
             }}
           >
             {/* Panel header */}

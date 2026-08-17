@@ -174,7 +174,7 @@ export default function Projects() {
             </motion.span>
             <motion.span className="block" style={{
               color: "transparent",
-              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(16,35,63,0.15)",
+              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.25)" : "2px rgba(16,35,63,0.4)",
               WebkitTextFillColor: "transparent",
             }}
               initial={{ opacity: 0, y: 30 }}
