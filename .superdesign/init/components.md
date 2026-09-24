@@ -1,3 +1,13 @@
+# Shared UI Components
+
+This project uses custom React components rather than a third-party primitive library. The small components below are the shared cross-page primitives most relevant to interaction behavior.
+
+## CustomCursor
+
+- Path: `app/src/components/CustomCursor.jsx`
+- Purpose: Shared high-z-index pointer treatment used across every route.
+
+```jsx
 import { useEffect, useState } from "react";
 
 const SIZE = 24;
@@ -77,3 +87,23 @@ export default function CustomCursor() {
     </>
   );
 }
+```
+## ScrollToTop
+
+- Path: `app/src/components/ScrollToTop.jsx`
+- Purpose: Shared route-change scroll behavior.
+
+```jsx
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+export default function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+}
+```

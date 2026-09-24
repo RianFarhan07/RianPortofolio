@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "home:about-preview": {
+      "targetKind": "existing-ui",
+      "projectId": "a4db3ab2-31ae-497a-b538-5c1192fa9965",
+      "baselineDraftId": "11d76b53-ab9c-4b59-b1fa-680b21141d3b",
+      "activeDraftId": "11d76b53-ab9c-4b59-b1fa-680b21141d3b",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "7c3c09ec-3f3f-48c6-8eb3-24c5b3dc2326"
+      ],
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "app/src/components/AboutPreview.jsx",
+        "app/src/index.css",
+        "app/src/context/ThemeContext.jsx"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "babad84fba8d1c9c5cf97eb4928c53728cde3d8caa0b3e363ec032ef4d96ac5c",
+        "app/src/components/AboutPreview.jsx": "c0f443b8bdb87adb3b6ceb816a0bbae6966ceae1ba87f68a1fc3df16ba68aa81",
+        "app/src/index.css": "04c85a55c8cacf1bd97e62b34f6fee5d23368d5e00677beba63c1bc6da2efa7d",
+        "app/src/context/ThemeContext.jsx": "81bfbbccf995c5f0f0d4cd845d0ee63d97a1f319be0641a0eceb38a2eaa366af"
+      },
+      "components": [],
+      "drafts": {
+        "11d76b53-ab9c-4b59-b1fa-680b21141d3b": {
+          "title": "About Preview — Cinematic Motion",
+          "visualDirection": "transform-only shutter sweep, card settle, portrait depth, and staggered content reveal",
+          "currentVersion": 2
+        }
+      },
+      "updatedAt": "2026-09-24T19:30:04.7790807+07:00"
+    }
+  }
+}
