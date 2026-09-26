@@ -44,7 +44,7 @@ export default function Contact() {
   const contactInfo = [
     { icon: <Phone size={18} />, title: "Phone", value: "+62 822 8037 2670", link: "https://wa.me/6282280372670" },
     { icon: <Mail size={18} />, title: "Email", value: "rian.mallanti@gmail.com", link: "mailto:rian.mallanti@gmail.com" },
-    { icon: <MapPin size={18} />, title: "Location", value: "Barru, Sulawesi Selatan", link: "#" },
+    { icon: <MapPin size={18} />, title: "Location", value: "Makassar, Sulawesi Selatan", link: "#" },
     { icon: <Clock size={18} />, title: "Available", value: "Freelance & Full-time" },
   ];
 
