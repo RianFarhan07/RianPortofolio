@@ -9,7 +9,7 @@ export const ROUTE_SEO = {
   "/": {
     title: "Baso Rian Farhan Mallanti — Software Engineer & Fullstack Developer",
     description:
-      "Baso Rian Farhan Mallanti (Rian Farhan) — software engineer, product engineer, and fullstack developer in Makassar, Indonesia. 20+ shipped apps across MERN, Next.js, Kotlin, and Flutter.",
+      "Baso Rian Farhan Mallanti (Rian Farhan) — software engineer, product engineer, and fullstack developer working from Makassar and Jakarta, Indonesia. 20+ shipped apps across MERN, Next.js, Kotlin, and Flutter.",
     breadcrumb: [],
   },
 
@@ -23,7 +23,7 @@ export const ROUTE_SEO = {
   "/about": {
     title: "About Baso Rian Farhan Mallanti — Software Engineer, Makassar",
     description:
-      "Who is Baso Rian Farhan Mallanti? A software engineer and fullstack developer from Makassar, Universitas Negeri Makassar informatics alumnus, now Fullstack Developer Associate Manager at CarbonEthics.",
+      "Who is Baso Rian Farhan Mallanti? A software engineer and fullstack developer from Makassar, working with Jakarta teams. Universitas Negeri Makassar informatics alumnus, now Fullstack Developer Associate Manager at CarbonEthics.",
     breadcrumb: [["About", "/about"]],
   },
 
@@ -37,7 +37,7 @@ export const ROUTE_SEO = {
   "/contact": {
     title: "Contact Baso Rian Farhan Mallanti — Hire a Fullstack Developer",
     description:
-      "Get in touch with Rian Farhan, a software engineer and fullstack developer based in Makassar, Indonesia. Open to work, freelance projects, remote roles, and collaboration.",
+      "Get in touch with Rian Farhan, a software engineer and fullstack developer based in Makassar and available in Jakarta or remote. Open to work, freelance projects, and collaboration.",
     breadcrumb: [["Contact", "/contact"]],
   },
 };
