@@ -22,6 +22,8 @@ import PageTransition5Tech from "./components/PageTransition5Tech";
 import PageTransition6Clean from "./components/PageTransition6Clean";
 import Hero3 from "./components/Hero3";
 import CustomCursor from "./components/CustomCursor";
+import NotFound from "./components/NotFound";
+import SeoManager from "./seo/SeoManager";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -56,6 +58,7 @@ const AppContent = () => {
 
   return (
     <MainLayout>
+      <SeoManager />
       <CustomCursor />
       <Navbar />
       <ScrollToTop />
@@ -83,6 +86,7 @@ const AppContent = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </PageTransition6Clean>
       <Footer />

@@ -35,6 +35,7 @@ export default function CertificatesPreview() {
   const contentRef = useRef(null);
   const stickyRef = useRef(null);
   const introRef = useRef(null);
+  const badgeRef = useRef(null);
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
 
@@ -134,6 +135,10 @@ export default function CertificatesPreview() {
       positionIntro();
       gsap.set(headerSideRef.current, { autoAlpha: 0, y: 24 });
       gsap.set(contentRef.current, { autoAlpha: 0, y: 60 });
+      gsap.set(badgeRef.current, {
+        autoAlpha: 0,
+        clipPath: "inset(0 100% 0 0)",
+      });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -148,6 +153,17 @@ export default function CertificatesPreview() {
       });
 
       // Fase 1 — reveal baris dari balik mask
+      tl.to(
+        badgeRef.current,
+        {
+          autoAlpha: 1,
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.2,
+          ease: "power2.out",
+        },
+        0.05,
+      );
+
       tl.fromTo(
         [line1Ref.current, line2Ref.current],
         { yPercent: 110 },
@@ -189,13 +205,15 @@ export default function CertificatesPreview() {
       // Tail kosong → jeda settle sebelum sticky lepas
       tl.to({}, { duration: 0.18 }, 0.82);
 
-      // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
-      const refresh = () => ScrollTrigger.refresh();
-      const raf = requestAnimationFrame(refresh);
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(refresh).catch(() => {});
-      }
     }, section);
+
+    // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
+    // Harus di luar gsap.context() — cleanup di bawah butuh `raf` dalam scope-nya.
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = requestAnimationFrame(refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -320,7 +338,7 @@ export default function CertificatesPreview() {
                   fontWeight: 700,
                 }}
               >
-                Certifications
+                Proof Behind the Practice
               </span>
             </div>
             <div
@@ -748,6 +766,7 @@ export default function CertificatesPreview() {
             style={{ position: "relative", zIndex: 30 }}
           >
             <div
+              ref={badgeRef}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -772,7 +791,7 @@ export default function CertificatesPreview() {
                   fontWeight: 700,
                 }}
               >
-                Certifications
+                Proof Behind the Practice
               </span>
             </div>
             <div className="cp-intro-title">

@@ -82,6 +82,7 @@ export default function ProjectPreview() {
   const footerRef = useRef(null);
   const stickyRef = useRef(null);
   const introRef = useRef(null);
+  const badgeRef = useRef(null);
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
 
@@ -179,6 +180,10 @@ export default function ProjectPreview() {
       gsap.set(headerSideRef.current, { autoAlpha: 0, y: 24 });
       gsap.set(sliderRef.current, { autoAlpha: 0, y: 60 });
       gsap.set(footerRef.current, { autoAlpha: 0, y: 30 });
+      gsap.set(badgeRef.current, {
+        autoAlpha: 0,
+        clipPath: "inset(0 100% 0 0)",
+      });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -193,6 +198,17 @@ export default function ProjectPreview() {
       });
 
       // Fase 1 — reveal baris dari balik mask (gsap penuh yang punya transform)
+      tl.to(
+        badgeRef.current,
+        {
+          autoAlpha: 1,
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.2,
+          ease: "power2.out",
+        },
+        0.05,
+      );
+
       tl.fromTo(
         [line1Ref.current, line2Ref.current],
         { yPercent: 110 },
@@ -243,13 +259,15 @@ export default function ProjectPreview() {
       // Tail kosong → kasih jeda "settle" sebelum sticky lepas
       tl.to({}, { duration: 0.18 }, 0.82);
 
-      // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
-      const refresh = () => ScrollTrigger.refresh();
-      const raf = requestAnimationFrame(refresh);
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(refresh).catch(() => {});
-      }
     }, section);
+
+    // Re-ukur posisi trigger setelah font besar (Syne) selesai load.
+    // Harus di luar gsap.context() — cleanup di bawah butuh `raf` dalam scope-nya.
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = requestAnimationFrame(refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -416,6 +434,39 @@ export default function ProjectPreview() {
               }}
             />
           ))}
+
+          {/* Descriptive badge */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 8,
+              opacity: entered ? 1 : 0,
+              transform: entered ? "translateY(0)" : "translateY(20px)",
+              transition: "opacity .6s ease, transform .6s ease",
+            }}
+          >
+            <div
+              style={{
+                width: 28,
+                height: 1,
+                background: "linear-gradient(90deg,var(--ac),transparent)",
+              }}
+            />
+            <span
+              style={{
+                fontSize: ".65rem",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                color: "rgba(var(--ac1),.7)",
+                fontFamily: "Syne,sans-serif",
+                fontWeight: 700,
+              }}
+            >
+              Built for Real Use
+            </span>
+          </div>
 
           {/* Title */}
           <div
@@ -912,6 +963,35 @@ export default function ProjectPreview() {
             className="pp-intro-inner"
             style={{ position: "relative", zIndex: 30 }}
           >
+            <div
+              ref={badgeRef}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 10,
+              }}
+            >
+              <div
+                style={{
+                  width: 36,
+                  height: 1,
+                  background: "linear-gradient(90deg,var(--ac),transparent)",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: ".65rem",
+                  letterSpacing: ".22em",
+                  textTransform: "uppercase",
+                  color: "rgba(var(--ac1),.7)",
+                  fontFamily: "Syne,sans-serif",
+                  fontWeight: 700,
+                }}
+              >
+                Built for Real Use
+              </span>
+            </div>
             <div className="pp-intro-title">
               <div className="pp-mask">
                 <div ref={line1Ref} style={{ color: textPrimary }}>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
-import fotoRianDark from "../assets/foto_rian_nobg3.webp.png";
+import fotoRianDark from "../assets/foto_rian_nobg3.webp";
 // import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
 import fotoRianLight from "../assets/foto_rian_putih.webp";
 
@@ -330,20 +330,25 @@ export default function Hero3() {
                     "linear-gradient(90deg, transparent, var(--ac), transparent)",
                 }}
               />
-              <div
+              <h1
                 style={{
                   fontFamily: "Syne, sans-serif",
                   fontSize: "0.62rem",
                   fontWeight: 600,
                   letterSpacing: "0.16em",
                   textTransform: "uppercase",
+                  margin: 0,
                   color: isDark
                     ? "rgba(255,255,255,0.75)"
                     : "rgba(16,35,63,0.7)",
                 }}
               >
                 BASO RIAN FARHAN MALLANTI
-              </div>
+                <span className="sr-only">
+                  {" "}
+                  — Software Engineer &amp; Fullstack Developer in Makassar, Indonesia
+                </span>
+              </h1>
             </div>
 
             {/* Availability readout */}
@@ -872,19 +877,24 @@ export default function Hero3() {
                 "linear-gradient(90deg, transparent, var(--ac), transparent)",
             }}
           />
-          <div
+          <h1
             style={{
               fontFamily: "Syne, sans-serif",
               fontSize: "clamp(0.6rem, 2.5vw, 0.95rem)",
               fontWeight: 600,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
+              margin: 0,
               color: isDark ? "rgba(255,255,255,0.85)" : "rgba(16,35,63,0.7)",
               whiteSpace: "nowrap",
             }}
           >
             BASO RIAN FARHAN MALLANTI
-          </div>
+            <span className="sr-only">
+              {" "}
+              — Software Engineer &amp; Fullstack Developer in Makassar, Indonesia
+            </span>
+          </h1>
           <div
             style={{
               fontSize: "0.68rem",

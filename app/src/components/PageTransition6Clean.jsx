@@ -282,7 +282,7 @@ function IntroTypewriter({ isDark }) {
 
       {/* Name — typed */}
       <div className="relative">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-center px-4"
+        <div className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-center px-4"
           style={{ fontFamily: "'Syne', sans-serif", color: txt }}>
           {nameChars.map((ch, i) => (
             <motion.span key={i}
@@ -298,7 +298,7 @@ function IntroTypewriter({ isDark }) {
             animate={typingDone
               ? { opacity: [1, 0, 1, 0], transition: { duration: 0.7, repeat: 2 } }
               : { opacity: [1, 0, 1, 0], transition: { duration: 0.6, repeat: Infinity, repeatType: "reverse" } }} />
-        </h1>
+        </div>
       </div>
 
       {/* Title — stagger per word */}
@@ -378,9 +378,9 @@ function IntroCards({ isDark }) {
           animate={{ rotateY: [100, -6, 2, 0, 0, -100], opacity: [0, 1, 1, 1, 1, 0], scale: [0.85, 1.02, 0.99, 1, 1, 0.85],
             transition: { times: [0, 0.18, 0.26, 0.36, 0.75, 1], duration: D, delay: 0.04, ease: "easeInOut" } }}>
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%)" }} />
-          <h1 className="relative text-2xl md:text-4xl font-bold tracking-tight text-center" style={{ fontFamily: "'Syne', sans-serif", color: txt }}>
+          <div className="relative text-2xl md:text-4xl font-bold tracking-tight text-center" style={{ fontFamily: "'Syne', sans-serif", color: txt }}>
             {personalInfo.name}
-          </h1>
+          </div>
         </motion.div>
 
         {/* Card 3 — Title + Origin — flips from bottom */}
@@ -581,10 +581,10 @@ function IntroCountdown({ isDark }) {
       <motion.div className="flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0, 0, 1, 1, 0], transition: { duration: D, times: [0, 0.63, 0.7, 0.82, 0.93, 1] } }}>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-center px-4"
+        <div className="text-3xl md:text-5xl font-bold tracking-tight text-center px-4"
           style={{ fontFamily: "'Syne', sans-serif", color: txt, textShadow: isDark ? `0 0 35px rgba(${AR}, 0.5)` : undefined }}>
           {personalInfo.name}
-        </h1>
+        </div>
         <p className="text-lg md:text-xl font-light mt-2 text-center" style={{ color: A }}>{personalInfo.title}</p>
         <p className="text-sm mt-1 opacity-50 tracking-wide text-center" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(16,35,63,0.4)" }}>{personalInfo.origin}</p>
       </motion.div>
