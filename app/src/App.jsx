@@ -1,29 +1,32 @@
-import React, { Component, useState } from "react";
+import React, { Component, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
-import PageTransition from "./components/PageTransition";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Projects from "./components/Projects";
-import Certificates from "./components/Certificates";
-import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import ProjectDialog from "./components/ProjectDialog";
 import ScrollToTop from "./components/ScrollToTop";
 import AboutPreview from "./components/AboutPreview";
 import CertificatesPreview from "./components/CertificatesPreview";
 import MainLayout from "./layouts/mainLayout";
 import ContactPreview from "./components/ContactPreview2";
 import ProjectPreview from "./components/ProjectPreview";
-import Hero2 from "./components/Hero2";
-import PageTransition5Tech from "./components/PageTransition5Tech";
 import PageTransition6Clean from "./components/PageTransition6Clean";
 import Hero3 from "./components/Hero3";
 import CustomCursor from "./components/CustomCursor";
-import NotFound from "./components/NotFound";
 import SeoManager from "./seo/SeoManager";
+
+const About = lazy(() => import("./components/About"));
+const Projects = lazy(() => import("./components/Projects"));
+const Certificates = lazy(() => import("./components/Certificates"));
+const Contact = lazy(() => import("./components/Contact"));
+const NotFound = lazy(() => import("./components/NotFound"));
+
+const RouteFallback = () => (
+  <div
+    role="status"
+    aria-label="Loading page"
+    style={{ minHeight: "100svh" }}
+  />
+);
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -67,27 +70,27 @@ const AppContent = () => {
       {/* TRANSITION: slide-strips | curtain-reveal | flip-card | radial-expand */}
       {/* ═══════════════════════════════════════════════════════ */}
       <PageTransition6Clean variant="slide-strips" introVariant="random">
-        <Routes location={location}>
-          <Route
-            path="/"
-            element={
-              <div className="mt-5">
-                {/* <Hero /> */}
-                {/* <Hero2 /> */}
-                <Hero3 />
-                <AboutPreview />
-                <ProjectPreview />
-                <CertificatesPreview />
-                <ContactPreview />
-              </div>
-            }
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/certificates" element={<Certificates />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes location={location}>
+            <Route
+              path="/"
+              element={
+                <div className="mt-5">
+                  <Hero3 />
+                  <AboutPreview />
+                  <ProjectPreview />
+                  <CertificatesPreview />
+                  <ContactPreview />
+                </div>
+              }
+            />
+            <Route path="/about" element={<About />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/certificates" element={<Certificates />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </PageTransition6Clean>
       <Footer />
     </MainLayout>

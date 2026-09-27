@@ -75,7 +75,6 @@ export default function Hero2() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
         @keyframes hero2-pdot {
           0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.7); }

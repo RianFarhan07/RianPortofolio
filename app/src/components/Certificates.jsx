@@ -71,7 +71,6 @@ export default function Certificates() {
     <section id="certificates" className="py-16 md:py-24 relative min-h-screen"
       style={{ opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
         @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(${AR},.6)}50%{box-shadow:0 0 0 5px rgba(${AR},0)}}
         @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
         .cp-scan{position:absolute;left:0;right:0;height:1px;z-index:8;pointer-events:none;

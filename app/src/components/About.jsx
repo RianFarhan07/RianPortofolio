@@ -1,29 +1,36 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
 import { Terminal, Download, Github, Linkedin, Mail } from "lucide-react";
-import rianPhoto from "../assets/rian_animate.webp";
+import rianPhoto from "../assets/rian-animate-editorial.webp";
 
 /* ──────────────────────────────────────────────
    DATA
 ────────────────────────────────────────────── */
 const EXPERIENCES = [
-  { role: "Fullstack Developer Associate Manager", org: "Carbonethics", period: "2024 → now", desc: "End-to-end web solutions aligned with sustainability initiatives." },
-  { role: "Freelance Android Developer", org: "SMKN 4 Jeneponto", period: "2023", desc: "Built & maintained Android apps for school needs using Kotlin." },
   { role: "IT Support", org: "Dept. of Manpower, Makassar", period: "2022 → 23", desc: "Daily technical support, hardware/software & internal networks." },
+  { role: "Freelance Android Developer", org: "SMKN 4 Jeneponto", period: "2023", desc: "Built & maintained Android apps for school needs using Kotlin." },
+  { role: "Fullstack Developer Associate Manager", org: "CarbonEthics", period: "2024 → now", desc: "End-to-end web solutions aligned with sustainability initiatives.", featured: true },
 ];
 const EDUCATION = [
-  { degree: "B.Sc Informatics", org: "Universitas Negeri Makassar", period: "2020 → 24", desc: "Computer science, software development & IT fundamentals." },
-  { degree: "Fullstack JS Bootcamp", org: "Hacktiv8", period: "2024 → 25", desc: "React, Node.js, Express, MongoDB — intensive fullstack track." },
+  { degree: "B.Sc Informatics", org: "Universitas Negeri Makassar", period: "2020 → 2024", desc: "Computer science, software development & IT fundamentals.", score: "3.86", scale: "/4.00", scoreLabel: "GPA" },
+  { degree: "Fullstack JavaScript Bootcamp", org: "Hacktiv8", period: "2024 → 2025", desc: "An intensive fullstack track covering React, Node.js, Express, and databases.", score: "99", scale: "/100", scoreLabel: "Final score", award: "Teacher's Award" },
 ];
-const SKILL_GROUPS = [
-  { cat: "Frontend", items: ["React / Next.js", "TypeScript", "HTML / CSS"] },
-  { cat: "Mobile", items: ["React Native", "Kotlin", "Flutter"] },
-  { cat: "Backend & Design", items: ["Node / API", "PHP", "Figma / UI"] },
+const WORK_PRINCIPLES = [
+  { title: "Think in Systems", desc: "I connect interface decisions with APIs, data, and the operational reality behind the product." },
+  { title: "Own It End-to-End", desc: "I stay close to the work from discovery and architecture through release, feedback, and iteration." },
+  { title: "Ship With Clarity", desc: "I turn ambiguous requirements into clear decisions, visible progress, and maintainable delivery." },
+];
+const CAPABILITY_GROUPS = [
+  { cat: "Frontend / Product UI", desc: "Accessible interfaces with a strong product hierarchy and dependable implementation.", items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind", "Figma"] },
+  { cat: "Backend / Systems", desc: "Practical APIs, data flows, and services designed around real operational needs.", items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "PHP", "Git"] },
+  { cat: "Mobile Delivery", desc: "Focused mobile experiences that translate workflows into tools people can use anywhere.", items: ["React Native", "Flutter", "Kotlin", "Apps Script"] },
 ];
 const STACK = ["React", "Next.js", "React Native", "Flutter", "TypeScript", "JavaScript", "Kotlin", "PHP", "Node.js", "Express", "MongoDB", "PostgreSQL", "Tailwind", "Figma", "Apps Script", "Git"];
 const SOCIALS = { github: "https://github.com", linkedin: "https://linkedin.com", mail: "mailto:rian.mallanti@gmail.com" };
 const CV = "/rianCV.pdf";
+const ABOUT_VIEW_KEY = "rian-about-view";
+const CARBONETHICS_LOGO = "https://static.wixstatic.com/media/ee9db0_f68a88bb9569472eae36b57823fdf84a~mv2.png/v1/crop/x_181,y_73,w_3005,h_835/fill/w_249,h_69,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/CarbonEthics%20Horizontal%20White.png";
 
 /* ──────────────────────────────────────────────
    COMPONENT
@@ -31,22 +38,12 @@ const CV = "/rianCV.pdf";
 export default function About() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
-  // Mobile skips the split picker entirely — page view only, no terminal.
-  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
-  const [view, setView] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 768 ? "page" : "picker"
-  ); // 'picker' | 'terminal' | 'page'
+  const [view, setView] = useState(() => {
+    if (typeof window === "undefined") return "picker";
+    const savedView = window.sessionStorage.getItem(ABOUT_VIEW_KEY);
+    return savedView === "page" || savedView === "terminal" ? savedView : "picker";
+  }); // 'picker' | 'terminal' | 'page'
   const [selecting, setSelecting] = useState(null); // null | 'terminal' | 'page' — drives the expand transition
-
-  useEffect(() => {
-    const c = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", c);
-    return () => window.removeEventListener("resize", c);
-  }, []);
-  // If we shrink to mobile while sitting on the picker, drop straight to page.
-  useEffect(() => {
-    if (isMobile && view === "picker") setView("page");
-  }, [isMobile, view]);
 
   const { introExited, pageTransitionDone } = useContext(IntroContext);
   const [visible, setVisible] = useState(false);
@@ -57,17 +54,39 @@ export default function About() {
     return () => clearTimeout(t);
   }, [introExited, pageTransitionDone]);
 
-  const choose = (target) => {
+  const openView = useCallback((target) => {
+    window.sessionStorage.setItem(ABOUT_VIEW_KEY, target);
+    setSelecting(null);
+    setView(target);
+  }, []);
+
+  const choose = useCallback((target) => {
     if (selecting) return;
     setSelecting(target);
-    setTimeout(() => setView(target), 560);
+    setTimeout(() => openView(target), 560);
+  }, [openView, selecting]);
+
+  const showPicker = () => {
+    window.sessionStorage.removeItem(ABOUT_VIEW_KEY);
+    setSelecting(null);
+    setView("picker");
   };
+
+  useEffect(() => {
+    if (view !== "picker") return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "1") choose("page");
+      if (event.key === "2") choose("terminal");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [view, choose]);
 
   const bodyRef = useRef(null);
   const apiRef = useRef(null);
   const setViewRef = useRef(setView);
   const toggleThemeRef = useRef(toggleTheme);
-  setViewRef.current = setView;
+  setViewRef.current = openView;
   toggleThemeRef.current = toggleTheme;
 
   /* ── terminal engine ── */
@@ -88,7 +107,7 @@ export default function About() {
     /* content */
     const neofetch = '<div class="nf"><div class="nf-ava">RF</div><div class="nf-info">'
       + '<div><span class="k">host</span> rian@portfolio</div><div><span class="k">role</span> Full Stack Developer</div>'
-      + '<div><span class="k">company</span> Carbonethics</div><div><span class="k">location</span> Makassar, ID</div>'
+      + '<div><span class="k">company</span> CarbonEthics</div><div><span class="k">location</span> Jakarta / Makassar, ID</div>'
       + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 20+</div>'
       + '<div><span class="k">status</span> <span class="ok">● open_to_work</span></div></div></div>';
     const bio = '<span class="muted">"""</span> Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences. <span class="muted">"""</span>';
@@ -246,13 +265,13 @@ export default function About() {
 
   /* ── terminal window (live = real engine boots; preview = static snapshot) ── */
   const renderTerminal = ({ live, outerStyle }) => (
-    <div className="bt" style={{ ...tv, "--mono": mono, ...outerStyle }}>
+    <div id={live ? "terminal-view" : undefined} className="bt" style={{ ...tv, "--mono": mono, ...outerStyle }}>
       <style>{btCss}</style>
       <div className="term-win">
         <div className="term-bar">
           <div className="dots"><span className="dot" style={{ background: "#ff5f57" }} /><span className="dot" style={{ background: "#febc2e" }} /><span className="dot" style={{ background: "#28c840" }} /></div>
           <div className="term-title"><b>rian@portfolio</b> : ~/about — zsh</div>
-          {live && <button className="vbtn" onClick={() => setView("page")}>▦ read as page</button>}
+          {live && <button className="vbtn" onClick={showPicker} aria-label="Switch view">▦ Switch view</button>}
         </div>
         {live
           ? <div className="term-body" ref={bodyRef} />
@@ -264,14 +283,14 @@ export default function About() {
             ))}
           </div>
         )}
-        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Makassar, ID</span><span className="sp">TSX · UTF-8</span></div>
+        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Jakarta / Makassar, ID</span><span className="sp">TSX · UTF-8</span></div>
         <div className="crt" />
       </div>
     </div>
   );
 
-  /* ── readable page (used full-screen AND clipped in the picker preview) ── */
-  const renderPage = ({ preview } = {}) => {
+  /* ── readable page ── */
+  const renderPage = () => {
     const soft = isDark ? "rgba(210,222,235,.7)" : "rgba(16,35,63,.7)";
     const muted = isDark ? "rgba(210,222,235,.5)" : "rgba(16,35,63,.5)";
     const txt = isDark ? "#eaf1fb" : "#10233f";
@@ -279,14 +298,12 @@ export default function About() {
     const line = isDark ? "rgba(120,160,220,.14)" : "rgba(16,120,100,.16)";
     const strk = isDark ? "rgba(255,255,255,.16)" : "rgba(16,35,63,.16)";
     return (
-      <div className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,4vw,40px) 60px", maxWidth: 1160, margin: "0 auto", opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
+      <div id="visual-journey" className="bp" style={{ minHeight: "100vh", fontFamily: "'DM Sans',system-ui,sans-serif", color: txt, padding: "90px clamp(20px,3vw,24px) 60px", maxWidth: 1200, margin: "0 auto", opacity: visible ? 1 : 0, transition: "opacity 0.4s" }}>
         <style>{bpCss}</style>
 
-        {!preview && !isMobile && (
-          <div className="bp-top">
-            <button className="bp-tbtn" onClick={() => setView("terminal")}><Terminal size={14} /> view as terminal</button>
-          </div>
-        )}
+        <div className="bp-top">
+          <button className="bp-tbtn" onClick={showPicker} aria-label="Switch view"><Terminal size={14} /> Switch view</button>
+        </div>
 
         {/* HERO */}
         <div className="bp-hero">
@@ -294,7 +311,7 @@ export default function About() {
             <div className="bp-eyebrow">console.log("Hello, World!")</div>
             <h1 className="bp-title"><span className="l1">Rian</span><span className="l2" style={{ WebkitTextStroke: `2px ${strk}` }}>Farhan</span></h1>
             <p className="bp-role" style={{ color: soft }}>Full Stack Developer · Mobile · UI/UX</p>
-            <span className="bp-badge"><span className="bp-dot" /> Available · Fullstack Dev @ Carbonethics</span>
+            <span className="bp-badge"><span className="bp-dot" /> Available · Jakarta / Makassar</span>
             <p className="bp-lead" style={{ color: muted }}>Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences.</p>
             <div className="bp-actions">
               <a className="bp-cv" href={CV} target="_blank" rel="noreferrer"><Download size={16} /> Download CV</a>
@@ -313,56 +330,109 @@ export default function About() {
           ))}
         </div>
 
-        {/* EXP + EDU */}
-        <section className="bp-s" style={{ borderColor: line }}>
-          <div className="bp-grid2">
-            <div>
-              <div className="bp-label"><span className="no" style={{ color: strk }}>01</span> Experience</div>
-              {EXPERIENCES.map((e) => (
-                <div className="bp-card" key={e.role} style={{ background: card, borderColor: line }}>
-                  <div className="h" style={{ color: txt }}><span className="ac">$</span> {e.role}</div>
-                  <div className="meta" style={{ color: muted }}>@ {e.org} · {e.period}</div>
-                  <div className="d" style={{ color: soft }}>{e.desc}</div>
-                </div>
-              ))}
-            </div>
-            <div>
-              <div className="bp-label"><span className="no" style={{ color: strk }}>02</span> Education</div>
-              {EDUCATION.map((e) => (
-                <div className="bp-card" key={e.degree} style={{ background: card, borderColor: line }}>
-                  <div className="h" style={{ color: txt }}>🎓 {e.degree}</div>
-                  <div className="meta" style={{ color: muted }}>@ {e.org} · {e.period}</div>
-                  <div className="d" style={{ color: soft }}>{e.desc}</div>
-                </div>
-              ))}
-            </div>
+        {/* LEARNING JOURNEY */}
+        <section id="education-journey" className="bp-s" style={{ borderColor: line }}>
+          <div className="bp-label"><span className="no" style={{ color: strk }}>01</span> Learning Journey</div>
+          <div className="bp-section-intro">
+            <h2 style={{ color: txt }}>Built through depth,<br />then sharpened by speed.</h2>
+            <p style={{ color: muted }}>A foundation in informatics followed by an intensive fullstack program, with the outcomes shown clearly.</p>
           </div>
-        </section>
-
-        {/* SKILLS */}
-        <section className="bp-s" style={{ borderColor: line }}>
-          <div className="bp-label"><span className="no" style={{ color: strk }}>03</span> Skills</div>
-          <div className="bp-skillgroups">
-            {SKILL_GROUPS.map((g) => (
-              <div key={g.cat}>
-                <div className="bp-skillcat">{g.cat}</div>
-                <div className="bp-chips">{g.items.map((t) => <span className="bp-chip" key={t} style={{ background: card }}>{t}</span>)}</div>
-              </div>
+          <div className="bp-achievement-grid">
+            {EDUCATION.map((item, index) => (
+              <article className="bp-achievement" key={item.degree} style={{ background: card, borderColor: line }}>
+                <div className="bp-achievement-top">
+                  <span className="bp-index">0{index + 1}</span>
+                  <span className="bp-period" style={{ color: muted }}>{item.period}</span>
+                </div>
+                <div className="bp-score" aria-label={`${item.score} ${item.scale}`}>
+                  <strong style={{ color: txt }}>{item.score}</strong><span>{item.scale}</span>
+                </div>
+                <div className="bp-score-label">{item.scoreLabel}</div>
+                <h3 style={{ color: txt }}>{item.degree}</h3>
+                <div className="bp-org" style={{ color: soft }}>{item.org}</div>
+                <p style={{ color: muted }}>{item.desc}</p>
+                {item.award && <div className="bp-award">✦ <span>Teacher's Award</span></div>}
+              </article>
             ))}
           </div>
         </section>
 
-        {/* STACK */}
-        <section className="bp-s" style={{ borderColor: line }}>
-          <div className="bp-label"><span className="no" style={{ color: strk }}>04</span> Tech Stack</div>
-          <div className="bp-chips">{STACK.map((t) => <span className="bp-chip" key={t} style={{ background: card }}>{t}</span>)}</div>
+        {/* CAREER JOURNEY */}
+        <section id="career-journey" className="bp-s" style={{ borderColor: line }}>
+          <div className="bp-label"><span className="no" style={{ color: strk }}>02</span> Professional Journey</div>
+          <div className="bp-career-list">
+            {EXPERIENCES.map((item, index) => (
+              <article className={`bp-career-item ${item.featured ? "is-current" : ""}`} key={item.role} style={{ borderColor: line }}>
+                <div className="bp-career-marker"><span>{String(index + 1).padStart(2, "0")}</span></div>
+                <div className="bp-career-time" style={{ color: muted }}>{item.period}</div>
+                <div className="bp-career-copy">
+                  <div className="bp-career-titleline">
+                    <div>
+                      <h3 style={{ color: txt }}>{item.role}</h3>
+                      <div className="bp-org" style={{ color: soft }}>{item.org}</div>
+                    </div>
+                    {item.featured && (
+                      <div className="bp-company-lockup" aria-label="CarbonEthics">
+                        <img src={CARBONETHICS_LOGO} alt="CarbonEthics logo" loading="lazy" decoding="async" />
+                        <span>Current role</span>
+                      </div>
+                    )}
+                  </div>
+                  <p style={{ color: muted }}>{item.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* HOW I WORK */}
+        <section id="work-principles" className="bp-s" style={{ borderColor: line }}>
+          <div className="bp-section-head">
+            <div className="bp-label"><span className="no" style={{ color: strk }}>03</span> How I Work</div>
+            <p style={{ color: muted }}>The habits behind the output—how I move from an unclear problem to a product people can rely on.</p>
+          </div>
+          <div className="bp-principles">
+            {WORK_PRINCIPLES.map((principle, index) => (
+              <article className="bp-principle" key={principle.title}>
+                <span className="bp-principle-no">0{index + 1}</span>
+                <h3 style={{ color: txt }}>{principle.title}</h3>
+                <p style={{ color: muted }}>{principle.desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* CAPABILITIES + TOOLBOX */}
+        <section id="capabilities-toolbox" className="bp-s" style={{ borderColor: line }}>
+          <div className="bp-toolbox-intro">
+            <div>
+              <div className="bp-label"><span className="no" style={{ color: strk }}>04</span> Capabilities &amp; Toolbox</div>
+              <h2 style={{ color: txt }}>One builder,<br /><span>across the stack.</span></h2>
+            </div>
+            <p style={{ color: muted }}>Tools are selected for the problem, not for decoration. The constant is ownership across interface, system, and delivery.</p>
+          </div>
+          <div className="bp-tool-rows">
+            {CAPABILITY_GROUPS.map((group, index) => (
+              <article className="bp-tool-row" key={group.cat} style={{ borderColor: line }}>
+                <span className="bp-tool-index">0{index + 1}</span>
+                <div className="bp-tool-copy">
+                  <h3 style={{ color: txt }}>{group.cat}</h3>
+                  <p style={{ color: muted }}>{group.desc}</p>
+                </div>
+                <div className="bp-tool-list">
+                  {group.items.map((tool) => <span key={tool}>{tool}</span>)}
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* CTA */}
         <section className="bp-s" style={{ borderColor: line }}>
           <div className="bp-cta">
-            <h2 style={{ color: txt }}>Let's build something <span className="ac">amazing</span></h2>
-            <p style={{ color: muted }}>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+            <div className="bp-label bp-cta-label"><span className="no" style={{ color: strk }}>05</span> Next Chapter</div>
+            <h2 style={{ color: txt }}>Need someone who can move from <span className="ac">product thinking</span> to production code?</h2>
+            <p style={{ color: muted }}>Let’s talk about the problem, the people using it, and what a dependable release should look like.</p>
             <a className="bp-cv" href="/contact"><Terminal size={16} /> Start a Conversation</a>
           </div>
         </section>
@@ -370,65 +440,75 @@ export default function About() {
     );
   };
 
-  /* ── PICKER VIEW (split choice, default) ──
-     Both real views sit in place at half-width from the start (not mockup
-     cards) with a dark scrim prompting a choice. Picking one lifts its
-     scrim and expands it to full width; only then does the real view
-     mount (and, for terminal, its boot sequence start). */
+  /* ── PICKER VIEW (shown once per browser session) ── */
   if (view === "picker") {
-    const entered = visible;
-    const halfStyle = (key) => ({
-      flex: selecting ? (selecting === key ? "1 0 100%" : "0 0 0%") : 1,
-      opacity: selecting ? (selecting === key ? 1 : 0) : entered ? 1 : 0,
-      transform: `scale(${entered || selecting ? 1 : 0.98})`,
-      transition: "flex .55s cubic-bezier(.4,0,.2,1), opacity .45s ease, transform .5s ease",
-      transitionDelay: !selecting && key === "page" ? "0.06s" : "0s",
-      position: "relative",
-      overflow: "hidden",
-      cursor: selecting ? "default" : "pointer",
-      minHeight: 0,
-    });
-    const scrimStyle = (key) => ({
-      opacity: selecting === key ? 0 : 1,
-      pointerEvents: selecting ? "none" : "auto",
-    });
+    const pickerTheme = isDark
+      ? { "--pk-bg": "#08111f", "--pk-panel": "#0d1827", "--pk-text": "#e8eef7", "--pk-soft": "#93a3b8", "--pk-line": "#243247" }
+      : { "--pk-bg": "#edf2f0", "--pk-panel": "#f8faf9", "--pk-text": "#10233f", "--pk-soft": "#68768a", "--pk-line": "#cad4d2" };
     return (
-      <div style={{ height: "100vh", overflow: "hidden", position: "relative" }}>
+      <main
+        id="about-view-picker"
+        className={`pk ${visible ? "is-visible" : ""} ${selecting ? `is-selecting is-selecting-${selecting}` : ""}`}
+        style={pickerTheme}
+      >
         <style>{pkCss}</style>
-        <div className="pk-row">
-          {/* TERMINAL half — the real window, static boot snapshot (engine runs on pick) */}
-          <div
-            style={halfStyle("terminal")}
-            onClick={() => choose("terminal")}
-            role="button"
-            tabIndex={0}
-            aria-label="Open terminal view"
-            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose("terminal"); } }}
-          >
-            {renderTerminal({ live: false, outerStyle: { width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "clamp(16px,3vw,44px)" } })}
-            <div className="pk-scrim" style={scrimStyle("terminal")}><span className="pk-badge">▸ Terminal</span></div>
-          </div>
+        <div className="pk-frame">
+          <section className="pk-identity" aria-label="Profile introduction">
+            <div className="pk-kicker"><span /> PROFILE / ABOUT</div>
+            <div className="pk-portrait-wrap">
+              <div className="pk-portrait-index">01</div>
+              <img src={rianPhoto} alt="Rian Farhan illustrated portrait" decoding="async" />
+              <div className="pk-portrait-caption">
+                <span>Full Stack Developer</span>
+                <span>Web · Mobile · UI/UX</span>
+              </div>
+            </div>
+            <div className="pk-identity-copy">
+              <span className="pk-available"><i /> Available · Jakarta / Makassar</span>
+              <h1>Baso Rian<br />Farhan Mallanti</h1>
+              <p>One story, two ways to explore it.</p>
+            </div>
+          </section>
 
-          {/* PAGE half — the real readable page, clipped to half width */}
-          <div
-            style={halfStyle("page")}
-            onClick={() => choose("page")}
-            role="button"
-            tabIndex={0}
-            aria-label="Open readable page view"
-            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose("page"); } }}
-          >
-            <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>{renderPage({ preview: true })}</div>
-            <div className="pk-scrim" style={scrimStyle("page")}><span className="pk-badge">▸ Page</span></div>
-          </div>
+          <section className="pk-choices" aria-labelledby="picker-heading">
+            <div className="pk-choice-kicker">CHOOSE YOUR ENTRY POINT</div>
+            <h2 id="picker-heading">How do you want<br />to meet me?</h2>
+            <p className="pk-choice-lead">The content is the same. The experience is yours.</p>
+
+            <div className="pk-options">
+              <button
+                className={`pk-option pk-option-page ${selecting === "page" ? "is-selected" : ""}`}
+                onClick={() => choose("page")}
+                aria-label="Visual Journey"
+                disabled={Boolean(selecting)}
+              >
+                <span className="pk-option-no">01</span>
+                <span className="pk-option-copy">
+                  <strong>Visual Journey</strong>
+                  <small>Editorial, structured, and easy to scan.</small>
+                </span>
+                <span className="pk-option-glyph" aria-hidden="true">↗</span>
+              </button>
+
+              <button
+                className={`pk-option pk-option-terminal ${selecting === "terminal" ? "is-selected" : ""}`}
+                onClick={() => choose("terminal")}
+                aria-label="Terminal Mode"
+                disabled={Boolean(selecting)}
+              >
+                <span className="pk-option-no">02</span>
+                <span className="pk-option-copy">
+                  <strong>Terminal Mode</strong>
+                  <small>Interactive commands for the curious.</small>
+                </span>
+                <span className="pk-option-glyph" aria-hidden="true">$_</span>
+              </button>
+            </div>
+
+            <div className="pk-keyhint"><kbd>1</kbd> Visual <span /> <kbd>2</kbd> Terminal</div>
+          </section>
         </div>
-        {!selecting && (
-          <div className="pk-hint">
-            <span className="pk-hint-title">Pick a view to explore</span>
-            <span className="pk-hint-sub">click either side to continue</span>
-          </div>
-        )}
-      </div>
+      </main>
     );
   }
 
@@ -496,7 +576,6 @@ const btCss = `
 `;
 
 const bpCss = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 @keyframes bp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.5)}50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}}
 .bp-top{display:flex;justify-content:flex-end;margin-bottom:8px}
 .bp-tbtn{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--ac);background:rgba(var(--ac1),.08);border:1px solid rgba(var(--ac1),.3);border-radius:8px;padding:8px 14px;cursor:pointer}
@@ -520,7 +599,8 @@ const bpCss = `
 .bp-ava{width:clamp(190px,26vw,300px);height:clamp(190px,26vw,300px);border-radius:28px;position:relative;overflow:hidden;box-shadow:0 30px 80px -24px rgba(var(--ac1),.55),0 0 0 1px rgba(var(--ac1),.3)}
 .bp-ava img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .bp-st{position:absolute;bottom:14px;right:14px;width:18px;height:18px;border-radius:50%;background:#3ddc97;border:3px solid #06101e;z-index:2}
-.bp-stats{display:flex;gap:clamp(20px,4vw,52px);flex-wrap:wrap;border-top:1px solid;padding-top:22px;margin-top:8px}
+.bp-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid;border-bottom:1px solid;margin-top:8px}
+.bp-stat{padding:22px clamp(14px,3vw,34px)}.bp-stat:first-child{padding-left:0}.bp-stat+.bp-stat{border-left:1px solid rgba(var(--ac1),.16)}
 .bp-stat .n{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,3.4vw,2.6rem);line-height:1}.bp-stat .n em{font-style:normal;color:var(--ac)}
 .bp-stat .l{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
 .bp-s{padding:clamp(34px,5vw,60px) 0;border-top:1px solid}
@@ -533,29 +613,66 @@ const bpCss = `
 .bp-card .h{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}.bp-card .h .ac{color:var(--ac)}
 .bp-card .meta{font-family:ui-monospace,Menlo,monospace;font-size:12px;margin:4px 0 8px}
 .bp-card .d{font-size:.86rem;line-height:1.6}
-.bp-skillgroups{display:flex;flex-direction:column;gap:20px}
-.bp-skillcat{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin:0 0 10px}
-.bp-chips{display:flex;flex-wrap:wrap;gap:9px}
-.bp-chip{font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:8px 14px;border-radius:9px;color:var(--ac);border:1px solid rgba(var(--ac1),.28)}
+.bp-section-intro{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:36px;align-items:end;margin-bottom:28px}
+.bp-section-intro h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,4rem);line-height:.96;letter-spacing:-.045em;margin:0;text-transform:uppercase}
+.bp-section-intro p{font-size:.95rem;line-height:1.7;margin:0;max-width:44ch}
+.bp-achievement-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bp-achievement{position:relative;overflow:hidden;border:1px solid;border-radius:18px;padding:clamp(20px,3vw,30px);min-height:330px;transition:transform .25s ease,border-color .25s ease}
+.bp-achievement:hover{transform:translateY(-4px);border-color:rgba(var(--ac1),.48)!important}
+.bp-achievement::after{content:'';position:absolute;right:-34px;bottom:-50px;width:150px;height:150px;border:1px solid rgba(var(--ac1),.18);border-radius:50%;pointer-events:none}
+.bp-achievement-top{display:flex;align-items:center;justify-content:space-between;font:11px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.bp-index{color:var(--ac);font-weight:700}.bp-period{white-space:nowrap}
+.bp-score{display:flex;align-items:baseline;margin:32px 0 0;font-family:'Syne',sans-serif;line-height:.8}
+.bp-score strong{font-size:clamp(4rem,8vw,7rem);letter-spacing:-.08em}.bp-score span{color:var(--ac);font-size:clamp(1rem,2vw,1.35rem);margin-left:10px;font-weight:700}
+.bp-score-label{font:10px ui-monospace,Menlo,monospace;color:var(--ac);letter-spacing:.18em;text-transform:uppercase;margin:12px 0 24px}
+.bp-achievement h3{font-family:'Syne',sans-serif;font-size:clamp(1.15rem,2vw,1.45rem);margin:0 0 4px}.bp-achievement p{font-size:.86rem;line-height:1.6;margin:12px 0 0;max-width:48ch}
+.bp-org{font:12px ui-monospace,Menlo,monospace;letter-spacing:.02em}
+.bp-award{position:absolute;right:20px;top:58px;display:inline-flex;align-items:center;gap:7px;background:var(--ac);color:#08111f;border-radius:999px;padding:8px 12px;font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;transform:rotate(2deg)}
+.bp-career-list{position:relative;border-left:1px solid rgba(var(--ac1),.32);margin-left:19px}
+.bp-career-item{display:grid;grid-template-columns:52px 132px 1fr;gap:18px;padding:0 0 32px;position:relative}
+.bp-career-item:last-child{padding-bottom:0}.bp-career-marker{width:39px;height:39px;margin-left:-20px;border:1px solid rgba(var(--ac1),.5);border-radius:50%;display:grid;place-items:center;background:var(--term,#08111f);color:var(--ac);font:700 10px ui-monospace,Menlo,monospace}
+.bp-career-time{padding-top:10px;font:11px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.bp-career-copy{border-bottom:1px solid;padding:4px 0 28px;border-color:inherit}.bp-career-item:last-child .bp-career-copy{border-bottom:0;padding-bottom:0}
+.bp-career-copy h3{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);margin:0 0 6px}.bp-career-copy p{font-size:.9rem;line-height:1.65;margin:13px 0 0;max-width:64ch}
+.bp-career-titleline{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}.bp-company-lockup{background:#08111f;border:1px solid rgba(224,168,58,.35);border-radius:10px;padding:9px 12px;min-width:176px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.bp-company-lockup img{display:block;width:150px;height:25px;object-fit:contain;object-position:left center}.bp-company-lockup span{font:9px ui-monospace,Menlo,monospace;color:#e0a83a;letter-spacing:.17em;text-transform:uppercase}
+.bp-career-item.is-current .bp-career-marker{background:var(--ac);color:#08111f}.bp-career-item.is-current .bp-career-copy{position:relative}.bp-career-item.is-current .bp-career-copy::before{content:'CURRENT';position:absolute;right:0;top:-18px;color:var(--ac);font:700 9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.bp-section-head{display:grid;grid-template-columns:1fr minmax(280px,.62fr);gap:36px;align-items:start;margin-bottom:30px}.bp-section-head .bp-label{margin-bottom:0}.bp-section-head>p{font-size:.92rem;line-height:1.7;margin:0;max-width:48ch}
+.bp-principles{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(var(--ac1),.18);border-bottom:1px solid rgba(var(--ac1),.18)}
+.bp-principle{padding:28px clamp(18px,2.8vw,34px) 30px;min-height:210px}.bp-principle:first-child{padding-left:0}.bp-principle+.bp-principle{border-left:1px solid rgba(var(--ac1),.18)}
+.bp-principle-no,.bp-tool-index{display:block;color:var(--ac);font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.16em}.bp-principle h3{font-family:'Syne',sans-serif;font-size:clamp(1.25rem,2.2vw,1.75rem);line-height:1.05;margin:36px 0 12px}.bp-principle p{font-size:.86rem;line-height:1.65;margin:0;max-width:34ch}
+.bp-toolbox-intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:44px;align-items:end;margin-bottom:34px}.bp-toolbox-intro h2{font-family:'Syne',sans-serif;font-size:clamp(2.3rem,5.2vw,4.6rem);line-height:.9;letter-spacing:-.05em;text-transform:uppercase;margin:0}.bp-toolbox-intro h2 span{color:transparent;-webkit-text-stroke:1px rgba(var(--ac1),.44)}.bp-toolbox-intro>p{font-size:.92rem;line-height:1.7;margin:0;max-width:45ch}
+.bp-tool-rows{border-bottom:1px solid rgba(var(--ac1),.18)}.bp-tool-row{display:grid;grid-template-columns:54px minmax(230px,.8fr) minmax(0,1.2fr);gap:24px;align-items:center;border-top:1px solid;padding:24px 0}.bp-tool-copy h3{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,1.8vw,1.35rem);margin:0 0 7px}.bp-tool-copy p{font-size:.8rem;line-height:1.55;margin:0;max-width:43ch}.bp-tool-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.bp-tool-list span{border-bottom:1px solid rgba(var(--ac1),.34);padding:5px 2px;color:var(--ac);font:11px ui-monospace,Menlo,monospace;white-space:nowrap}
+@media (max-width:820px){.bp-section-intro,.bp-achievement-grid,.bp-section-head,.bp-toolbox-intro{grid-template-columns:1fr}.bp-achievement{min-height:300px}.bp-career-item{grid-template-columns:42px 1fr;gap:13px}.bp-career-time{grid-column:2;padding-top:0}.bp-career-copy{grid-column:2}.bp-career-marker{grid-row:1 / span 2}.bp-career-titleline{flex-direction:column}.bp-company-lockup{margin-top:8px}.bp-principles{grid-template-columns:1fr}.bp-principle{min-height:0;padding:24px 0}.bp-principle+.bp-principle{border-left:0;border-top:1px solid rgba(var(--ac1),.18)}.bp-principle h3{margin-top:20px}.bp-tool-row{grid-template-columns:38px 1fr}.bp-tool-list{grid-column:2;justify-content:flex-start;margin-top:4px}}
+@media (max-width:520px){.bp-award{position:static;margin-top:20px;transform:none}.bp-score strong{font-size:4rem}}
 .bp-cta{text-align:center;max-width:680px;margin:0 auto}
+.bp-cta .bp-cta-label{justify-content:center;margin-bottom:22px}
 .bp-cta h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,3rem);margin:0 0 14px;text-wrap:balance}
 .bp-cta h2 .ac{color:var(--ac)}
 .bp-cta p{line-height:1.7;margin:0 0 26px}
 `;
 
 const pkCss = `
-.pk-row{display:flex;flex-direction:row;height:100%;min-height:0}
-@media (max-width:768px){.pk-row{flex-direction:column}}
-.pk-row > div:focus-visible{outline:none}
-.pk-row > div:focus-visible .pk-scrim{background:rgba(0,0,0,.30);box-shadow:inset 0 0 0 2px var(--ac)}
-.pk-scrim{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);transition:opacity .4s ease,background .3s ease}
-.pk-row > div:hover .pk-scrim{background:rgba(0,0,0,.28)}
-.pk-badge{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#10233f;background:var(--ac);padding:9px 20px;border-radius:100px;box-shadow:0 12px 36px rgba(0,0,0,.5);transition:transform .25s ease}
-.pk-row > div:hover .pk-badge{transform:scale(1.06)}
-.pk-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;pointer-events:none;animation:pk-hint-in .7s ease both}
-@keyframes pk-hint-in{from{opacity:0;transform:translate(-50%,-44%)}to{opacity:1;transform:translate(-50%,-50%)}}
-.pk-hint-title{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:clamp(16px,2.4vw,24px);letter-spacing:.1em;text-transform:uppercase;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.8)}
-.pk-hint-sub{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.78);text-shadow:0 1px 10px rgba(0,0,0,.8)}
-.pk-hint-sub::after{content:'▸';margin-left:8px;animation:pk-hint-blink 1.2s step-end infinite}
-@keyframes pk-hint-blink{50%{opacity:0}}
+.pk{min-height:100vh;background:var(--pk-bg);color:var(--pk-text);padding:clamp(82px,9vh,112px) clamp(16px,4vw,56px) 34px;display:flex;align-items:center;position:relative;overflow:hidden;opacity:0;transition:opacity .4s ease;font-family:'DM Sans',system-ui,sans-serif}
+.pk.is-visible{opacity:1}.pk::before,.pk::after{content:'';position:absolute;pointer-events:none;background:var(--pk-line);opacity:.55}.pk::before{width:1px;top:0;bottom:0;left:8vw}.pk::after{height:1px;left:0;right:0;top:18vh}
+.pk-frame{width:min(1220px,100%);min-height:min(690px,calc(100vh - 120px));margin:0 auto;border:1px solid var(--pk-line);display:grid;grid-template-columns:minmax(360px,.9fr) minmax(480px,1.1fr);background:var(--pk-panel);position:relative;z-index:1}
+.pk-identity{padding:clamp(24px,4vw,48px);border-right:1px solid var(--pk-line);display:flex;flex-direction:column;justify-content:space-between;min-width:0;opacity:0;transform:translateX(-28px);transition:opacity .65s ease,transform .65s cubic-bezier(.22,1,.36,1)}
+.pk.is-visible .pk-identity{opacity:1;transform:none}
+.pk-kicker,.pk-choice-kicker{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.22em;color:var(--ac);display:flex;align-items:center;gap:10px}.pk-kicker span{display:block;width:28px;height:1px;background:var(--ac)}
+.pk-portrait-wrap{width:min(340px,85%);aspect-ratio:1/1.04;position:relative;align-self:center;margin:26px 0 22px;border:1px solid rgba(var(--ac1),.38);border-radius:28px 28px 28px 7px;overflow:hidden;background:var(--pk-bg)}
+.pk-portrait-wrap::before{content:'';position:absolute;left:16px;top:16px;width:30px;height:30px;border-left:1px solid var(--ac);border-top:1px solid var(--ac);z-index:2}.pk-portrait-wrap img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.02)}
+.pk-portrait-index{position:absolute;right:15px;top:14px;z-index:2;color:var(--ac);font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.pk-portrait-caption{position:absolute;inset:auto 0 0;display:flex;justify-content:space-between;gap:12px;padding:13px 16px;background:#08111f;color:#d8e1ed;font:9px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase}.pk-portrait-caption span:last-child{color:#e0a83a;text-align:right}
+.pk-identity-copy h1{font-family:'Syne',system-ui,sans-serif;font-size:clamp(2rem,3.5vw,3.7rem);line-height:.92;letter-spacing:-.045em;text-transform:uppercase;margin:15px 0 8px}.pk-identity-copy p{color:var(--pk-soft);font-size:.92rem;margin:0}
+.pk-available{font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:var(--ac);display:flex;align-items:center;gap:8px}.pk-available i{display:block;width:7px;height:7px;border-radius:50%;background:#3ddc97;box-shadow:0 0 0 4px rgba(61,220,151,.1)}
+.pk-choices{padding:clamp(32px,6vw,76px);display:flex;justify-content:center;flex-direction:column;min-width:0;opacity:0;transform:translateY(24px);transition:opacity .65s .12s ease,transform .65s .12s cubic-bezier(.22,1,.36,1)}.pk.is-visible .pk-choices{opacity:1;transform:none}
+.pk-choices h2{font-family:'Syne',system-ui,sans-serif;font-size:clamp(2.6rem,5.5vw,5.7rem);line-height:.88;letter-spacing:-.055em;text-transform:uppercase;margin:22px 0 18px}.pk-choice-lead{color:var(--pk-soft);font-size:.95rem;margin:0 0 34px}
+.pk-options{display:flex;flex-direction:column;border-top:1px solid var(--pk-line)}
+.pk-option{appearance:none;width:100%;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:16px;text-align:left;padding:22px 4px;border:0;border-bottom:1px solid var(--pk-line);background:transparent;color:var(--pk-text);cursor:pointer;transition:padding .24s ease,background-color .24s ease,opacity .28s ease,transform .45s cubic-bezier(.22,1,.36,1)}
+.pk-option:hover,.pk-option:focus-visible{padding-left:16px;background:rgba(var(--ac1),.07);outline:none}.pk-option:focus-visible{box-shadow:inset 3px 0 0 var(--ac)}.pk-option:disabled{cursor:default}
+.pk-option-no{color:var(--ac);font:700 11px ui-monospace,Menlo,monospace}.pk-option-copy{display:flex;flex-direction:column;gap:5px}.pk-option-copy strong{font-family:'Syne',system-ui,sans-serif;font-size:clamp(1.2rem,2vw,1.55rem)}.pk-option-copy small{color:var(--pk-soft);font-size:.8rem}.pk-option-glyph{color:var(--ac);font:700 16px ui-monospace,Menlo,monospace;min-width:28px;text-align:right}
+.pk-keyhint{margin-top:22px;color:var(--pk-soft);display:flex;align-items:center;gap:8px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase}.pk-keyhint kbd{border:1px solid var(--pk-line);border-bottom-width:2px;border-radius:5px;padding:4px 7px;color:var(--pk-text);font:inherit}.pk-keyhint>span{width:16px;height:1px;background:var(--pk-line);margin:0 4px}
+.pk.is-selecting .pk-option:not(.is-selected){opacity:.12;transform:translateX(24px)}.pk.is-selecting .pk-option.is-selected{background:var(--ac);color:#08111f;padding-left:16px;transform:scale(1.01)}.pk.is-selecting .pk-option.is-selected .pk-option-no,.pk.is-selecting .pk-option.is-selected .pk-option-glyph,.pk.is-selecting .pk-option.is-selected small{color:#08111f}.pk.is-selecting .pk-identity{opacity:.25;transform:scale(.985)}
+@media (max-width:900px){.pk{align-items:flex-start;overflow:auto}.pk-frame{grid-template-columns:1fr;min-height:0}.pk-identity{border-right:0;border-bottom:1px solid var(--pk-line)}.pk-portrait-wrap{width:min(280px,76vw)}.pk-identity-copy h1{font-size:clamp(2rem,10vw,3.6rem)}.pk-choices{padding:34px 24px 42px}.pk-choices h2{font-size:clamp(2.6rem,12vw,5rem)}}
+@media (max-width:520px){.pk{padding:74px 10px 18px}.pk-identity{padding:20px 16px;display:grid;grid-template-columns:124px 1fr;gap:16px;align-items:center}.pk-kicker{grid-column:1/-1}.pk-portrait-wrap{width:124px;margin:2px 0;align-self:auto;border-radius:18px 18px 18px 5px}.pk-portrait-wrap::before{left:10px;top:10px;width:20px;height:20px}.pk-portrait-index{right:9px;top:9px}.pk-portrait-caption{display:none}.pk-identity-copy h1{font-size:1.55rem;line-height:.94;margin:11px 0 7px}.pk-identity-copy p{font-size:.78rem;line-height:1.4}.pk-available{font-size:7px;letter-spacing:.03em;gap:5px}.pk-choices{padding:27px 24px 34px}.pk-choices h2{font-size:2.5rem;margin:16px 0 12px}.pk-choice-lead{font-size:.82rem;margin-bottom:22px}.pk-option{grid-template-columns:34px 1fr auto;gap:10px;padding:17px 2px}.pk-option-copy strong{font-size:1.12rem}.pk-option-copy small{max-width:27ch;font-size:.72rem}}
+@media (prefers-reduced-motion:reduce){.pk,.pk-identity,.pk-choices,.pk-option{transition-duration:.01ms!important}}
 `;

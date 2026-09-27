@@ -28,7 +28,6 @@ export default function Footer() {
   return (
     <footer className="relative py-12 md:py-16 overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
         .ft-scan{position:absolute;left:0;right:0;height:1px;top:0;z-index:8;pointer-events:none;
           background:linear-gradient(90deg,transparent,rgba(${AR2},.3),transparent);animation:ft-sc 8s ease-in-out infinite}
         @keyframes ft-sc{0%{opacity:0;left:-100%}5%{opacity:1;left:0}95%{opacity:1;left:0}100%{opacity:0;left:100%}}

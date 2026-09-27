@@ -3,8 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
 import fotoRianDark from "../assets/foto_rian_nobg3.webp";
+import fotoRianDarkMobile from "../assets/foto_rian_nobg3-960.webp";
 // import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
 import fotoRianLight from "../assets/foto_rian_putih.webp";
+import fotoRianLightMobile from "../assets/foto_rian_putih-960.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {
@@ -90,7 +92,6 @@ export default function Hero3() {
     return (
       <>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
           @keyframes hero-mob-pdot {
             0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),0.7); }
@@ -205,27 +206,37 @@ export default function Hero3() {
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "center",
-              opacity: entered ? 1 : 0,
-              transition: "opacity 1.1s ease 0.1s",
+              opacity: 1,
             }}
           >
-            <img
-              ref={photoImgRef}
-              src={isDark ? fotoRianDark : fotoRianLight}
-              alt="Rian Farhan"
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                maskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 6%, black 80%, transparent 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 6%, black 80%, transparent 100%)",
-                filter: isDark
-                  ? "brightness(0.95) contrast(1.08) saturate(1.12)"
-                  : "brightness(1.02) contrast(1.05) saturate(1.1)",
-              }}
-            />
+            <picture>
+              <source
+                media="(max-width: 767px)"
+                srcSet={isDark ? fotoRianDarkMobile : fotoRianLightMobile}
+              />
+              <img
+                ref={photoImgRef}
+                src={isDark ? fotoRianDark : fotoRianLight}
+                alt="Rian Farhan"
+                width="1672"
+                height="941"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, black 6%, black 80%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, black 6%, black 80%, transparent 100%)",
+                  filter: isDark
+                    ? "brightness(0.95) contrast(1.08) saturate(1.12)"
+                    : "brightness(1.02) contrast(1.05) saturate(1.1)",
+                }}
+              />
+            </picture>
           </div>
 
           {/* Gradient overlay bawah — supaya teks bottom terbaca */}
@@ -468,7 +479,6 @@ export default function Hero3() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
         @keyframes hero2-pdot {
           0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),0.7); }
@@ -659,29 +669,39 @@ export default function Hero3() {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "center",
-            opacity: entered ? 1 : 0,
-            transition: "opacity 1.1s ease 0.1s",
+            opacity: 1,
           }}
         >
-          <img
-            ref={photoImgRef}
-            src={isDark ? fotoRianDark : fotoRianLight}
-            alt="Rian Farhan"
-            style={{
-              width: "100%",
-              height: "auto",
-              display: "block",
-              maskImage:
-                "linear-gradient(to bottom, transparent 0%, black 5%, black 82%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, black 5%, black 82%, transparent 100%)",
-              filter: isDark
-                ? "brightness(0.95) contrast(1.08) saturate(1.12)"
-                : "brightness(1.02) contrast(1.05) saturate(1.1)",
-              transformStyle: "preserve-3d",
-              transition: "transform 1s ease",
-            }}
-          />
+          <picture>
+            <source
+              media="(max-width: 767px)"
+              srcSet={isDark ? fotoRianDarkMobile : fotoRianLightMobile}
+            />
+            <img
+              ref={photoImgRef}
+              src={isDark ? fotoRianDark : fotoRianLight}
+              alt="Rian Farhan"
+              width="1672"
+              height="941"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                maskImage:
+                  "linear-gradient(to bottom, transparent 0%, black 5%, black 82%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, transparent 0%, black 5%, black 82%, transparent 100%)",
+                filter: isDark
+                  ? "brightness(0.95) contrast(1.08) saturate(1.12)"
+                  : "brightness(1.02) contrast(1.05) saturate(1.1)",
+                transformStyle: "preserve-3d",
+                transition: "transform 1s ease",
+              }}
+            />
+          </picture>
         </div>
 
         {/* ── SIDE LEFT ── */}

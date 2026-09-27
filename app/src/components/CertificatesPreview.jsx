@@ -17,6 +17,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const getCertificatePreview = (image) =>
+  image?.replace(
+    /^images\/certificates\//,
+    "images/certificates/previews/",
+  );
+
 export default function CertificatesPreview() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -56,13 +62,13 @@ export default function CertificatesPreview() {
 
   /* ── Autoplay ── */
   useEffect(() => {
-    if (autoplay) {
+    if (autoplay && inView) {
       autoplayRef.current = setInterval(() => {
         setActiveIndex((p) => (p === certificates.length - 1 ? 0 : p + 1));
       }, 5000);
     }
     return () => clearInterval(autoplayRef.current);
-  }, [autoplay]);
+  }, [autoplay, inView]);
 
   /* ── Scroll-morph intro (desktop only) ──────────────────────
      "VERIFIED SKILLS" (judul header, elemen SAMA) di-transform ke tengah
@@ -144,7 +150,7 @@ export default function CertificatesPreview() {
         defaults: { ease: "none" },
         scrollTrigger: {
           trigger: section,
-          start: "top top",
+          start: "top 15%",
           end: "bottom bottom",
           scrub: 0.6,
           invalidateOnRefresh: true,
@@ -239,7 +245,6 @@ export default function CertificatesPreview() {
     return (
       <>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
           @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
           @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}}
           .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
@@ -390,8 +395,10 @@ export default function CertificatesPreview() {
             >
               <motion.img
                 key={activeIndex}
-                src={current.image || "/placeholder.svg"}
+                src={getCertificatePreview(current.image) || "/placeholder.svg"}
                 alt={current.title}
+                loading="lazy"
+                decoding="async"
                 initial={{ opacity: 0, scale: 1.04 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.55 }}
@@ -644,7 +651,6 @@ export default function CertificatesPreview() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
         @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
         @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}}
         @keyframes cp-arr{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.3}50%{transform:rotate(45deg) translate(4px,4px);opacity:1}}
@@ -936,8 +942,10 @@ export default function CertificatesPreview() {
             >
               <motion.img
                 key={activeIndex}
-                src={current.image || "/placeholder.svg"}
+                src={getCertificatePreview(current.image) || "/placeholder.svg"}
                 alt={current.title}
+                loading="lazy"
+                decoding="async"
                 initial={{ opacity: 0, scale: 1.04 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.55 }}

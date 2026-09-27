@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, createContext } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  createContext,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
@@ -18,7 +24,7 @@ import { useTheme } from "../context/ThemeContext";
 export const IntroContext = createContext({ 
   introExited: true, 
   pageTransitionDone: true,
-  INTRO_DURATION: 3000, 
+  INTRO_DURATION: 1800,
   PAGE_TRANSITION_DURATION: 1200 
 });
 
@@ -36,10 +42,11 @@ const A = "var(--ac)";
 const AD = "var(--ac-deep)";
 const AR = "var(--ac1)";
 
-const INTRO_DURATION = 3000;
-const INTRO_EXIT = 700;
+const INTRO_DURATION = 1800;
+const INTRO_EXIT = 450;
 const PAGE_TRANSITION_DURATION = 1200;
-const D = INTRO_DURATION / 1000; // 3.0
+const D = INTRO_DURATION / 1000;
+const INTRO_SESSION_KEY = "rian-landing-intro-seen";
 
 /* ═══════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -55,22 +62,34 @@ export default function PageTransition6Clean({ children, variant = "slide-strips
   const activeIntroVariant = introVariant === "random" ? pickedRef.current : introVariant;
 
   const [isInitialRender, setIsInitialRender] = useState(true);
-  const [showIntro, setShowIntro] = useState(true);
-  const [introExited, setIntroExited] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [introExited, setIntroExited] = useState(true);
   const [isPageTransition, setIsPageTransition] = useState(false);
   const pageTransitionDone = !isPageTransition;
   const previousPathRef = useRef(pathname);
+  const introStartedRef = useRef(false);
 
-  useEffect(() => {
-    if (showIntro) {
-      const t = setTimeout(() => { setShowIntro(false); setIsInitialRender(false); }, INTRO_DURATION);
-      return () => clearTimeout(t);
+  useLayoutEffect(() => {
+    if (!introStartedRef.current) {
+      const hasSeenIntro = sessionStorage.getItem(INTRO_SESSION_KEY) === "1";
+      if (hasSeenIntro) {
+        setIsInitialRender(false);
+        return undefined;
+      }
+
+      introStartedRef.current = true;
+      sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+      setShowIntro(true);
+      setIntroExited(false);
     }
-  }, [showIntro]);
 
-  useEffect(() => {
-    const t2 = setTimeout(() => setIntroExited(true), INTRO_DURATION);
-    return () => clearTimeout(t2);
+    const timer = setTimeout(() => {
+      setShowIntro(false);
+      setIntroExited(true);
+      setIsInitialRender(false);
+    }, INTRO_DURATION);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -119,6 +138,8 @@ export default function PageTransition6Clean({ children, variant = "slide-strips
 function IntroWrap({ children, isDark }) {
   return (
     <motion.div
+      role="status"
+      aria-label="Portfolio introduction"
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center pointer-events-none"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: INTRO_EXIT / 1000, ease: "easeInOut" } }}

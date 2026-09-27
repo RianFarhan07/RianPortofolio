@@ -10,6 +10,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const getProjectThumbnail = (image) =>
+  image?.replace(/^images\//, "images/thumbs/");
+
 /* ─── Flatten techStack apapun strukturnya ─────────────────
    Bisa berupa: string[], {name,icon}[], [{category, items:[]}]
    Kembalikan array string nama saja. */
@@ -189,7 +192,7 @@ export default function ProjectPreview() {
         defaults: { ease: "none" },
         scrollTrigger: {
           trigger: section,
-          start: "top top",
+          start: "top 15%",
           end: "bottom bottom",
           scrub: 0.6,
           invalidateOnRefresh: true,
@@ -282,13 +285,13 @@ export default function ProjectPreview() {
 
   /* ── Auto-slide (pause saat user lagi baca / hover) ── */
   useEffect(() => {
-    if (descOpen || hovered) return; // jangan auto-next pas baca atau kursor di showcase
+    if (!inView || descOpen || hovered) return; // jangan auto-next sebelum terlihat / saat user membaca
     const timer = setInterval(() => {
       if (!dragging)
         setActiveIndex((p) => (p === projects.length - 1 ? 0 : p + 1));
     }, 8000);
     return () => clearInterval(timer);
-  }, [dragging, descOpen, hovered]);
+  }, [dragging, descOpen, hovered, inView]);
 
   const nextSlide = () =>
     setActiveIndex((p) => (p === projects.length - 1 ? 0 : p + 1));
@@ -337,7 +340,6 @@ export default function ProjectPreview() {
     return (
       <>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
           @keyframes pp-scan {
             0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
@@ -570,6 +572,8 @@ export default function ProjectPreview() {
                 key={activeIndex}
                 src={currentProject.image || "/placeholder.svg"}
                 alt={currentProject.title}
+                loading="lazy"
+                decoding="async"
                 initial={{ opacity: 0, scale: 1.04 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.55 }}
@@ -752,7 +756,6 @@ export default function ProjectPreview() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
         @keyframes pp-scan {
           0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
@@ -1097,6 +1100,8 @@ export default function ProjectPreview() {
               key={activeIndex}
               src={currentProject.image || "/placeholder.svg"}
               alt={currentProject.title}
+              loading="lazy"
+              decoding="async"
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
@@ -1450,7 +1455,7 @@ export default function ProjectPreview() {
                 }}
               >
                 <img loading="lazy" decoding="async"
-                  src={p.image || "/placeholder.svg"}
+                  src={getProjectThumbnail(p.image) || "/placeholder.svg"}
                   alt={p.title}
                   style={{
                     width: "100%",

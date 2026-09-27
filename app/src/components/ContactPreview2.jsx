@@ -226,7 +226,6 @@ export default function ContactPreview() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
         @keyframes cp-fadein {
           from { opacity: 0; transform: translateY(24px); }

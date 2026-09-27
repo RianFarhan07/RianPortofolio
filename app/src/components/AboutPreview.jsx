@@ -3,6 +3,8 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import aboutImage from "../assets/foto-nobg-editorial-natural.webp";
+import aboutImage480 from "../assets/foto-nobg-editorial-natural-480.webp";
+import aboutImage768 from "../assets/foto-nobg-editorial-natural-768.webp";
 
 const stats = [
   { value: 20, suffix: "+", label: "Projects shipped" },
@@ -160,7 +162,6 @@ export default function AboutPreview() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700;800&display=swap');
 
         .apx-section {
           position: relative;
@@ -958,7 +959,11 @@ export default function AboutPreview() {
             <img
               className="apx-photo"
               src={aboutImage}
+              srcSet={`${aboutImage480} 480w, ${aboutImage768} 768w, ${aboutImage} 1024w`}
+              sizes="(max-width: 767px) 92vw, 42vw"
               alt="Baso Rian Farhan Mallanti"
+              width="1024"
+              height="1536"
               loading="lazy"
               decoding="async"
             />

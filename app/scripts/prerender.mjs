@@ -72,6 +72,18 @@ function revealAll() {
   }
 }
 
+// The crawler walk intentionally activates below-fold widgets. Keep their
+// rendered content, but never bake runtime-only third-party embeds into the
+// deploy artifact: they must be created again only when a real visitor reaches
+// the relevant section.
+function removeTransientEmbeds() {
+  document
+    .querySelectorAll(
+      '#giscus-script, #giscus-css, .giscus, script[src*="giscus.app"], iframe[src*="giscus.app"]',
+    )
+    .forEach((element) => element.remove());
+}
+
 let browser;
 try {
   await waitForServer();
@@ -95,6 +107,7 @@ try {
     await page.waitForTimeout(1200);
 
     await page.evaluate(revealAll);
+    await page.evaluate(removeTransientEmbeds);
 
     // 404.html is served at whatever URL missed, so a canonical baked from the
     // placeholder route would point somewhere meaningless. noindex carries it.

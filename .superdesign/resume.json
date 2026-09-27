@@ -31,6 +31,86 @@
         }
       },
       "updatedAt": "2026-09-24T19:30:04.7790807+07:00"
+    },
+    "/about": {
+      "targetKind": "existing-ui",
+      "projectId": "a4db3ab2-31ae-497a-b538-5c1192fa9965",
+      "baselineDraftId": "faf8d551-c267-479e-9998-5bb3ad884fc5",
+      "activeDraftId": "324cd03c-b8d8-4839-beda-45f22b88b94d",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "cce4cc24-4dfb-4e7c-91dc-c14ebc9853c6",
+        "app-src-assets-foto-nobg-editorial-natural.webp",
+        "external-carbonethics-horizontal-white",
+        "308f092c-023d-4121-8420-5a35ed293915"
+      ],
+      "brandAssets": {
+        "logo": {
+          "assetKey": "external-carbonethics-horizontal-white",
+          "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/a4db3ab2-31ae-497a-b538-5c1192fa9965/brand-assets/external-carbonethics-horizontal-white/carbonethics-logo.png"
+        }
+      },
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "app/src/components/About.jsx",
+        "app/src/components/Navbar.jsx",
+        "app/src/layouts/MainLayout.jsx",
+        "app/src/components/Footer.jsx",
+        "app/src/context/ThemeContext.jsx",
+        "app/src/index.css"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "3bbf627e11cb233113c93dedd39b8ede16997d2556517eca18f2fcb646a49aab",
+        "app/src/components/About.jsx": "b695a2cd68b42bcd678919dfa5fcb11e33a0fc3801fc9635092a7e89f0125544",
+        "app/src/components/Navbar.jsx": "6af7ff673bca0c91502842d5e7b09ee3b3205e668a6aaebe2fd9a087f4ea7cae",
+        "app/src/layouts/MainLayout.jsx": "39d1b9545c95a8e26d896064b917fbaf1318710985e518d7c5b28a5fb72bfe38",
+        "app/src/components/Footer.jsx": "d51745a85dc8f080ae037efe88f939807849e31a01fd16d2c25f5cb2eb70b147",
+        "app/src/context/ThemeContext.jsx": "81bfbbccf995c5f0f0d4cd845d0ee63d97a1f319be0641a0eceb38a2eaa366af",
+        "app/src/index.css": "04c85a55c8cacf1bd97e62b34f6fee5d23368d5e00677beba63c1bc6da2efa7d"
+      },
+      "components": [
+        {
+          "name": "Navbar",
+          "id": "bf3cc718-b881-4864-b888-0d9965191749",
+          "sourcePath": "app/src/components/Navbar.jsx"
+        },
+        {
+          "name": "MainLayout",
+          "id": "fce23c78-7221-4f68-a940-fd299a8b7784",
+          "sourcePath": "app/src/layouts/MainLayout.jsx"
+        },
+        {
+          "name": "Footer",
+          "id": "8f9e8b81-bc3c-470e-9376-429dfe0e746d",
+          "sourcePath": "app/src/components/Footer.jsx"
+        }
+      ],
+      "drafts": {
+        "faf8d551-c267-479e-9998-5bb3ad884fc5": {
+          "title": "Current About — Baseline",
+          "visualDirection": "pixel-perfect reproduction of the current desktop view picker",
+          "currentVersion": 1
+        },
+        "a9ed7cfe-e0f7-400d-9ae7-f5f2f7c9583d": {
+          "title": "About — Editorial Profile Dossier",
+          "visualDirection": "sticky identity portrait with an editorial narrative dossier",
+          "parentDraftId": "faf8d551-c267-479e-9998-5bb3ad884fc5",
+          "currentVersion": 1
+        },
+        "324cd03c-b8d8-4839-beda-45f22b88b94d": {
+          "title": "About — Career Timeline",
+          "visualDirection": "career progression with a one-time 3D avatar reveal and a highlighted Hacktiv8 99/100 Teacher's Award milestone",
+          "parentDraftId": "faf8d551-c267-479e-9998-5bb3ad884fc5",
+          "currentVersion": 2
+        },
+        "ed6adba1-8e68-4766-becb-2fee92709f94": {
+          "title": "About — Refined Terminal Narrative",
+          "visualDirection": "professional terminal narrative paired with recruiter-readable identity content",
+          "parentDraftId": "faf8d551-c267-479e-9998-5bb3ad884fc5",
+          "currentVersion": 1
+        }
+      },
+      "updatedAt": "2026-09-26T14:39:00.0000000+07:00"
     }
   }
 }
