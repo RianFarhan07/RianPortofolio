@@ -7,8 +7,19 @@ export default function CustomCursor() {
   const [pos, setPos] = useState({ x: -100, y: -100 });
   const [visible, setVisible] = useState(false);
   const [hover, setHover] = useState(false);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
+    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updateEnabled = () => setEnabled(pointerQuery.matches);
+    updateEnabled();
+    pointerQuery.addEventListener("change", updateEnabled);
+    return () => pointerQuery.removeEventListener("change", updateEnabled);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+
     const move = (e) => {
       setPos({ x: e.clientX, y: e.clientY });
       setVisible(true);
@@ -34,7 +45,9 @@ export default function CustomCursor() {
       document.removeEventListener("mouseenter", enter);
       document.removeEventListener("mouseover", onHover);
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   const half = SIZE / 2;
   const halfDot = DOT / 2;
