@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
   Globe,
@@ -34,12 +34,12 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
   const cardBorder = `rgba(${AR2}, 0.18)`;
   const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
   const muted2 = isDark ? "rgba(210,222,235,0.35)" : "rgba(16,35,63,0.35)";
-  const txt = isDark ? "#e7edf5" : "#10233f";
   const cat = categoryMap[project.category] || { label: project.category };
 
   return (
-    <motion.div
+    <Motion.div
       ref={ref}
+      data-project-card
       initial={{ y: 24, opacity: 0 }}
       animate={inView ? { y: 0, opacity: 1 } : { y: 24, opacity: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 14 }}
@@ -53,7 +53,7 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
     >
       {/* Image area */}
       <div className="relative overflow-hidden aspect-video">
-        <motion.img
+        <Motion.img
           loading="lazy" decoding="async"
           src={project.image || "/placeholder.svg"}
           alt={project.title}
@@ -152,19 +152,27 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: `rgba(${AR2}, 0.12)` }}>
-          <div className="flex gap-1.5">
-            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
-              style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
-              <Github size={16} />
-            </a>
-            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
-              style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
-              <ExternalLink size={16} />
-            </a>
-          </div>
+        <div className={`flex items-center ${project.githubUrl || project.liveUrl ? "justify-between" : "justify-end"} pt-3 border-t`} style={{ borderColor: `rgba(${AR2}, 0.12)` }}>
+          {(project.githubUrl || project.liveUrl) && (
+            <div className="flex gap-1.5">
+              {project.githubUrl && (
+                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                  aria-label="View source code"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+                  style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
+                  <Github size={16} />
+                </a>
+              )}
+              {project.liveUrl && (
+                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                  aria-label="View live demo"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+                  style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: muted }}>
+                  <ExternalLink size={16} />
+                </a>
+              )}
+            </div>
+          )}
           <button onClick={e => { e.stopPropagation(); onOpenModal(project); }}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-200"
             style={{
@@ -179,6 +187,6 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
       </div>
 
       <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
-    </motion.div>
+    </Motion.div>
   );
 };

@@ -1,5 +1,177 @@
 export const projectsData = [
   {
+    id: 25,
+    title: "Finlog",
+    description:
+      "Personal Finance OS untuk mengelola transaksi, multi-wallet, budget, tagihan berulang, dan portofolio investasi dalam satu dashboard. Finlog menggabungkan pencatatan keuangan, analitik cashflow dan net worth, insight otomatis, serta technical screener dengan arsitektur multi-user dan multi-currency.",
+    category: "web",
+    image: "images/finlog.webp",
+    images: [
+      "images/Finlog/1.webp",
+      "images/Finlog/2.webp",
+    ],
+    techLogos: [
+      "Next.js",
+      "TypeScript",
+      "Supabase",
+      "PostgreSQL",
+      "Drizzle ORM",
+      "TanStack Query",
+      "Recharts",
+    ],
+    completed: true,
+    liveUrl: "https://finlog.my.id/",
+    keyFeatures: [
+      "Dashboard cashflow, net worth, dan pola pengeluaran lintas wallet",
+      "Budget, transaksi berulang, dan rekonsiliasi ledger multi-currency",
+      "Portofolio investasi dengan technical screener dan price alerts",
+      "Insight otomatis untuk menemukan anomali dan kebiasaan finansial",
+      "Supabase Auth dan Row-Level Security untuk isolasi data tiap pengguna",
+      "Impor/ekspor data serta integrasi Telegram untuk perintah dan notifikasi",
+    ],
+    challengesAndSolutions:
+      "Tantangan utamanya adalah menjaga perhitungan keuangan tetap presisi di berbagai mata uang serta mengisolasi data antar pengguna. Solusinya menggunakan decimal.js untuk nominal, ledger terstruktur di PostgreSQL, Drizzle ORM, dan Row-Level Security berbasis auth.uid(). Data pasar dan aturan berulang diproses oleh background jobs agar dashboard tetap responsif.",
+  },
+  {
+    id: 24,
+    title: "CarbonEthics Petani App",
+    description:
+      "Aplikasi Android offline-first untuk tim lapangan CarbonEthics. Petani dan vendor melaporkan bibit, penanaman awal, dan monitoring berkala lengkap dengan foto berlokasi GPS, bahkan saat sinyal lemah. Data disimpan di perangkat lalu disinkronkan otomatis ke backend Laravel. Sudah rilis di Google Play.",
+    category: "android",
+    image: "images/petani-app.webp",
+    images: [
+      "images/PetaniApp/1.webp",
+      "images/PetaniApp/2.webp",
+      "images/PetaniApp/3.webp",
+      "images/PetaniApp/4.webp",
+      "images/PetaniApp/5.webp",
+    ],
+    techLogos: [
+      "React Native",
+      "Expo",
+      "NativeWind",
+      "WatermelonDB",
+      "MMKV",
+      "Laravel API",
+    ],
+    completed: true,
+    liveUrl: "https://play.google.com/store/apps/details?id=co.carbonethics.petaniapp",
+    keyFeatures: [
+      "Offline-first: laporan disimpan di perangkat dan disinkronkan otomatis saat online",
+      "Pelaporan bibit, penanaman awal, dan monitoring berkala",
+      "Foto dengan watermark lokasi GPS",
+      "Kalender jadwal monitoring tiap lokasi penanaman",
+      "Draft form tersimpan lokal agar data tidak hilang saat aplikasi tertutup",
+      "Pengecekan versi aplikasi dengan opsi update wajib atau opsional",
+    ],
+    challengesAndSolutions:
+      "Di lapangan sinyal sering lemah dan GPS lambat mengunci. Solusinya: sinkronisasi per record dengan retry saat terkena rate limit, dan pengambilan lokasi bertingkat (akurasi tinggi, lalu lokasi terakhir, lalu akurasi seimbang) supaya proses foto tidak menggantung dan data tidak hilang karena koneksi.",
+  },
+  {
+    id: 23,
+    title: "CarbonEthics Internal Dashboard",
+    description:
+      "Dashboard internal berbasis peran untuk operasional CarbonEthics. Tim ops, finance, marketing, P&O, dan lainnya mengelola lokasi dan cluster penanaman, order, vendor, jadwal monitoring, serta keuangan dalam satu tempat. Menggantikan alur manual Google Forms/Airtable, dengan backend Laravel yang juga melayani website dan aplikasi lapangan.",
+    category: "web",
+    image: "images/internal-dashboard.webp",
+    images: [
+      "images/InternalDashboard/1.webp",
+      "images/InternalDashboard/2.webp",
+      "images/InternalDashboard/3.webp",
+      "images/InternalDashboard/4.webp",
+      "images/InternalDashboard/5.webp",
+      "images/InternalDashboard/6.webp",
+    ],
+    techLogos: [
+      "Laravel",
+      "PHP",
+      "MySQL",
+      "Inertia.js",
+      "React",
+      "Alpine.js",
+      "Tailwind CSS",
+    ],
+    completed: true,
+    keyFeatures: [
+      "Akses berbasis peran dengan dashboard berbeda untuk tiap departemen",
+      "Jadwal monitoring penanaman dalam kalender, lengkap dengan tahap monitoring tiap lokasi",
+      "Manajemen lokasi, cluster penanaman, order, vendor, seed supply, dan biodiversity",
+      "Modul keuangan untuk order, payment request, dan budget",
+      "Pencarian dan filter AJAX di halaman daftar tanpa reload",
+      "REST API untuk website dan aplikasi lapangan",
+    ],
+    challengesAndSolutions:
+      "Data yang tumbuh cepat (ribuan order dan user) membuat halaman daftar mudah melambat, terutama pada tabel dengan kolom JSON besar. Solusinya: memilih kolom yang dibutuhkan saja pada query daftar, pencarian dan filter lewat AJAX dengan debounce, dan panduan gaya UI yang seragam supaya puluhan halaman tetap konsisten.",
+  },
+  {
+    id: 22,
+    title: "CarbonEthics Website Revamp",
+    description:
+      "Revamp website korporat CarbonEthics dari Wix ke Next.js. Situs dua bahasa (EN/ID) yang memperkenalkan solusi berbasis alam, proyek dan dampak, digital monitoring, blog, karir, dan kontak, terhubung ke backend Laravel untuk konten, form, dan data proyek.",
+    category: "web",
+    image: "images/website-revamp.webp",
+    images: [
+      "images/WebsiteRevamp/1.webp",
+      "images/WebsiteRevamp/2.webp",
+      "images/WebsiteRevamp/3.webp",
+    ],
+    techLogos: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "next-intl",
+      "Laravel API",
+      "Docker",
+      "AWS S3",
+    ],
+    completed: true,
+    liveUrl: "https://www.carbonethics.co",
+    keyFeatures: [
+      "Dua bahasa (EN/ID) dengan routing dan konten terjemahan",
+      "Migrasi konten dan blog dari Wix lengkap dengan pemetaan redirect untuk menjaga SEO",
+      "Metadata SEO dinamis, sitemap, dan tracking analytics yang berjalan setelah persetujuan consent",
+      "Form kontak dan lamaran kerja dengan proteksi bot dan antrean draft",
+      "Peta proyek interaktif dan penyimpanan media di AWS S3",
+      "Deployment berbasis Docker",
+    ],
+    challengesAndSolutions:
+      "Tantangan utamanya adalah berpindah dari Wix tanpa kehilangan peringkat pencarian dan tanpa mengganggu dashboard klien yang sudah berjalan. Solusinya: pemetaan URL lama ke URL baru, URL yang tidak punya padanan dibiarkan 404, branch rilis khusus situs publik yang dibangun dari tag, dan domain terpisah dari dashboard monitoring.",
+  },
+  {
+    id: 21,
+    title: "CarbonEthics B2B Dashboard",
+    description:
+      "Dashboard monitoring digital untuk klien korporat CarbonEthics. Klien login untuk melihat progres penanaman mangrove mereka: ringkasan pohon dan area, potensi serapan karbon, peta lokasi dengan citra satelit, timeline fase tanam dan monitoring berkala, galeri lapangan, serta laporan dan sertifikat yang bisa diunduh.",
+    category: "web",
+    image: "images/b2b-dashboard.webp",
+    images: [
+      "images/B2BDashboard/1.webp",
+      "images/B2BDashboard/2.webp",
+      "images/B2BDashboard/3.webp",
+      "images/B2BDashboard/4.webp",
+    ],
+    techLogos: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "TanStack Query",
+      "Leaflet",
+      "Recharts",
+      "Laravel API",
+    ],
+    completed: true,
+    keyFeatures: [
+      "Ringkasan proyek: total proyek, pohon ditanam, luas area, dan potensi serapan karbon",
+      "Peta lokasi interaktif dengan pilihan citra satelit",
+      "Timeline progres dari cultivating, planting, sampai monitoring berkala",
+      "Galeri foto, laporan detail, community overview, dan biodiversity per proyek",
+      "Unduh laporan dan sertifikat, serta berbagi proyek",
+      "Daftar order dengan filter lokasi, status, dan rentang tanggal",
+    ],
+    challengesAndSolutions:
+      "Data lapangan yang kompleks (lokasi, fase, monitoring berkala, foto) harus mudah dibaca oleh klien non-teknis. Solusinya: memecah data menjadi ringkasan angka, peta, dan timeline per fase, dengan TanStack Query untuk caching dan Leaflet untuk peta, di atas API Laravel yang datanya diisi tim lapangan lewat aplikasi mobile.",
+  },
+  {
     id: 1,
     title: "Kelompro App",
     description:
@@ -39,7 +211,6 @@ export const projectsData = [
     completed: true,
     duration: "3 months",
     githubUrl: "https://github.com/rianFarhan07/KelomproApp",
-    liveUrl: "https://kelomproapp.com",
     keyFeatures: [
       "Real-time collaboration",
       "Task reminder notifications",
@@ -98,8 +269,7 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "4 months",
-    githubUrl: "https://github.com/rianFarhan07/MobileLearning",
-    liveUrl: "https://mobilelearning.com",
+    githubUrl: "https://github.com/RianFarhan07/MobileLearningAPP",
     keyFeatures: [
       "Interactive learning materials",
       "Adaptive quizzes",
@@ -134,7 +304,6 @@ export const projectsData = [
     completed: true,
     duration: "5 months",
     githubUrl: "https://github.com/rianFarhan07/KostHunt",
-    liveUrl: "https://kosthunt.com",
     keyFeatures: [
       "Location-based search using GPS",
       "Smart filter for price, facilities, and room type",
@@ -160,8 +329,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "2 months",
-    githubUrl: "https://github.com/rianFarhan07/QuizApp",
-    liveUrl: "https://quizapp-edutech.com",
     keyFeatures: [
       "Adaptive difficulty levels",
       "Global leaderboard",
@@ -200,8 +367,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "3.5 months",
-    githubUrl: "https://github.com/rianFarhan07/ProjeManaj",
-    liveUrl: "https://projemanaj.app",
     keyFeatures: [
       "Drag-and-drop task boards",
       "Automatic reminders",
@@ -230,8 +395,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "2 months",
-    githubUrl: "https://github.com/rianFarhan07/BukuTamuDisnaker",
-    liveUrl: "https://disnaker-makassar.go.id/bukutamu",
     keyFeatures: [
       "Digital guest registration",
       "Visit purpose categorization",
@@ -271,8 +434,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "4 months",
-    githubUrl: "https://github.com/rianFarhan07/ShopeeKWApp",
-    liveUrl: "https://shopeekw.app",
     keyFeatures: [
       "Product catalog with categories",
       "Shopping cart functionality",
@@ -295,8 +456,6 @@ export const projectsData = [
     techLogos: ["svg/html.svg", "svg/bootstrap.svg", "svg/javascript.svg"],
     completed: true,
     duration: "1 month",
-    githubUrl: "https://github.com/rianFarhan07/PortoRian",
-    liveUrl: "https://rianFarhan07.github.io/portfolio",
     keyFeatures: [
       "Responsive design for all devices",
       "Interactive project showcase",
@@ -319,8 +478,7 @@ export const projectsData = [
     techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
     completed: true,
     duration: "2.5 months",
-    githubUrl: "https://github.com/rianFarhan07/WhatShouldICookToday",
-    liveUrl: "https://what-should-i-cook.herokuapp.com",
+    githubUrl: "https://github.com/RianFarhan07/CAPSTONE-whatshouldicooktoday",
     keyFeatures: [
       "Ingredient-based recipe search",
       "Daily recipe recommendations",
@@ -343,8 +501,6 @@ export const projectsData = [
     techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
     completed: true,
     duration: "3 months",
-    githubUrl: "https://github.com/rianFarhan07/BookReview",
-    liveUrl: "https://bookreview-app.herokuapp.com",
     keyFeatures: [
       "Book search via Open Library API",
       "User ratings and reviews",
@@ -367,8 +523,6 @@ export const projectsData = [
     techLogos: ["HTML", "CSS", "JavaScript", "Express.js", "Node.js"],
     completed: true,
     duration: "2 months",
-    githubUrl: "https://github.com/rianFarhan07/IndonesiaTravelWeb",
-    liveUrl: "https://indonesia-travel-tracker.vercel.app",
     keyFeatures: [
       "Interactive map of Indonesia",
       "Visited location tracking",
@@ -406,8 +560,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "3 months",
-    githubUrl: "https://github.com/rianFarhan07/RylixHub",
-    liveUrl: "https://rylixhub.app",
     keyFeatures: [
       "Location-tagged photo/video sharing",
       "Cloud storage integration",
@@ -441,8 +593,6 @@ export const projectsData = [
     techLogos: ["Kotlin", "Firebase BAAS", "Firestore Database"],
     completed: true,
     duration: "2.5 months",
-    githubUrl: "https://github.com/rianFarhan07/NgobrolApp",
-    liveUrl: "https://ngobrolapp.com",
     keyFeatures: [
       "Real-time messaging",
       "User discovery system",
@@ -476,7 +626,7 @@ export const projectsData = [
     ],
     completed: true,
     duration: "4 months",
-    githubUrl: "https://github.com/rianFarhan07/KostHunt-MERN",
+    githubUrl: "https://github.com/RianFarhan07/KostHuntMern",
     liveUrl: "https://kost-hunt.vercel.app/",
     keyFeatures: [
       "Location-based search",
@@ -510,7 +660,6 @@ export const projectsData = [
     ],
     completed: true,
     duration: "5 months",
-    githubUrl: "https://github.com/rianFarhan07/RylixEstate",
     liveUrl: "https://real-estate-mern-sandy.vercel.app/",
     keyFeatures: [
       "Property listing and management",
@@ -582,8 +731,7 @@ export const projectsData = [
     ],
     completed: true,
     duration: "3 months",
-    githubUrl: "https://github.com/rianFarhan07/TemuDokter",
-    liveUrl: "https://temudokter-client.web.app",
+    liveUrl: "https://temu-dokter.vercel.app/",
     keyFeatures: [
       // "Konsultasi dokter secara online melalui video call",
       "Sistem pemesanan jadwal untuk konsultasi langsung maupun virtual",
@@ -613,7 +761,6 @@ export const projectsData = [
     ],
     completed: true,
     duration: "4 months",
-    githubUrl: "https://github.com/rianFarhan07/Artelux",
     liveUrl: "https://artelux.vercel.app/",
     keyFeatures: [
       "Koleksi seni lukis yang dikurasi dengan beragam gaya dari seni kontemporer hingga klasik",
@@ -642,7 +789,6 @@ export const projectsData = [
     techLogos: ["React Native", "Apollo GraphQL", "MongoDB", "JWT", "Redis"],
     completed: true,
     duration: "3 months",
-    githubUrl: "https://github.com/rianFarhan07/Ex", // Ganti dengan link repositori GitHub jika ada
     keyFeatures: [
       "Membuat dan berbagi postingan dengan mudah",
       "Mengikuti pengguna lain dan berinteraksi dengan konten dalam waktu nyata",
@@ -660,7 +806,7 @@ export const projectsData = [
       "Recipedia adalah platform penemuan resep pintar yang membantu pengguna menemukan resep berdasarkan bahan yang tersedia, kebutuhan diet, dan preferensi pribadi. Dengan pengenalan gambar berbasis AI, Recipedia dapat menganalisis gambar makanan dan menghasilkan daftar bahan, membuat memasak lebih mudah dan dapat diakses.",
     category: "web",
     image: "images/recipedia.webp",
-    link: "https://recipedia-e625b.web.app/",
+    link: "https://recipedia-client-eight.vercel.app/",
     techLogos: [
       "React.js",
       "AI",
@@ -671,8 +817,7 @@ export const projectsData = [
     ],
     completed: true,
     duration: "4 months",
-    githubUrl: "https://github.com/rianFarhan07/Recipedia",
-    liveUrl: "https://recipedia-e625b.web.app/",
+    liveUrl: "https://recipedia-client-eight.vercel.app/",
     keyFeatures: [
       "Pencarian resep berdasarkan bahan yang tersedia di rumah",
       "Kalkulator nutrisi yang memberikan rekomendasi makan sesuai dengan berat badan, tinggi badan, dan tujuan diet",
