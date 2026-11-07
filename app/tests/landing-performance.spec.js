@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("landing intro plays once per browser session without hiding the hero portrait", async ({
+test("landing intro hides the hero portrait, then plays only once per browser session", async ({
   page,
 }) => {
   await page.goto("/");
@@ -9,16 +9,22 @@ test("landing intro plays once per browser session without hiding the hero portr
   await expect(intro).toBeVisible();
 
   const portrait = page.locator('#home img[alt="Rian Farhan"]').first();
-  await expect(portrait).toBeVisible();
   await expect
     .poll(() =>
       portrait.evaluate((image) =>
-        Number(getComputedStyle(image.parentElement).opacity),
+        Number(getComputedStyle(image.closest("div")).opacity),
+      ),
+    )
+    .toBe(0);
+
+  await expect(intro).toBeHidden({ timeout: 3_000 });
+  await expect
+    .poll(() =>
+      portrait.evaluate((image) =>
+        Number(getComputedStyle(image.closest("div")).opacity),
       ),
     )
     .toBe(1);
-
-  await expect(intro).toBeHidden({ timeout: 3_000 });
 
   await page.reload();
   await page.waitForTimeout(300);

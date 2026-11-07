@@ -206,7 +206,8 @@ export default function Hero3() {
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "center",
-              opacity: 1,
+              opacity: introExited ? 1 : 0,
+              transition: introExited ? "opacity 0.6s ease" : "none",
             }}
           >
             <picture>
@@ -669,7 +670,8 @@ export default function Hero3() {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "center",
-            opacity: 1,
+            opacity: introExited ? 1 : 0,
+            transition: introExited ? "opacity 0.6s ease" : "none",
           }}
         >
           <picture>
