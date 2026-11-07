@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
 import {
   ArrowRight,
   Award,
@@ -46,6 +47,7 @@ export default function CertificatesPreview() {
   const line2Ref = useRef(null);
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
+  const pauseRef = usePauseWhenOffscreen();
 
   const textPrimary = isDark ? "#e7edf5" : "#10233f";
   const textMuted = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
@@ -245,9 +247,9 @@ export default function CertificatesPreview() {
     return (
       <>
         <style>{`
-          @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
+          @keyframes cp-scan{0%{transform:translate3d(0,0,0);opacity:0}5%{opacity:1}95%{opacity:1}100%{transform:translate3d(0,100%,0);opacity:0}}
           @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}}
-          .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
+          .cp-scan{position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent) top/100% 1px no-repeat;will-change:transform,opacity;animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
           .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
           .cp-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.68rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.05em}
           .cp-verify-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;background:var(--ac-deep);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;color:${isDark ? "#10233f" : "white"};text-decoration:none;transition:background .2s}
@@ -261,6 +263,7 @@ export default function CertificatesPreview() {
           id="certificates"
           ref={(el) => {
             ref(el);
+            pauseRef(el);
             wrapperRef.current = el;
           }}
           style={{
@@ -651,11 +654,11 @@ export default function CertificatesPreview() {
   return (
     <>
       <style>{`
-        @keyframes cp-scan{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
+        @keyframes cp-scan{0%{transform:translate3d(0,0,0);opacity:0}5%{opacity:1}95%{opacity:1}100%{transform:translate3d(0,100%,0);opacity:0}}
         @keyframes cp-pdot{0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)}50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}}
         @keyframes cp-arr{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.3}50%{transform:rotate(45deg) translate(4px,4px);opacity:1}}
 
-        .cp-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent);animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
+        .cp-scan{position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent) top/100% 1px no-repeat;will-change:transform,opacity;animation:cp-scan 7s ease-in-out infinite;pointer-events:none;z-index:8}
         .cp-gridbg{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px),repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px);z-index:0}
         .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
         .cp-pdot-sm{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
@@ -685,6 +688,7 @@ export default function CertificatesPreview() {
         id="certificates"
         ref={(el) => {
           ref(el);
+          pauseRef(el);
           wrapperRef.current = el;
         }}
         style={{

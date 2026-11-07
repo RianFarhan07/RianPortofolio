@@ -85,6 +85,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Sections pause their decorative CSS loops while off-screen (src/lib/usePauseWhenOffscreen.js). */
+[data-offscreen],
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused !important;
+}
+
 /* Sembunyikan cursor bawaan — dikelola oleh CustomCursor */
 * {
   cursor: none !important;

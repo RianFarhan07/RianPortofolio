@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
+import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
 import fotoRianDark from "../assets/foto_rian_nobg3.webp";
 import fotoRianDarkMobile from "../assets/foto_rian_nobg3-960.webp";
 // import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
@@ -39,6 +40,7 @@ export default function Hero3() {
 
   const photoRef = useRef(null);
   const photoImgRef = useRef(null);
+  const pauseRef = usePauseWhenOffscreen();
 
   const location = useLocation();
   const { introExited, pageTransitionDone } = useContext(IntroContext);
@@ -97,20 +99,22 @@ export default function Hero3() {
             0%, 100% { box-shadow: 0 0 0 0 rgba(var(--ac1),0.7); }
             50%       { box-shadow: 0 0 0 5px rgba(var(--ac1),0); }
           }
+          /* transform, not top: the element spans the section and paints its 1px line at the top edge,
+             so translateY(100%) travels the full height without triggering layout every frame */
           @keyframes hero-mob-scan {
-            0%   { top: 0;    opacity: 0; }
+            0%   { transform: translate3d(0, 0, 0);    opacity: 0; }
             5%   { opacity: 1; }
             95%  { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
+            100% { transform: translate3d(0, 100%, 0); opacity: 0; }
           }
           @keyframes hero-mob-arr {
             0%, 100% { transform: rotate(45deg) translate(0,0); opacity: 0.3; }
             50%       { transform: rotate(45deg) translate(4px,4px); opacity: 1; }
           }
           .mob-scan {
-            position: absolute; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent);
-            z-index: 8; pointer-events: none;
+            position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent) top / 100% 1px no-repeat;
+            z-index: 8; pointer-events: none; will-change: transform, opacity;
             animation: hero-mob-scan 7s ease-in-out infinite;
           }
           .mob-pdot {
@@ -142,6 +146,7 @@ export default function Hero3() {
 
         <section
           id="home"
+          ref={pauseRef}
           style={{
             position: "relative",
             width: "100%",
@@ -489,17 +494,18 @@ export default function Hero3() {
           0%, 100% { transform: rotate(45deg) translate(0,0); opacity: 0.3; }
           50%       { transform: rotate(45deg) translate(4px,4px); opacity: 1; }
         }
+        /* transform, not top (see hero-mob-scan) */
         @keyframes hero2-scan {
-          0%   { top: 0;    opacity: 0; }
+          0%   { transform: translate3d(0, 0, 0);    opacity: 0; }
           5%   { opacity: 1; }
           95%  { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
+          100% { transform: translate3d(0, 100%, 0); opacity: 0; }
         }
 
         .h2-scan {
-          position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent);
-          z-index: 8; pointer-events: none;
+          position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+          background: linear-gradient(90deg, transparent, rgba(var(--ac2),0.35), transparent) top / 100% 1px no-repeat;
+          z-index: 8; pointer-events: none; will-change: transform, opacity;
           animation: hero2-scan 7s ease-in-out infinite;
         }
         .h2-role-dot {
@@ -547,6 +553,7 @@ export default function Hero3() {
 
       <section
         id="home"
+        ref={pauseRef}
         style={{
           position: "relative",
           width: "100%",

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
+import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
 import { Github, Linkedin, Mail, Heart, ArrowUp } from "lucide-react";
 
 const A = "var(--ac)";
@@ -11,6 +12,7 @@ export default function Footer() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const currentYear = new Date().getFullYear();
+  const pauseRef = usePauseWhenOffscreen();
 
   const txt = isDark ? "#e7edf5" : "#10233f";
   const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
@@ -26,11 +28,12 @@ export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative py-12 md:py-16 overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <footer ref={pauseRef} className="relative py-12 md:py-16 overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
-        .ft-scan{position:absolute;left:0;right:0;height:1px;top:0;z-index:8;pointer-events:none;
+        .ft-scan{position:absolute;left:0;right:0;height:1px;top:0;z-index:8;pointer-events:none;will-change:transform,opacity;
           background:linear-gradient(90deg,transparent,rgba(${AR2},.3),transparent);animation:ft-sc 8s ease-in-out infinite}
-        @keyframes ft-sc{0%{opacity:0;left:-100%}5%{opacity:1;left:0}95%{opacity:1;left:0}100%{opacity:0;left:100%}}
+        /* transform, not left: sliding the line must not trigger layout every frame */
+        @keyframes ft-sc{0%{opacity:0;transform:translate3d(-100%,0,0)}5%{opacity:1;transform:translate3d(0,0,0)}95%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(100%,0,0)}}
         @keyframes ft-heart{0%,100%{transform:scale(1)rotate(0deg)}25%{transform:scale(1.2)rotate(5deg)}75%{transform:scale(1.2)rotate(-5deg)}}
         .ft-heart{display:inline-block;animation:ft-heart 1.5s ease-in-out infinite;color:${A}}
       `}</style>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
 import { ArrowRight, ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
@@ -93,6 +94,7 @@ export default function ProjectPreview() {
   const reduced = false;
 
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 });
+  const pauseRef = usePauseWhenOffscreen();
 
   /* ── Responsive check ── */
   useEffect(() => {
@@ -342,15 +344,15 @@ export default function ProjectPreview() {
         <style>{`
 
           @keyframes pp-scan {
-            0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
+            0%{transform:translate3d(0,0,0);opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{transform:translate3d(0,100%,0);opacity:0}
           }
           @keyframes pp-pdot {
             0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)} 50%{box-shadow:0 0 0 5px rgba(var(--ac1),0)}
           }
           .pp-scan {
-            position:absolute; left:0; right:0; height:1px;
-            background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent);
-            animation:pp-scan 7s ease-in-out infinite;
+            position:absolute; left:0; right:0; top:0; bottom:0;
+            background:linear-gradient(90deg,transparent,rgba(var(--ac2),.35),transparent) top / 100% 1px no-repeat;
+            animation:pp-scan 7s ease-in-out infinite; will-change:transform,opacity;
             pointer-events:none; z-index:8;
           }
           .pp-pdot {
@@ -389,7 +391,10 @@ export default function ProjectPreview() {
 
         <section
           id="projects"
-          ref={ref}
+          ref={(el) => {
+            ref(el);
+            pauseRef(el);
+          }}
           style={{
             position: "relative",
             padding: "72px 24px 80px",
@@ -758,7 +763,7 @@ export default function ProjectPreview() {
       <style>{`
 
         @keyframes pp-scan {
-          0%{top:0;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0}
+          0%{transform:translate3d(0,0,0);opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{transform:translate3d(0,100%,0);opacity:0}
         }
         @keyframes pp-pdot {
           0%,100%{box-shadow:0 0 0 0 rgba(var(--ac1),.7)} 50%{box-shadow:0 0 0 6px rgba(var(--ac1),0)}
@@ -769,9 +774,9 @@ export default function ProjectPreview() {
         }
 
         .pp-scan {
-          position:absolute; left:0; right:0; height:1px;
-          background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent);
-          animation:pp-scan 7s ease-in-out infinite;
+          position:absolute; left:0; right:0; top:0; bottom:0;
+          background:linear-gradient(90deg,transparent,rgba(var(--ac2),.25),transparent) top / 100% 1px no-repeat;
+          animation:pp-scan 7s ease-in-out infinite; will-change:transform,opacity;
           pointer-events:none; z-index:8;
         }
         .pp-gridbg {
@@ -879,6 +884,7 @@ export default function ProjectPreview() {
         id="projects"
         ref={(el) => {
           ref(el);
+          pauseRef(el);
           wrapperRef.current = el;
         }}
         style={{
