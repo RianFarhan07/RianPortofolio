@@ -10,7 +10,18 @@ import rianPhoto from "../assets/rian-animate-editorial.webp";
 const EXPERIENCES = [
   { role: "IT Support", org: "Dept. of Manpower, Makassar", period: "2022 → 23", desc: "Daily technical support, hardware/software & internal networks." },
   { role: "Freelance Android Developer", org: "SMKN 4 Jeneponto", period: "2023", desc: "Built & maintained Android apps for school needs using Kotlin." },
-  { role: "Fullstack Developer Associate Manager", org: "CarbonEthics", period: "2024 → now", desc: "End-to-end web solutions aligned with sustainability initiatives.", featured: true },
+  {
+    role: "Fullstack Developer Associate Manager", org: "CarbonEthics", period: "2025 → now",
+    desc: "Independently designed and built an end-to-end monitoring ecosystem—from database architecture to production deployment—replacing a manual Google Forms/Airtable workflow.",
+    featured: true,
+    highlights: [
+      "Built a multi-role Internal Dashboard (Laravel, 30+ tables) managing planting operations, orders, vendors, finance, and HR across six departments.",
+      "Developed an offline-first Field Monitoring App (React Native/Expo) with GPS-watermarked photos, draft persistence, and automatic sync—eliminating data loss in low-connectivity areas.",
+      "Led the corporate website migration from Wix to Next.js with bilingual (EN/ID) content, SEO redirect mapping, Docker deployment, and AWS S3 media handling.",
+      "Built a B2B Client Dashboard (Next.js) with interactive satellite maps, planting timeline, gallery, and downloadable reports and certificates.",
+      "Led and mentored a team of 2 development interns, overseeing task delegation, code review, and delivery timelines.",
+    ],
+  },
 ];
 const EDUCATION = [
   { degree: "B.Sc Informatics", org: "Universitas Negeri Makassar", period: "2020 → 2024", desc: "Computer science, software development & IT fundamentals.", score: "3.86", scale: "/4.00", scoreLabel: "GPA" },
@@ -111,7 +122,12 @@ export default function About() {
       + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 20+</div>'
       + '<div><span class="k">status</span> <span class="ok">● open_to_work</span></div></div></div>';
     const bio = '<span class="muted">"""</span> Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences. <span class="muted">"""</span>';
-    const exp = EXPERIENCES.map((e) => `<div class="rec"><span class="ok">▸ ${e.period}</span>  ${e.role} · <span class="hl">${e.org}</span><div class="sub">${e.desc}</div></div>`).join("");
+    const exp = EXPERIENCES.map((e) => {
+      const highlights = e.highlights?.length
+        ? `<div class="rec-points">${e.highlights.map((point) => `<div><span class="k">├─</span> ${point}</div>`).join("")}</div>`
+        : "";
+      return `<div class="rec"><span class="ok">▸ ${e.period}</span>  ${e.role} · <span class="hl">${e.org}</span><div class="sub">${e.desc}</div>${highlights}</div>`;
+    }).join("");
     const edu = EDUCATION.map((e) => `<div class="rec"><span class="ok">🎓 ${e.period}</span>  ${e.degree} · <span class="hl">${e.org}</span></div>`).join("");
     const chipRow = (items) => '<div class="chips">' + items.map((t) => `<span class="chip"><span class="k">▸</span> ${t}</span>`).join("") + "</div>";
     const skills = '<div class="skcat"># frontend</div>' + chipRow(["react / next", "typescript", "html / css"])
@@ -379,6 +395,11 @@ export default function About() {
                     )}
                   </div>
                   <p style={{ color: muted }}>{item.desc}</p>
+                  {item.highlights?.length > 0 && (
+                    <ul className="bp-career-highlights">
+                      {item.highlights.map((point) => <li key={point}>{point}</li>)}
+                    </ul>
+                  )}
                 </div>
               </article>
             ))}
@@ -561,7 +582,7 @@ const btCss = `
 .bt .nf{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 .bt .nf-ava{width:84px;height:84px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;letter-spacing:1px;color:#04121a;background:var(--ac)}
 .bt .nf-info>div{display:flex;gap:10px}.bt .nf-info .k{color:var(--ac);min-width:78px;display:inline-block}
-.bt .rec{margin-bottom:11px}.bt .rec .sub{color:var(--muted);font-size:12px;padding-left:16px;line-height:1.5}
+.bt .rec{margin-bottom:11px}.bt .rec .sub{color:var(--muted);font-size:12px;padding-left:16px;line-height:1.5}.bt .rec-points{display:grid;gap:5px;margin:8px 0 0 16px;padding-left:11px;border-left:1px solid rgba(var(--ac1),.28);color:var(--muted);font-size:11px;line-height:1.5}.bt .rec-points .k{margin-right:5px}
 .bt .skcat{color:var(--mag);margin:10px 0 5px;font-size:12px}
 .bt .chips{display:flex;flex-wrap:wrap;gap:7px}
 .bt .chip{font-size:11.5px;color:var(--txt);background:rgba(var(--ac2),.08);border:1px solid rgba(var(--ac2),.25);border-radius:7px;padding:5px 10px}.bt .chip .k{color:var(--ac)}
@@ -633,7 +654,7 @@ const bpCss = `
 .bp-career-item:last-child{padding-bottom:0}.bp-career-marker{width:39px;height:39px;margin-left:-20px;border:1px solid rgba(var(--ac1),.5);border-radius:50%;display:grid;place-items:center;background:var(--term,#08111f);color:var(--ac);font:700 10px ui-monospace,Menlo,monospace}
 .bp-career-time{padding-top:10px;font:11px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .bp-career-copy{border-bottom:1px solid;padding:4px 0 28px;border-color:inherit}.bp-career-item:last-child .bp-career-copy{border-bottom:0;padding-bottom:0}
-.bp-career-copy h3{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);margin:0 0 6px}.bp-career-copy p{font-size:.9rem;line-height:1.65;margin:13px 0 0;max-width:64ch}
+.bp-career-copy h3{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);margin:0 0 6px}.bp-career-copy p{font-size:.9rem;line-height:1.65;margin:13px 0 0;max-width:72ch}.bp-career-highlights{display:grid;gap:10px;margin:18px 0 0;padding:0;max-width:78ch;list-style:none}.bp-career-highlights li{position:relative;padding-left:20px;font-size:.84rem;line-height:1.62;color:var(--muted)}.bp-career-highlights li::before{content:'↳';position:absolute;left:0;color:var(--ac);font-family:ui-monospace,Menlo,monospace;font-weight:700}
 .bp-career-titleline{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}.bp-company-lockup{background:#08111f;border:1px solid rgba(224,168,58,.35);border-radius:10px;padding:9px 12px;min-width:176px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.bp-company-lockup img{display:block;width:150px;height:25px;object-fit:contain;object-position:left center}.bp-company-lockup span{font:9px ui-monospace,Menlo,monospace;color:#e0a83a;letter-spacing:.17em;text-transform:uppercase}
 .bp-career-item.is-current .bp-career-marker{background:var(--ac);color:#08111f}.bp-career-item.is-current .bp-career-copy{position:relative}.bp-career-item.is-current .bp-career-copy::before{content:'CURRENT';position:absolute;right:0;top:-18px;color:var(--ac);font:700 9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
 .bp-section-head{display:grid;grid-template-columns:1fr minmax(280px,.62fr);gap:36px;align-items:start;margin-bottom:30px}.bp-section-head .bp-label{margin-bottom:0}.bp-section-head>p{font-size:.92rem;line-height:1.7;margin:0;max-width:48ch}

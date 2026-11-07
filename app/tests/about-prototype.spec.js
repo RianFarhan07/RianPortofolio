@@ -62,6 +62,23 @@ test("academic achievements form a separate chapter before the career journey", 
   await expect(page.locator('img[src*="foto-nobg-editorial-natural"]')).toHaveCount(0);
 });
 
+test("CarbonEthics experience shows end-to-end product and leadership impact", async ({
+  page,
+}) => {
+  await page.addInitScript(() =>
+    sessionStorage.setItem("rian-about-view", "page"),
+  );
+  await page.goto("/about");
+
+  const career = page.locator("#career-journey");
+  await expect(career.getByText("2025 → now", { exact: true })).toBeVisible();
+  await expect(career.getByText(/multi-role Internal Dashboard/)).toBeVisible();
+  await expect(career.getByText(/offline-first Field Monitoring App/)).toBeVisible();
+  await expect(career.getByText(/corporate website migration from Wix/)).toBeVisible();
+  await expect(career.getByText(/B2B Client Dashboard/)).toBeVisible();
+  await expect(career.getByText(/team of 2 development interns/)).toBeVisible();
+});
+
 test("page view shares the same desktop content rails as the navbar", async ({
   page,
 }) => {
