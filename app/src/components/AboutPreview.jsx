@@ -1,61 +1,92 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowRight, MapPin } from "lucide-react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import aboutImage from "../assets/foto-nobg-editorial-natural.webp";
-import aboutImage480 from "../assets/foto-nobg-editorial-natural-480.webp";
-import aboutImage768 from "../assets/foto-nobg-editorial-natural-768.webp";
+import {
+  NODE_PATHS,
+  chapterScrollProgress,
+  easeOut,
+  getEntranceState,
+  getOrbitState,
+  nodePosition,
+  phaseProgress,
+  smoothToward,
+} from "../lib/orbitJourneyModel";
+
+/*
+  Home "About" section: one scroll-controlled story.
+
+  The headline flies in while the section rises into view, holds once the
+  stage pins, flies apart, a point is born where it was, rings grow from that
+  point, four capabilities swing in from the corners, and the orbit then turns
+  through the chapters. Every stage is a pure function of scroll position
+  (lib/orbitJourneyModel), eased toward that position so wheel steps read as
+  motion rather than jumps, and fully reversible.
+
+  Rendering: a single rAF loop writes transform/opacity straight onto the ~30
+  moving elements (never layout properties, never inherited custom properties)
+  and skips values that did not change. It stops itself once at rest and
+  reports that state on the story element as data-motion="idle" | "moving".
+
+  Product note: like the rest of the site (PRODUCT.md, DESIGN.md), motion is
+  always on and prefers-reduced-motion is deliberately ignored — Windows with
+  "Animation effects" off reports `reduce`, which used to leave this section
+  fading in place while everything else animated. Set to true to honour it.
+*/
+const RESPECT_REDUCED_MOTION = false;
+const EASE_MS = 120; // how quickly the scene catches up with the scroll position
 
 const stats = [
   { value: 20, suffix: "+", label: "Projects shipped" },
   { value: 4, suffix: "+", label: "Years building" },
 ];
 
-const technologies = [
-  {
-    name: "Next.js",
-    category: "Framework",
-    icon: "https://cdn.simpleicons.org/nextdotjs/FFFFFF",
-    color: "238, 243, 255",
-  },
-  {
-    name: "NestJS",
-    category: "Backend",
-    icon: "https://cdn.simpleicons.org/nestjs/E0234E",
-    color: "224, 35, 78",
-  },
-  {
-    name: "React",
-    category: "Interface",
-    icon: "https://cdn.simpleicons.org/react/61DAFB",
-    color: "97, 218, 251",
-  },
-  {
-    name: "Node.js",
-    category: "Runtime",
-    icon: "https://cdn.simpleicons.org/nodedotjs/5FA04E",
-    color: "95, 160, 78",
-  },
-  {
-    name: "Flutter",
-    category: "Mobile",
-    icon: "https://cdn.simpleicons.org/flutter/54C5F8",
-    color: "84, 197, 248",
-  },
-  {
-    name: "Kotlin",
-    category: "Android",
-    icon: "https://cdn.simpleicons.org/kotlin/7F52FF",
-    color: "127, 82, 255",
-  },
+const proofItems = ["CarbonEthics", "Disnaker Makassar", "Hacktiv8", "SMKN 4 Jeneponto"];
+
+/* Where each word comes from (fx/fy in vw/vh, scale, rotation in deg) and where it
+   flies when dispersing (dx/dy in vw/vh). Fixed, never random, so it reverses exactly. */
+const headline = [
+  { text: "I", fx: -52, fy: -18, fs: 0.5, fr: -12, dx: -42, dy: -24 },
+  { text: "build", fx: 0, fy: -48, fs: 0.7, fr: 6, dx: 4, dy: -40 },
+  { text: "from", fx: 54, fy: -10, fs: 0.6, fr: 10, dx: 44, dy: -16 },
+  { text: "the", fx: 8, fy: 6, fs: 2.4, fr: 0, dx: 12, dy: 10 },
+  { text: "interface", fx: -50, fy: 22, fs: 0.6, fr: 8, dx: -46, dy: 26 },
+  { text: "to", fx: 6, fy: 52, fs: 0.5, fr: -8, dx: 8, dy: 44 },
+  { text: "the", fx: 50, fy: 30, fs: 0.7, fr: -10, dx: 40, dy: 28 },
+  { text: "system", fx: -30, fy: -45, fs: 0.8, fr: 5, dx: -34, dy: -34, outline: true },
+  { text: "behind", fx: 36, fy: 48, fs: 0.55, fr: -6, dx: 38, dy: 38, outline: true },
+  { text: "it.", fx: -10, fy: 6, fs: 2.8, fr: 0, dx: -14, dy: 12, outline: true },
 ];
 
-const carbonEthicsLogo = "https://static.wixstatic.com/media/ee9db0_f68a88bb9569472eae36b57823fdf84a~mv2.png/v1/crop/x_181,y_73,w_3005,h_835/fill/w_249,h_69,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/CarbonEthics%20Horizontal%20White.png";
-const proofItems = [
-  "CarbonEthics",
-  "Disnaker Makassar",
-  "Hacktiv8",
-  "SMKN 4 Jeneponto",
+const chapters = [
+  {
+    label: "Interface",
+    hint: "What people touch",
+    tag: "Chapter 01 · Interface",
+    title: "Making ideas tangible",
+    body: "Android projects taught me to start with a problem close enough to understand and a user close enough to listen to.",
+  },
+  {
+    label: "Systems",
+    hint: "Data and APIs",
+    tag: "Chapter 02 · Systems",
+    title: "Thinking beyond the interface",
+    body: "The interface pulled me into APIs, data models, roles, and the architecture behind every reliable interaction.",
+  },
+  {
+    label: "Resilience",
+    hint: "Reality-proof UX",
+    tag: "Chapter 03 · Resilience",
+    title: "Designing for imperfect conditions",
+    body: "Weak signals, slow GPS, and interrupted workflows made resilience part of the experience itself.",
+  },
+  {
+    label: "Ecosystem",
+    hint: "Products connected",
+    tag: "Chapter 04 · Ecosystem",
+    title: "Connecting the whole product range",
+    body: "Today I connect public web, B2B monitoring, internal operations, and field mobile products at CarbonEthics.",
+  },
 ];
 
 function CountUp({ to, suffix = "", active }) {
@@ -87,970 +118,953 @@ function CountUp({ to, suffix = "", active }) {
   );
 }
 
-export default function AboutPreview() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const sectionRef = useRef(null);
-  const profileRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isSettled, setIsSettled] = useState(false);
+const fixed = (value, digits) => Number(value.toFixed(digits)); // stable strings -> unchanged values are skipped
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || !("IntersectionObserver" in window)) {
-      setIsVisible(true);
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setIsVisible(true);
-        observer.disconnect();
-      },
-      { threshold: 0.22 },
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return undefined;
-
-    const timer = window.setTimeout(() => setIsSettled(true), 1250);
-    return () => window.clearTimeout(timer);
-  }, [isVisible]);
-
-  const handlePointerMove = (event) => {
-    if (!profileRef.current || window.innerWidth < 768) return;
-
-    const bounds = profileRef.current.getBoundingClientRect();
-    const relativeX = (event.clientX - bounds.left) / bounds.width;
-    const relativeY = (event.clientY - bounds.top) / bounds.height;
-    const imageX = (relativeX - 0.5) * -12;
-    const imageY = (relativeY - 0.5) * -8;
-
-    profileRef.current.style.setProperty("--pointer-x", `${relativeX * 100}%`);
-    profileRef.current.style.setProperty("--pointer-y", `${relativeY * 100}%`);
-    profileRef.current.style.setProperty("--image-x", `${imageX}px`);
-    profileRef.current.style.setProperty("--image-y", `${imageY}px`);
-  };
-
-  const resetPointer = () => {
-    if (!profileRef.current) return;
-    profileRef.current.style.setProperty("--pointer-x", "72%");
-    profileRef.current.style.setProperty("--pointer-y", "22%");
-    profileRef.current.style.setProperty("--image-x", "0px");
-    profileRef.current.style.setProperty("--image-y", "0px");
-  };
-
-  const themeStyles = {
-    "--apx-bg": isDark ? "#08121f" : "#eef2f6",
-    "--apx-panel": isDark ? "#0b1725" : "#f7f9fb",
-    "--apx-panel-strong": isDark ? "#101e2e" : "#e8edf2",
-    "--apx-ink": isDark ? "#e7edf5" : "#10233f",
-    "--apx-muted": isDark ? "#91a0b2" : "#58677b",
-    "--apx-faint": isDark ? "#7d8ca0" : "#5c6a7d",
-    "--apx-photo-bg": isDark ? "#07101a" : "#dfe5ea",
-    "--apx-button-text": isDark ? "#101a25" : "#ffffff",
-    "--apx-shadow": isDark
-      ? "0 46px 110px rgba(0, 0, 0, .3)"
-      : "0 42px 100px rgba(24, 42, 67, .14)",
-  };
-
-  return (
-    <>
-      <style>{`
-
-        .apx-section {
+/* Static parts, created once: re-renders on chapter change skip them entirely. */
+const css = `
+        .oj-root {
+          --oj-vh: 100vh;
+          --oj-top: 84px;
+          --oj-bottom: 24px;
           position: relative;
-          isolation: isolate;
-          overflow: hidden;
-          padding: clamp(78px, 9vw, 136px) clamp(18px, 4vw, 64px);
-          color: var(--apx-ink);
-          background: var(--apx-bg);
+          color: var(--oj-ink);
+          background: var(--oj-bg);
           font-family: 'DM Sans', sans-serif;
         }
 
-        .apx-section::before {
-          position: absolute;
-          inset: 0;
-          z-index: -2;
-          background-image:
-            linear-gradient(rgba(var(--ac2), .045) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(var(--ac2), .045) 1px, transparent 1px);
-          background-size: 72px 72px;
-          content: '';
-          mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
-        }
+        @supports (height: 100svh) { .oj-root { --oj-vh: 100svh; } }
 
-        .apx-section::after {
-          position: absolute;
-          z-index: -1;
-          top: 5%;
-          left: -12%;
-          width: 52vw;
-          height: 52vw;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(var(--ac1), .12), transparent 68%);
-          content: '';
-          filter: blur(20px);
-        }
-
-        .apx-kicker {
-          display: flex;
-          width: min(1220px, 100%);
-          align-items: center;
-          justify-content: space-between;
-          margin: 0 auto 18px;
-          color: var(--apx-faint);
+        .oj-mono {
           font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .64rem;
-          letter-spacing: .16em;
-          text-transform: uppercase;
-          opacity: 0;
-          transform: translate3d(0, 12px, 0);
-          transition: opacity 500ms ease, transform 700ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .apx-kicker.is-visible {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
-
-        .apx-kicker span:first-child {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          color: var(--ac);
-        }
-
-        .apx-kicker span:first-child::before {
-          width: 30px;
-          height: 1px;
-          background: var(--ac);
-          content: '';
-        }
-
-        .apx-profile {
-          --pointer-x: 72%;
-          --pointer-y: 22%;
-          --image-x: 0px;
-          --image-y: 0px;
+        .oj-story {
           position: relative;
-          display: grid;
-          width: min(1220px, 100%);
-          min-height: 700px;
-          margin: 0 auto;
-          overflow: hidden;
-          grid-template-columns: minmax(360px, .84fr) minmax(520px, 1.16fr);
-          border: 1px solid rgba(var(--ac2), .22);
-          border-radius: 22px;
-          background: var(--apx-panel);
-          box-shadow: var(--apx-shadow);
-          opacity: 0;
-          transform: perspective(1200px) translate3d(0, 58px, 0) rotateX(3deg) scale(.975);
-          transform-origin: 50% 28%;
-          transition:
-            opacity 420ms ease,
-            transform 950ms cubic-bezier(.16, 1, .3, 1);
-          contain: paint;
+          height: 700vh;
         }
 
-        .apx-profile.is-visible {
-          opacity: 1;
-          transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0) scale(1);
-        }
-
-        .apx-shutters {
-          position: absolute;
-          z-index: 40;
-          inset: 0;
-          display: grid;
-          grid-template-rows: repeat(3, 1fr);
-          pointer-events: none;
-        }
-
-        .apx-shutter {
-          position: relative;
-          background: linear-gradient(90deg, var(--apx-panel), var(--apx-panel-strong) 72%, var(--ac));
-          transform: scaleX(1);
-          transform-origin: right center;
-          transition: transform 760ms cubic-bezier(.76, 0, .24, 1);
-        }
-
-        .apx-shutter::after {
-          position: absolute;
+        /* Everything that moves is written as transform/opacity by script. The
+           defaults below are the no-JavaScript view: headline assembled, orbit hidden. */
+        .oj-stage {
+          position: sticky;
           top: 0;
-          right: 0;
-          bottom: 0;
-          width: 2px;
-          background: var(--ac);
-          box-shadow: -18px 0 44px rgba(var(--ac1), .34);
-          content: '';
-        }
-
-        .apx-profile.is-visible .apx-shutter { transform: scaleX(0); }
-        .apx-profile.is-visible .apx-shutter:nth-child(2) { transition-delay: 70ms; }
-        .apx-profile.is-visible .apx-shutter:nth-child(3) { transition-delay: 140ms; }
-        .apx-profile.is-settled .apx-shutters { display: none; }
-
-        .apx-profile::before,
-        .apx-profile::after {
-          position: absolute;
-          z-index: 15;
-          width: 26px;
-          height: 26px;
-          pointer-events: none;
-          content: '';
-        }
-
-        .apx-profile::before {
-          top: 12px;
-          left: 12px;
-          border-top: 1px solid rgba(var(--ac2), .58);
-          border-left: 1px solid rgba(var(--ac2), .58);
-        }
-
-        .apx-profile::after {
-          right: 12px;
-          bottom: 12px;
-          border-right: 1px solid rgba(var(--ac2), .58);
-          border-bottom: 1px solid rgba(var(--ac2), .58);
-        }
-
-        .apx-portrait {
-          position: relative;
-          min-height: 700px;
+          height: var(--oj-vh);
           overflow: hidden;
-          border-right: 1px solid rgba(var(--ac2), .2);
+          contain: layout paint;
           background:
-            radial-gradient(circle at 52% 35%, rgba(var(--ac1), .24), transparent 31%),
-            radial-gradient(circle at 50% 70%, rgba(35, 180, 210, .08), transparent 38%),
-            linear-gradient(145deg, var(--apx-photo-bg), #050b12 72%);
+            linear-gradient(rgba(var(--ac2), .05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(var(--ac2), .05) 1px, transparent 1px),
+            var(--oj-bg);
+          background-size: 72px 72px;
         }
 
-        .apx-portrait::before {
+        .oj-corner {
           position: absolute;
-          z-index: 4;
-          inset: 0;
-          background:
-            linear-gradient(180deg, rgba(5, 11, 18, .04) 42%, rgba(5, 11, 18, .92) 100%),
-            linear-gradient(90deg, transparent 78%, rgba(5, 11, 18, .32));
-          content: '';
+          z-index: 30;
+          width: 18px;
+          height: 18px;
+          border: 0 solid rgba(var(--ac2), .35);
           pointer-events: none;
         }
+        .oj-corner-tl { top: 14px; left: 14px; border-top-width: 1px; border-left-width: 1px; }
+        .oj-corner-tr { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; }
+        .oj-corner-bl { bottom: 14px; left: 14px; border-bottom-width: 1px; border-left-width: 1px; }
+        .oj-corner-br { right: 14px; bottom: 14px; border-right-width: 1px; border-bottom-width: 1px; }
 
-        .apx-portrait::after {
+        .oj-scan {
           position: absolute;
-          z-index: 6;
-          top: -18%;
+          z-index: 29;
+          top: 0;
           right: 0;
           left: 0;
-          height: 15%;
-          background: linear-gradient(180deg, transparent, rgba(var(--ac1), .42), transparent);
-          content: '';
-          opacity: .52;
-          animation: apx-scan 6.5s linear infinite;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(var(--ac2), .4), transparent);
+          opacity: 0;
+          animation: oj-scan 7s ease-in-out infinite paused;
+          pointer-events: none;
+          will-change: transform;
+        }
+        .oj-root.is-near .oj-scan { animation-play-state: running; }
+        /* plain units (no var()) so the browser can run it on the compositor */
+        @keyframes oj-scan {
+          0% { transform: translate3d(0, 0, 0); opacity: 0; }
+          6%, 94% { opacity: 1; }
+          100% { transform: translate3d(0, 100vh, 0); opacity: 0; }
+        }
+
+        /* Stages 1 + 2: headline flies in, holds, then disperses */
+        .oj-intro {
+          position: absolute;
+          z-index: 14;
+          inset: 0;
+          display: grid;
+          justify-items: center;
+          padding: 0 clamp(20px, 5vw, 80px);
+          place-content: center;
+          text-align: center;
           pointer-events: none;
         }
 
-        .apx-photo {
-          position: absolute;
-          z-index: 3;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: 51% center;
-          filter: saturate(.88) contrast(1.08) brightness(.9);
-          opacity: .48;
-          transform: translate3d(var(--image-x), calc(var(--image-y) + 22px), 0) scale(1.14);
-          transition:
-            opacity 700ms ease 150ms,
-            transform 1100ms cubic-bezier(.16, 1, .3, 1) 120ms;
-          will-change: transform;
-        }
-
-        .apx-profile.is-visible .apx-photo {
-          opacity: 1;
-          transform: translate3d(var(--image-x), var(--image-y), 0) scale(1.055);
-        }
-
-        .apx-profile.is-settled .apx-photo {
-          transition: transform 560ms cubic-bezier(.2, .75, .2, 1);
-        }
-
-        .apx-orbit {
-          position: absolute;
-          z-index: 2;
-          top: 13%;
-          left: 50%;
-          width: 430px;
-          height: 430px;
-          border: 1px solid rgba(var(--ac2), .18);
-          border-radius: 50%;
-          transform: translateX(-50%);
-          animation: apx-orbit 18s linear infinite;
-        }
-
-        .apx-orbit::before,
-        .apx-orbit::after {
-          position: absolute;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: var(--ac);
-          box-shadow: 0 0 18px rgba(var(--ac1), .8);
-          content: '';
-        }
-
-        .apx-orbit::before { top: 38px; right: 78px; }
-        .apx-orbit::after { bottom: 54px; left: 57px; opacity: .5; }
-
-        .apx-portrait-top,
-        .apx-portrait-bottom {
-          position: absolute;
-          z-index: 8;
-          right: 28px;
-          left: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          opacity: 0;
-          transform: translate3d(0, 18px, 0);
-          transition: opacity 500ms ease 420ms, transform 750ms cubic-bezier(.16, 1, .3, 1) 380ms;
-        }
-
-        .apx-profile.is-visible .apx-portrait-top,
-        .apx-profile.is-visible .apx-portrait-bottom {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
-
-        .apx-portrait-top { top: 28px; }
-        .apx-portrait-bottom { bottom: 30px; align-items: flex-end; }
-
-        .apx-system-label,
-        .apx-location {
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .64rem;
-          letter-spacing: .15em;
-          text-transform: uppercase;
-        }
-
-        .apx-system-label { color: rgba(255, 255, 255, .62); }
-
-        .apx-status {
-          display: inline-flex;
-          align-items: center;
-          gap: 9px;
-          padding: 8px 12px;
-          border: 1px solid rgba(255, 255, 255, .16);
-          border-radius: 999px;
-          color: rgba(255, 255, 255, .84);
-          background: rgba(5, 11, 18, .46);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .64rem;
-          letter-spacing: .08em;
-          backdrop-filter: blur(12px);
-        }
-
-        .apx-status-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #55db8a;
-          box-shadow: 0 0 0 0 rgba(85, 219, 138, .55);
-          animation: apx-pulse 2.4s ease-out infinite;
-        }
-
-        .apx-name p {
-          margin: 0 0 8px;
-          color: var(--ac);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .66rem;
-          letter-spacing: .17em;
-          text-transform: uppercase;
-        }
-
-        .apx-name-title {
-          max-width: 340px;
+        .oj-title {
+          max-width: 1100px;
           margin: 0;
-          color: #f1f5fa;
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(1.8rem, 3vw, 2.55rem);
-          font-weight: 700;
-          line-height: 1.01;
-          letter-spacing: -.05em;
-        }
-
-        .apx-location {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          color: rgba(255, 255, 255, .58);
-          writing-mode: vertical-rl;
-          transform: rotate(180deg);
-        }
-
-        .apx-content {
-          position: relative;
-          display: flex;
-          min-width: 0;
-          flex-direction: column;
-          padding: clamp(42px, 4.6vw, 68px) clamp(34px, 4.4vw, 64px) 0;
-          background:
-            radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(var(--ac1), .1), transparent 27%),
-            var(--apx-panel);
-        }
-
-        .apx-content::before {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 29px;
-          border-left: 1px dashed rgba(var(--ac2), .14);
-          content: '';
-        }
-
-        .apx-content > * { position: relative; z-index: 1; }
-
-        .apx-step {
-          opacity: 0;
-          transform: translate3d(0, 30px, 0);
-          transition:
-            opacity 560ms ease,
-            transform 800ms cubic-bezier(.16, 1, .3, 1);
-        }
-
-        .apx-profile.is-visible .apx-step { opacity: 1; transform: translate3d(0, 0, 0); }
-        .apx-profile.is-visible .apx-step:nth-child(1) { transition-delay: 220ms; }
-        .apx-profile.is-visible .apx-step:nth-child(2) { transition-delay: 290ms; }
-        .apx-profile.is-visible .apx-step:nth-child(3) { transition-delay: 360ms; }
-        .apx-profile.is-visible .apx-step:nth-child(4) { transition-delay: 430ms; }
-        .apx-profile.is-visible .apx-step:nth-child(5) { transition-delay: 500ms; }
-        .apx-profile.is-visible .apx-step:nth-child(6) { transition-delay: 570ms; }
-
-        .apx-eyebrow {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin: 0 0 22px;
-          color: var(--ac);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .69rem;
-          letter-spacing: .16em;
-          text-transform: uppercase;
-        }
-
-        .apx-eyebrow::before { width: 34px; height: 1px; background: var(--ac); content: ''; }
-
-        .apx-title {
-          max-width: 720px;
-          margin: 0;
-          color: var(--apx-ink);
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(2.9rem, 4.15vw, 4.5rem);
-          font-weight: 800;
-          line-height: .94;
+          color: var(--oj-ink);
+          font: 800 clamp(2.8rem, 7vw, 7.8rem)/.92 'Syne', sans-serif;
           letter-spacing: -.065em;
         }
 
-        .apx-title-line {
-          display: block;
-          overflow: hidden;
+        .oj-word {
+          display: inline-block;
+          will-change: transform, opacity;
+          backface-visibility: hidden;
         }
 
-        .apx-title-line > span {
-          display: block;
-          transform: translate3d(0, 112%, 0) skewY(3deg);
-          transition: transform 900ms cubic-bezier(.16, 1, .3, 1) 300ms;
-        }
-
-        .apx-title-line:nth-child(2) > span { transition-delay: 390ms; }
-
-        .apx-profile.is-visible .apx-title-line > span {
-          transform: translate3d(0, 0, 0) skewY(0);
-        }
-
-        .apx-title-line-accent > span {
+        .oj-outline {
           color: transparent;
-          background: linear-gradient(110deg, transparent 18%, rgba(var(--ac1), .7) 50%, transparent 82%);
-          background-clip: text;
-          background-size: 240% 100%;
-          -webkit-background-clip: text;
-          -webkit-text-stroke: 1px rgba(var(--ac2), .82);
-          animation: apx-title-shine 4.8s ease-in-out infinite;
+          -webkit-text-stroke: 1px rgba(var(--ac2), .85);
         }
 
-        .apx-lead {
-          max-width: 650px;
-          margin: 24px 0 0;
-          color: var(--apx-muted);
-          font-size: clamp(.92rem, 1.15vw, 1.04rem);
-          line-height: 1.72;
+        .oj-lead {
+          max-width: 620px;
+          margin-top: 28px;
+          will-change: transform, opacity;
+        }
+        .oj-lead p {
+          margin: 0;
+          color: var(--oj-muted);
+          font-size: 1.05rem;
+          line-height: 1.7;
         }
 
-        .apx-lead strong { color: var(--apx-ink); font-weight: 600; }
-
-        .apx-role {
-          display: grid;
-          margin-top: 26px;
-          padding: 15px 17px;
-          grid-template-columns: 96px minmax(0, 1fr);
+        .oj-cue {
+          display: inline-flex;
           align-items: center;
-          gap: 3px 14px;
-          border: 1px solid rgba(var(--ac2), .23);
-          border-radius: 12px;
-          background:
-            radial-gradient(circle at 8% 50%, rgba(71, 193, 154, .1), transparent 27%),
-            rgba(var(--ac1), .04);
+          gap: 10px;
+          margin-top: 30px;
+          color: var(--ac);
+          font-size: .64rem;
+          letter-spacing: .16em;
+          text-transform: uppercase;
         }
-
-        .apx-role-logo {
-          position: relative;
-          display: grid;
-          width: 96px;
-          height: 46px;
-          grid-row: 1 / span 2;
-          place-items: center;
-          overflow: hidden;
-          border: 1px solid rgba(97, 225, 178, .22);
-          border-radius: 9px;
-          background: linear-gradient(145deg, #071b24, #0b2a30);
-          box-shadow: inset 0 1px rgba(255, 255, 255, .05), 0 8px 22px rgba(3, 18, 23, .16);
-        }
-
-        .apx-role-logo::before {
-          position: absolute;
-          inset: -20%;
-          background: radial-gradient(circle, rgba(67, 210, 158, .15), transparent 63%);
+        .oj-cue::before {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--ac);
+          box-shadow: 0 0 0 6px rgba(var(--ac1), .12);
           content: '';
         }
 
-        .apx-role-logo img {
-          position: relative;
-          z-index: 1;
-          width: 78px;
-          height: auto;
-          object-fit: contain;
+        /* Stages 3 + 4: a point is born, rings expand from it */
+        .oj-system {
+          position: absolute;
+          left: 50%;
+          top: calc(var(--oj-top) + (var(--oj-vh) - var(--oj-top) - var(--oj-bottom)) / 2);
+          width: min(58vw, 730px, calc((var(--oj-vh) - var(--oj-top) - var(--oj-bottom) - 184px) / .96));
+          aspect-ratio: 1;
+          transform: translate(-50%, -50%);
+          will-change: transform;
         }
 
-        .apx-role small {
-          color: var(--apx-faint);
+        .oj-ring {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          border: 1px solid rgba(var(--ac2), .3);
+          border-radius: 50%;
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0);
+          will-change: transform, opacity; /* own layer: growing rings don't re-raster the orbit */
+        }
+        .oj-r1 { width: 34%; aspect-ratio: 1; }
+        .oj-r2 { width: 65%; aspect-ratio: 1; border-style: dashed; }
+        .oj-r3 { width: 96%; aspect-ratio: 1; border-color: rgba(var(--ac2), .18); }
+
+        .oj-seed {
+          position: absolute;
+          z-index: 3;
+          top: 50%;
+          left: 50%;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--ac);
+          box-shadow: 0 0 26px rgba(var(--ac1), .85);
+          opacity: 0;
+          transform: translate(-50%, -50%);
+        }
+        .oj-root.is-near .oj-story.is-seed-live .oj-seed { animation: oj-seed 1.4s ease-out infinite; }
+        @keyframes oj-seed {
+          0% { box-shadow: 0 0 0 0 rgba(var(--ac1), .55), 0 0 26px rgba(var(--ac1), .85); }
+          100% { box-shadow: 0 0 0 26px rgba(var(--ac1), 0), 0 0 26px rgba(var(--ac1), .85); }
+        }
+
+        .oj-core {
+          position: absolute;
+          z-index: 2;
+          top: 50%;
+          left: 50%;
+          display: grid;
+          width: 23%;
+          aspect-ratio: 1;
+          place-items: center;
+          border: 1px solid var(--ac);
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(var(--ac1), .18), var(--oj-panel) 68%);
+          box-shadow: 0 0 62px rgba(var(--ac1), .12);
+          text-align: center;
+          font: 700 clamp(.7rem, 1.2vw, 1rem) 'Syne', sans-serif;
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(.2);
+          will-change: transform, opacity;
+        }
+        .oj-core-label { opacity: 0; }
+
+        /* Stage 5: nodes arrive from four corners */
+        .oj-node {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          display: grid;
+          width: clamp(108px, 14vw, 184px);
+          aspect-ratio: 1;
+          place-items: center;
+          padding: 14px;
+          border: 1px solid rgba(var(--ac2), .24);
+          border-radius: 50%;
+          background: var(--oj-panel);
+          color: var(--oj-muted);
+          text-align: center;
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(.55);
+          transition: border-color 300ms ease, box-shadow 300ms ease, color 300ms ease;
+          will-change: transform, opacity;
+        }
+        .oj-node strong {
+          display: block;
+          margin-bottom: 5px;
+          color: var(--oj-ink);
+          font: 700 clamp(.72rem, 1.15vw, .96rem) 'Syne', sans-serif;
+        }
+        .oj-node.is-active {
+          border-color: var(--ac);
+          color: var(--ac);
+          box-shadow: 0 0 0 9px rgba(var(--ac1), .07), 0 0 42px rgba(var(--ac1), .2);
+        }
+
+        /* Stage 6: chapter copy, navigation and readout fade in once the orbit has formed */
+        .oj-heading, .oj-copy, .oj-nav, .oj-readout { visibility: hidden; opacity: 0; }
+        .oj-story.is-orbit-ready .oj-heading,
+        .oj-story.is-orbit-ready .oj-copy,
+        .oj-story.is-orbit-ready .oj-nav,
+        .oj-story.is-orbit-ready .oj-readout { visibility: visible; }
+
+        .oj-heading {
+          position: absolute;
+          z-index: 12;
+          top: clamp(84px, 9vh, 110px);
+          left: clamp(28px, 5vw, 74px);
+          max-width: 470px;
+        }
+        .oj-eyebrow {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 14px;
+          color: var(--ac);
+          font-size: .66rem;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+        .oj-eyebrow::before { width: 30px; height: 1px; background: var(--ac); content: ''; }
+        .oj-heading h3 {
+          margin: 0;
+          color: var(--oj-ink);
+          font: 800 clamp(2.2rem, 3.6vw, 4.4rem)/.94 'Syne', sans-serif;
+          letter-spacing: -.065em;
+        }
+        .oj-heading h3 span {
+          display: block;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(var(--ac2), .85);
+        }
+
+        .oj-copy {
+          position: absolute;
+          z-index: 12;
+          bottom: clamp(36px, 7vh, 76px);
+          left: clamp(28px, 5vw, 74px);
+          max-width: 450px;
+        }
+        .oj-copy small {
+          display: block;
+          margin-bottom: 10px;
+          color: var(--ac);
+          font-size: .66rem;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+        .oj-copy h3 {
+          margin: 0 0 12px;
+          color: var(--oj-ink);
+          /* scales with the shorter of width and height so the panel stays clear of the orbit on short laptops */
+          font: 800 clamp(1.5rem, min(3vw, 4.4vh), 3.5rem)/.98 'Syne', sans-serif;
+          letter-spacing: -.045em;
+        }
+        .oj-copy p {
+          margin: 0;
+          color: var(--oj-muted);
+          font-size: clamp(.86rem, 1.9vh, 1rem);
+          line-height: 1.65;
+        }
+
+        .oj-nav {
+          position: absolute;
+          z-index: 20;
+          top: 50%;
+          right: clamp(22px, 4vw, 60px);
+          display: grid;
+          gap: 12px;
+          transform: translateY(-50%);
+        }
+        .oj-nav button {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: transparent;
+          cursor: pointer;
+        }
+        .oj-nav span {
           font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+          font-size: .62rem;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          transition: color 250ms ease;
+        }
+        .oj-nav i {
+          display: block;
+          width: 5px;
+          height: 30px;
+          border-radius: 99px;
+          background: rgba(var(--ac2), .26);
+          transition: background 250ms ease, box-shadow 250ms ease;
+        }
+        .oj-nav button:hover span,
+        .oj-nav button:focus-visible span,
+        .oj-nav button.is-active span { color: var(--oj-muted); }
+        .oj-nav button.is-active i { background: var(--ac); box-shadow: 0 0 14px rgba(var(--ac1), .65); }
+        .oj-nav button:focus-visible { outline: 1px solid var(--ac); outline-offset: 6px; }
+
+        .oj-readout {
+          position: absolute;
+          z-index: 12;
+          right: clamp(22px, 4vw, 60px);
+          bottom: 58px;
+          color: var(--oj-faint);
+          font-size: .62rem;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+        }
+        .oj-readout b { color: var(--ac); font-weight: 500; }
+
+        .oj-skip {
+          position: absolute;
+          z-index: 25;
+          right: clamp(22px, 4vw, 60px);
+          bottom: 30px;
+          padding-bottom: 3px;
+          border-bottom: 1px solid rgba(var(--ac2), .45);
+          color: var(--oj-faint);
+          font-size: .62rem;
+          letter-spacing: .14em;
+          text-decoration: none;
+          text-transform: uppercase;
+          transition: color 180ms ease, border-color 180ms ease;
+        }
+        .oj-skip:hover, .oj-skip:focus-visible { border-color: var(--ac); color: var(--ac); }
+
+        /* Closing: the calls to action stay on the home page */
+        .oj-closing {
+          position: relative;
+          display: grid;
+          justify-items: center;
+          gap: 30px;
+          padding: clamp(72px, 10vw, 130px) clamp(18px, 4vw, 64px);
+          border-top: 1px solid rgba(var(--ac2), .22);
+          background: var(--oj-bg);
+          text-align: center;
+        }
+        .oj-closing h3 {
+          max-width: 1100px;
+          margin: 0;
+          color: var(--oj-ink);
+          font: 800 clamp(2.2rem, 4.2vw, 4.6rem)/.96 'Syne', sans-serif;
+          letter-spacing: -.06em;
+        }
+        .oj-closing h3 span {
+          display: block;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(var(--ac2), .85);
+        }
+
+        .oj-role { display: grid; gap: 4px; }
+        .oj-role small {
+          color: var(--oj-faint);
           font-size: .6rem;
           letter-spacing: .14em;
           text-transform: uppercase;
         }
+        .oj-role strong { color: var(--oj-ink); font-size: .92rem; font-weight: 600; }
 
-        .apx-role strong { font-size: .88rem; font-weight: 600; }
-
-        .apx-stats {
+        .oj-stats {
           display: grid;
-          margin-top: 26px;
+          width: min(640px, 100%);
           grid-template-columns: .8fr .8fr 1.2fr;
           border-top: 1px solid rgba(var(--ac2), .22);
           border-bottom: 1px solid rgba(var(--ac2), .22);
         }
-
-        .apx-stat { padding: 21px 18px 19px 0; }
-        .apx-stat + .apx-stat { padding-left: 21px; border-left: 1px solid rgba(var(--ac2), .2); }
-
-        .apx-stat strong {
+        .oj-stat { padding: 21px 14px 19px; }
+        .oj-stat + .oj-stat { border-left: 1px solid rgba(var(--ac2), .2); }
+        .oj-stat strong {
           display: block;
           min-height: 37px;
           margin-bottom: 5px;
-          color: var(--apx-ink);
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(1.65rem, 2.5vw, 2.25rem);
-          line-height: 1;
+          color: var(--oj-ink);
+          font: 800 clamp(1.65rem, 2.5vw, 2.25rem)/1 'Syne', sans-serif;
           letter-spacing: -.05em;
         }
-
-        .apx-stat strong em { color: var(--ac); font-style: normal; }
-
-        .apx-stat span {
-          color: var(--apx-faint);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        .oj-stat strong em { color: var(--ac); font-style: normal; }
+        .oj-stat span {
+          color: var(--oj-faint);
           font-size: .58rem;
           letter-spacing: .12em;
           text-transform: uppercase;
         }
 
-        .apx-bottom {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 22px;
-          margin-top: auto;
-          padding: 25px 0 22px;
-        }
-
-        .apx-tech {
-          display: grid;
-          width: min(360px, 100%);
-          margin: 0;
-          padding: 0;
-          grid-template-columns: repeat(3, minmax(102px, 1fr));
-          gap: 8px;
-          list-style: none;
-        }
-
-        .apx-tech-card {
-          position: relative;
-          display: flex;
-          min-width: 0;
-          align-items: center;
-          gap: 9px;
-          overflow: hidden;
-          padding: 8px;
-          border: 1px solid rgba(var(--ac2), .22);
-          border-radius: 10px;
-          background: linear-gradient(145deg, rgba(var(--ac1), .055), rgba(var(--ac1), .015));
-          opacity: 0;
-          transform: translate3d(0, 10px, 0) scale(.97);
-          transition:
-            opacity 420ms ease,
-            transform 560ms cubic-bezier(.16, 1, .3, 1),
-            border-color 180ms ease,
-            box-shadow 180ms ease;
-          transition-delay: calc(610ms + var(--tech-index) * 55ms);
-        }
-
-        .apx-tech-card::before {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 20% 20%, rgba(var(--tech-color), .16), transparent 60%);
-          content: '';
-          opacity: .58;
-          pointer-events: none;
-          transition: opacity 180ms ease;
-        }
-
-        .apx-profile.is-visible .apx-tech-card {
-          opacity: 1;
-          transform: translate3d(0, 0, 0) scale(1);
-        }
-
-        .apx-profile.is-visible .apx-tech-card:hover {
-          border-color: rgba(var(--tech-color), .55);
-          box-shadow: 0 10px 26px rgba(var(--tech-color), .12);
-          transform: translate3d(0, -3px, 0) scale(1.015);
-        }
-
-        .apx-profile.is-visible .apx-tech-card:hover::before { opacity: 1; }
-
-        .apx-tech-icon {
-          position: relative;
-          z-index: 1;
-          display: grid;
-          width: 32px;
-          height: 32px;
-          flex: 0 0 32px;
-          place-items: center;
-          border: 1px solid rgba(var(--tech-color), .23);
-          border-radius: 8px;
-          background: #07121f;
-          box-shadow: inset 0 1px rgba(255, 255, 255, .05);
-        }
-
-        .apx-tech-icon img {
-          width: 17px;
-          height: 17px;
-          object-fit: contain;
-        }
-
-        .apx-tech-copy {
-          position: relative;
-          z-index: 1;
-          display: grid;
-          min-width: 0;
-          gap: 1px;
-        }
-
-        .apx-tech-copy strong {
-          overflow: hidden;
-          color: var(--apx-ink);
-          font-size: .68rem;
-          font-weight: 600;
-          line-height: 1.2;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .apx-tech-copy small {
-          color: var(--apx-faint);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .48rem;
-          letter-spacing: .08em;
-          text-transform: uppercase;
-        }
-
-        .apx-actions { display: flex; flex-shrink: 0; gap: 10px; }
-
-        .apx-button {
+        .oj-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .oj-button {
           display: inline-flex;
           min-height: 46px;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          padding: 0 20px;
+          padding: 0 24px;
           border: 1px solid rgba(var(--ac2), .28);
-          border-radius: 999px;
-          color: var(--apx-ink);
-          text-decoration: none;
-          font-size: .76rem;
+          border-radius: 100px;
+          color: var(--oj-ink);
+          font-size: .78rem;
           font-weight: 600;
-          transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+          text-decoration: none;
+          transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
         }
-
-        .apx-button:hover { transform: translateY(-3px); }
-
-        .apx-button-primary {
+        .oj-button:hover { transform: translateY(-2px); }
+        .oj-button-primary {
           border-color: transparent;
-          color: var(--apx-button-text);
           background: linear-gradient(135deg, var(--ac-deep), var(--ac));
-          box-shadow: 0 0 28px rgba(var(--ac-glow), .18);
+          box-shadow: 0 0 28px rgba(var(--ac-glow), .4);
+          color: var(--oj-button-text);
         }
+        .oj-button-primary:hover { box-shadow: 0 0 44px rgba(var(--ac-glow), .65); }
+        .oj-button-ghost { background: rgba(var(--ac2), .06); }
+        .oj-button-ghost:hover { border-color: rgba(var(--ac2), .62); }
 
-        .apx-button-primary:hover { box-shadow: 0 0 42px rgba(var(--ac-glow), .32); }
-        .apx-button-ghost:hover { border-color: rgba(var(--ac2), .62); }
-
-        .apx-proof {
-          position: relative;
-          z-index: 2;
-          margin: 0 calc(clamp(34px, 4.4vw, 64px) * -1);
-          overflow: hidden;
-          border-top: 1px solid rgba(var(--ac2), .18);
-          background: var(--apx-panel-strong);
-        }
-
-        .apx-proof-track {
-          display: flex;
-          width: max-content;
-          align-items: center;
-          animation: apx-marquee 24s linear infinite;
-        }
-
-        .apx-proof-group {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 14px 8px 14px 32px;
-          color: var(--apx-faint);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: .56rem;
-          letter-spacing: .1em;
+        .oj-proof {
+          margin: 0;
+          color: var(--oj-faint);
+          font-size: .6rem;
+          letter-spacing: .12em;
           text-transform: uppercase;
-          white-space: nowrap;
         }
+        .oj-proof b { color: var(--oj-muted); font-weight: 500; }
 
-        .apx-proof-group b { color: var(--apx-muted); font-weight: 500; }
-        .apx-proof-group i { width: 3px; height: 3px; border-radius: 50%; background: var(--ac); }
-
-        @keyframes apx-scan { to { top: 110%; } }
-        @keyframes apx-pulse { 70% { box-shadow: 0 0 0 8px rgba(85, 219, 138, 0); } 100% { box-shadow: 0 0 0 0 rgba(85, 219, 138, 0); } }
-        @keyframes apx-orbit { from { transform: translateX(-50%) rotate(0); } to { transform: translateX(-50%) rotate(360deg); } }
-        @keyframes apx-title-shine { 0%, 18% { background-position: 100% 0; } 65%, 100% { background-position: -100% 0; } }
-        @keyframes apx-marquee { to { transform: translateX(-50%); } }
-
-        @media (prefers-reduced-motion: reduce) {
-          .apx-kicker,
-          .apx-profile,
-          .apx-photo,
-          .apx-portrait-top,
-          .apx-portrait-bottom,
-          .apx-step,
-          .apx-tech-card,
-          .apx-title-line > span {
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
+        @media (max-width: 900px) {
+          .oj-heading h3 { font-size: clamp(2.2rem, 5vw, 4rem); }
+          .oj-system {
+            width: min(68vw, calc((var(--oj-vh) - var(--oj-top) - var(--oj-bottom) - 184px) / .96));
           }
-
-          .apx-shutters { display: none; }
-          .apx-portrait::after,
-          .apx-orbit,
-          .apx-status-dot,
-          .apx-title-line-accent > span,
-          .apx-proof-track { animation: none !important; }
+          .oj-copy { max-width: 380px; }
+          .oj-nav { right: 18px; }
         }
 
-        @media (max-width: 1080px) {
-          .apx-profile { grid-template-columns: minmax(320px, .72fr) minmax(470px, 1.28fr); }
-          .apx-content { padding-right: 38px; padding-left: 42px; }
-          .apx-title { font-size: clamp(2.7rem, 4.5vw, 3.8rem); }
-          .apx-bottom { align-items: flex-start; flex-direction: column; }
-          .apx-tech { width: 100%; max-width: 430px; }
-          .apx-actions { width: 100%; }
-          .apx-button { flex: 1; }
+        /* Portrait tablets have height to spare: stack the orbit above the panel instead of beside it. */
+        @media (max-width: 900px) and (min-height: 900px) {
+          .oj-root { --oj-bottom: 250px; }
         }
 
-        @media (max-width: 860px) {
-          .apx-profile { grid-template-columns: 1fr; }
-          .apx-portrait {
-            min-height: 620px;
-            border-right: 0;
-            border-bottom: 1px solid rgba(var(--ac2), .2);
-          }
-          .apx-content { padding: 48px 46px 0; }
-          .apx-proof { margin-right: -46px; margin-left: -46px; }
-        }
-
+        /* Below Tailwind's md the navbar becomes a bottom tab bar plus a floating theme
+           toggle, so the chapter panel moves to the (free) top and the orbit sits below it. */
         @media (max-width: 767px) {
-          .apx-section { padding: 76px 12px; }
-          .apx-section::before { background-size: 48px 48px; }
-          .apx-kicker { padding: 0 6px; }
-          .apx-kicker span:last-child { display: none; }
-          .apx-profile { min-height: auto; grid-template-columns: 1fr; border-radius: 16px; transform: perspective(900px) translate3d(0, 34px, 0) scale(.985); }
-          .apx-portrait { min-height: 500px; border-right: 0; border-bottom: 1px solid rgba(var(--ac2), .2); }
-          .apx-photo { object-position: 52% center; }
-          .apx-orbit { top: 10%; width: 340px; height: 340px; }
-          .apx-portrait-top, .apx-portrait-bottom { right: 20px; left: 20px; }
-          .apx-portrait-top { top: 20px; }
-          .apx-portrait-bottom { bottom: 23px; }
-          .apx-location { display: none; }
-          .apx-name-title { max-width: 280px; font-size: clamp(1.8rem, 8vw, 2.3rem); }
-          .apx-content { padding: 35px 24px 0; }
-          .apx-content::before { display: none; }
-          .apx-title { max-width: 100%; font-size: clamp(2.4rem, 11.3vw, 3.3rem); }
-          .apx-lead { margin-top: 20px; font-size: .91rem; }
-          .apx-role { margin-top: 24px; }
-          .apx-tech { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          .apx-stats { grid-template-columns: 1fr; }
-          .apx-stat, .apx-stat + .apx-stat { display: flex; align-items: baseline; justify-content: space-between; padding: 17px 0; border-left: 0; }
-          .apx-stat + .apx-stat { border-top: 1px solid rgba(var(--ac2), .18); }
-          .apx-stat strong { min-height: 0; margin: 0; }
-          .apx-bottom { margin-top: 0; }
-          .apx-actions { flex-direction: column; }
-          .apx-proof { margin-right: -24px; margin-left: -24px; }
+          .oj-root { --oj-top: 252px; --oj-bottom: 78px; }
+          .oj-story { height: 600vh; }
+          .oj-title { font-size: clamp(2.4rem, 11.5vw, 3.6rem); }
+          .oj-lead p { font-size: .95rem; }
+          .oj-heading { display: none; }
+          .oj-system {
+            width: min(80vw, calc(104vw - 120px), calc((var(--oj-vh) - var(--oj-top) - var(--oj-bottom) - 84px) / .96));
+          }
+          .oj-core { width: 28%; font-size: .62rem; }
+          .oj-node { width: 84px; padding: 8px; font-size: .64rem; }
+          .oj-copy {
+            top: 40px;
+            right: 20px;
+            bottom: auto;
+            left: 20px;
+            height: 196px;
+            max-width: none;
+            padding: 12px 16px;
+            overflow: hidden;
+            border-left: 1px solid var(--ac);
+            background: linear-gradient(90deg, var(--oj-panel), transparent 140%);
+          }
+          .oj-copy small { margin-bottom: 6px; font-size: .62rem; }
+          .oj-copy h3 { margin-bottom: 8px; font-size: 1.3rem; }
+          .oj-copy p { font-size: .8rem; line-height: 1.55; }
+          .oj-nav, .oj-readout { display: none; }
+          .oj-skip { top: 12px; right: 20px; bottom: auto; }
+          .oj-stats { grid-template-columns: 1fr; }
+          .oj-stat, .oj-stat + .oj-stat {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 17px 0;
+            border-left: 0;
+          }
+          .oj-stat + .oj-stat { border-top: 1px solid rgba(var(--ac2), .18); }
+          .oj-stat strong { min-height: 0; margin: 0; }
+          .oj-actions { width: 100%; flex-direction: column; }
         }
-      `}</style>
+`;
+
+const STYLE_ELEMENT = <style>{css}</style>;
+
+const INTRO_AND_HEADING = (
+  <>
+            <div className="oj-intro">
+              <h2 className="oj-title" id="about-preview-title">
+                {headline.map((word, i) => (
+                  <Fragment key={`${word.text}-${i}`}>
+                    {i > 0 ? " " : null}
+                    <span className="oj-word">
+                      <span className={word.outline ? "oj-outline" : undefined}>{word.text}</span>
+                    </span>
+                  </Fragment>
+                ))}
+              </h2>
+              <div className="oj-lead">
+                <p>
+                  My journey is not a list of dates. It is an expanding view of what a useful
+                  product needs&mdash;and who it needs to connect.
+                </p>
+                <span className="oj-cue oj-mono">Scroll to enter the orbit</span>
+              </div>
+            </div>
+
+            <div className="oj-heading">
+              <p className="oj-eyebrow oj-mono">My product universe</p>
+              <h3>
+                Every project<span>expanded the system.</span>
+              </h3>
+            </div>
+  </>
+);
+
+const SR_LIST = (
+        <ol className="sr-only oj-sr">
+          {chapters.map((item) => (
+            <li key={item.label}>
+              <strong>{item.title}.</strong> {item.body}
+            </li>
+          ))}
+        </ol>
+);
+
+export default function AboutPreview() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const rootRef = useRef(null);
+  const storyRef = useRef(null);
+  const stageRef = useRef(null);
+  const closingRef = useRef(null);
+  const [chapter, setChapter] = useState(0);
+  const [closingVisible, setClosingVisible] = useState(false);
+
+  /* Count-up in the closing block starts when it is reached. */
+  useEffect(() => {
+    const closing = closingRef.current;
+    if (!closing) return undefined;
+    if (!("IntersectionObserver" in window)) {
+      setClosingVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setClosingVisible(true);
+        observer.disconnect();
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(closing);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Decorative loops (scan line, seed pulse) only run while the section is near the viewport. */
+  useEffect(() => {
+    const root = rootRef.current;
+    const stage = stageRef.current;
+    if (!root || !stage || !("IntersectionObserver" in window)) {
+      root?.classList.add("is-near");
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => root.classList.toggle("is-near", entry.isIntersecting),
+      { rootMargin: "50% 0px" },
+    );
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Scroll-driven render loop. */
+  useEffect(() => {
+    const story = storyRef.current;
+    const stage = stageRef.current;
+    if (!story || !stage) return undefined;
+
+    const all = (selector) => [...stage.querySelectorAll(selector)];
+    const words = all(".oj-word");
+    const lead = stage.querySelector(".oj-lead");
+    const system = stage.querySelector(".oj-system");
+    const rings = all(".oj-ring");
+    const seed = stage.querySelector(".oj-seed");
+    const core = stage.querySelector(".oj-core");
+    const label = stage.querySelector(".oj-core-label");
+    const nodes = all("[data-node]");
+    const risers = all(".oj-heading, .oj-copy");
+    const faders = all(".oj-nav, .oj-readout");
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const compact = window.matchMedia("(max-width: 767px)");
+
+    const written = new Map();
+    const put = (el, prop, value) => {
+      let record = written.get(el);
+      if (!record) {
+        record = {};
+        written.set(el, record);
+      }
+      if (record[prop] === value) return;
+      record[prop] = value;
+      el.style[prop] = value;
+    };
+    const flags = {};
+    const flag = (el, name, on) => {
+      if (flags[name] === on) return;
+      flags[name] = on;
+      el.classList.toggle(name, on);
+    };
+
+    /* Layout is only read here (on resize, load, or when content above changes height),
+       never inside the animation frame, so easing frames cannot force a layout. */
+    let vw = 0;
+    let vh = 0;
+    let range = 1;
+    let stageWidth = 0;
+    let systemSize = 0;
+    let storyTop = 0;
+    const measure = () => {
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      range = Math.max(1, story.offsetHeight - vh);
+      stageWidth = stage.clientWidth;
+      systemSize = system.offsetWidth;
+      storyTop = story.getBoundingClientRect().top + window.scrollY;
+    };
+
+    let lastChapter = -1;
+    let motionState = "";
+    const setMotion = (value) => {
+      if (motionState === value) return;
+      motionState = value;
+      story.dataset.motion = value;
+    };
+
+    /* y = how far the page has scrolled past the top of the story, in px (negative while approaching). */
+    const draw = (y) => {
+      const reduced = RESPECT_REDUCED_MOTION && motion.matches;
+      const state = getOrbitState(y / range);
+      const entrance = getEntranceState(1 + y / vh, words.length);
+      const h = state.headline;
+      const keep = Math.max(0, 1 - h * 1.25);
+
+      words.forEach((el, i) => {
+        const word = headline[i];
+        const e = easeOut(entrance.words[i]);
+        put(el, "opacity", String(fixed(e * keep, 3)));
+        if (reduced || (e === 1 && h === 0)) {
+          put(el, "transform", "none");
+          return;
+        }
+        const tx = fixed(((word.fx * (1 - e) + word.dx * h) * vw) / 100, 1);
+        const ty = fixed(((word.fy * (1 - e) + word.dy * h) * vh) / 100, 1);
+        const scale = fixed((word.fs + (1 - word.fs) * e) * (1 - h * 0.3), 4);
+        const turn = fixed(word.fr * (1 - e), 2);
+        put(el, "transform", `translate3d(${tx}px, ${ty}px, 0) scale(${scale}) rotate(${turn}deg)`);
+      });
+
+      put(lead, "opacity", String(fixed(entrance.lead * Math.max(0, 1 - h * 2.6), 3)));
+      put(lead, "transform", reduced || h === 0 ? "none" : `translate3d(0, ${fixed(h * 44, 1)}px, 0)`);
+
+      const rotation = reduced ? 0 : state.rotation;
+      const shift = compact.matches ? 0 : fixed(state.shift * 0.09 * stageWidth, 1);
+      put(system, "transform", `translate(-50%, -50%) translate3d(${shift}px, 0, 0) rotate(${fixed(rotation, 2)}deg)`);
+      const counter = fixed(-rotation, 2);
+
+      state.rings.forEach((value, i) => {
+        put(rings[i], "opacity", String(fixed(value, 3)));
+        put(rings[i], "transform", `translate(-50%, -50%) scale(${fixed(value, 4)})`);
+      });
+
+      put(seed, "opacity", String(fixed(Math.min(1, state.core * 8) * (1 - phaseProgress(state.core, 0.65, 1)), 3)));
+      flag(story, "is-seed-live", !reduced && state.core > 0 && state.core < 1);
+      put(core, "opacity", String(fixed(Math.min(1, state.core * 1.6), 3)));
+      put(core, "transform", `translate(-50%, -50%) rotate(${counter}deg) scale(${fixed(0.2 + state.core * 0.8, 4)})`);
+      put(label, "opacity", String(fixed(phaseProgress(state.core, 0.7, 1), 3)));
+
+      nodes.forEach((el, i) => {
+        const t = easeOut(state.nodes[i]);
+        const point = reduced ? NODE_PATHS[i].end : nodePosition(i, t);
+        const px = fixed(((point.x - 50) / 100) * systemSize, 1);
+        const py = fixed(((point.y - 50) / 100) * systemSize, 1);
+        const scale = reduced ? 1 : fixed(0.55 + 0.45 * t, 4);
+        put(el, "opacity", String(fixed(Math.min(1, state.nodes[i] * (reduced ? 1 : 2.5)), 3)));
+        put(el, "transform", `translate(-50%, -50%) translate3d(${px}px, ${py}px, 0) rotate(${counter}deg) scale(${scale})`);
+      });
+
+      const copy = String(fixed(state.copy, 3));
+      risers.forEach((el) => {
+        put(el, "opacity", copy);
+        put(el, "transform", `translate3d(0, ${fixed((1 - state.copy) * 18, 1)}px, 0)`);
+      });
+      faders.forEach((el) => put(el, "opacity", copy));
+      flag(story, "is-orbit-ready", state.copy >= 0.5);
+
+      if (state.chapter !== lastChapter) {
+        lastChapter = state.chapter;
+        setChapter(state.chapter);
+      }
+    };
+
+    let goal = 0;
+    let current = 0;
+    let frame = 0;
+    let lastTime = 0;
+    // read in the scroll handler (layout is already clean there); frames reuse it
+    const readGoal = () => {
+      goal = window.scrollY - storyTop;
+    };
+
+    const tick = (now) => {
+      frame = 0;
+      const dt = lastTime ? now - lastTime : 16;
+      lastTime = now;
+      const reduced = RESPECT_REDUCED_MOTION && motion.matches;
+      // nothing of the story on screen: no point easing through it, jump straight there
+      const offscreen = goal < -vh || goal > range + vh;
+      current = reduced || offscreen ? goal : smoothToward(current, goal, dt, EASE_MS);
+      draw(current);
+      if (current === goal) {
+        lastTime = 0;
+        setMotion("idle");
+      } else {
+        setMotion("moving");
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const kick = () => {
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+    const onScroll = () => {
+      readGoal();
+      kick();
+    };
+    const onResize = () => {
+      measure();
+      readGoal();
+      current = goal;
+      kick();
+    };
+    // content above the story can change height (images, fonts, other sections): re-measure then
+    const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(onResize) : null;
+
+    measure();
+    readGoal();
+    current = goal;
+    draw(current);
+    setMotion("idle");
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    window.addEventListener("load", onResize);
+    window.addEventListener("pageshow", onResize);
+    motion.addEventListener("change", kick);
+    compact.addEventListener("change", onResize);
+    resizeObserver?.observe(document.body);
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("load", onResize);
+      window.removeEventListener("pageshow", onResize);
+      motion.removeEventListener("change", kick);
+      compact.removeEventListener("change", onResize);
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
+  const scrollToChapter = (index) => {
+    const story = storyRef.current;
+    if (!story) return;
+    const range = story.offsetHeight - window.innerHeight;
+    const top = story.getBoundingClientRect().top + window.scrollY + range * chapterScrollProgress(index);
+    const reduced = RESPECT_REDUCED_MOTION && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
+  };
+
+  const themeStyles = {
+    "--oj-bg": isDark ? "#08121f" : "#eef2f6",
+    "--oj-panel": isDark ? "rgba(10, 20, 32, .94)" : "rgba(232, 236, 241, .96)",
+    "--oj-ink": isDark ? "#e7edf5" : "#10233f",
+    "--oj-muted": isDark ? "#91a0b2" : "#58677b",
+    "--oj-faint": isDark ? "#7d8ca0" : "#5c6a7d",
+    "--oj-button-text": isDark ? "#10233f" : "#ffffff",
+  };
+
+  const active = chapters[chapter];
+
+  return (
+    <>
+      {STYLE_ELEMENT}
 
       <section
-        ref={sectionRef}
         id="about"
-        className="apx-section"
+        ref={rootRef}
+        className="oj-root"
         style={themeStyles}
         aria-labelledby="about-preview-title"
       >
-        <div className={`apx-kicker${isVisible ? " is-visible" : ""}`} aria-hidden="true">
-          <span>Profile / 01</span>
-          <span>Makassar — Indonesia</span>
-        </div>
+        <div className="oj-story" ref={storyRef}>
+          <div className="oj-stage" ref={stageRef}>
+            <span className="oj-corner oj-corner-tl" aria-hidden="true" />
+            <span className="oj-corner oj-corner-tr" aria-hidden="true" />
+            <span className="oj-corner oj-corner-bl" aria-hidden="true" />
+            <span className="oj-corner oj-corner-br" aria-hidden="true" />
+            <div className="oj-scan" aria-hidden="true" />
 
-        <div
-          ref={profileRef}
-          className={`apx-profile${isVisible ? " is-visible" : ""}${isSettled ? " is-settled" : ""}`}
-          onPointerMove={handlePointerMove}
-          onPointerLeave={resetPointer}
-        >
-          <div className="apx-shutters" aria-hidden="true">
-            <span className="apx-shutter" />
-            <span className="apx-shutter" />
-            <span className="apx-shutter" />
-          </div>
+            {INTRO_AND_HEADING}
 
-          <div className="apx-portrait">
-            <div className="apx-orbit" aria-hidden="true" />
-            <img
-              className="apx-photo"
-              src={aboutImage}
-              srcSet={`${aboutImage480} 480w, ${aboutImage768} 768w, ${aboutImage} 1024w`}
-              sizes="(max-width: 767px) 92vw, 42vw"
-              alt="Baso Rian Farhan Mallanti"
-              width="1024"
-              height="1536"
-              loading="lazy"
-              decoding="async"
-            />
-
-            <div className="apx-portrait-top">
-              <span className="apx-system-label">Subject / BRFM</span>
-              <span className="apx-status"><i className="apx-status-dot" aria-hidden="true" />Open to work</span>
-            </div>
-
-            <div className="apx-portrait-bottom">
-              <div className="apx-name">
-                <p>Full-stack &amp; mobile engineer</p>
-                <div className="apx-name-title">Baso Rian<br />Farhan Mallanti</div>
+            <div className="oj-system" aria-hidden="true">
+              <div className="oj-ring oj-r1" />
+              <div className="oj-ring oj-r2" />
+              <div className="oj-ring oj-r3" />
+              <div className="oj-seed" />
+              <div className="oj-core">
+                <span className="oj-core-label">Build what matters</span>
               </div>
-              <span className="apx-location"><MapPin size={12} aria-hidden="true" /> Makassar — ID</span>
-            </div>
-          </div>
-
-          <div className="apx-content">
-            <p className="apx-eyebrow apx-step">Profile overview</p>
-            <h2 className="apx-title apx-step" id="about-preview-title">
-              <span className="apx-title-line"><span>I build products</span></span>
-              <span className="apx-title-line apx-title-line-accent"><span>end-to-end.</span></span>
-            </h2>
-
-            <p className="apx-lead apx-step">
-              I design and build digital products from the interface to the systems behind it.
-              My work spans <strong>web and mobile</strong> applications used by real businesses,
-              institutions, and people.
-            </p>
-
-            <div className="apx-role apx-step">
-              <span className="apx-role-logo">
-                <img src={carbonEthicsLogo} alt="CarbonEthics" width="249" height="69" loading="lazy" />
-              </span>
-              <small>Currently building at</small>
-              <strong>CarbonEthics &mdash; Fullstack Developer Associate Manager</strong>
-            </div>
-
-            <div className="apx-stats apx-step" role="group" aria-label="Experience summary">
-              {stats.map(({ value, suffix, label }) => (
-                <div className="apx-stat" key={label}>
-                  <strong><CountUp to={value} suffix={suffix} active={isVisible} /></strong>
-                  <span>{label}</span>
+              {chapters.map((item, i) => (
+                <div
+                  className={`oj-node${i === chapter ? " is-active" : ""}`}
+                  data-node={i}
+                  key={item.label}
+                >
+                  <div>
+                    <strong>{item.label}</strong>
+                    {item.hint}
+                  </div>
                 </div>
               ))}
-              <div className="apx-stat"><strong>Web <em>+</em> Mobile</strong><span>Full product range</span></div>
             </div>
 
-            <div className="apx-bottom apx-step">
-              <ul className="apx-tech" aria-label="Core technologies">
-                {technologies.map((technology, index) => (
-                  <li
-                    className="apx-tech-card"
-                    key={technology.name}
-                    style={{ "--tech-color": technology.color, "--tech-index": index }}
-                  >
-                    <span className="apx-tech-icon" aria-hidden="true">
-                      <img src={technology.icon} alt="" width="17" height="17" loading="lazy" />
-                    </span>
-                    <span className="apx-tech-copy">
-                      <strong>{technology.name}</strong>
-                      <small>{technology.category}</small>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="apx-actions">
-                <Link to="/projects" className="apx-button apx-button-primary">Explore Projects <ArrowRight size={15} aria-hidden="true" /></Link>
-                <Link to="/about" className="apx-button apx-button-ghost">About Me</Link>
-              </div>
+            <div className="oj-copy" aria-live="polite">
+              <small className="oj-mono">{active.tag}</small>
+              <h3>{active.title}</h3>
+              <p>{active.body}</p>
             </div>
 
-            <div className="apx-proof" aria-label="Selected employers and clients">
-              <div className="apx-proof-track">
-                {[0, 1].map((copy) => (
-                  <div className="apx-proof-group" key={copy} aria-hidden={copy === 1}>
-                    <span>Selected proof</span>
-                    {proofItems.map((item) => (
-                      <span key={item} style={{ display: "contents" }}><i aria-hidden="true" /><b>{item}</b></span>
-                    ))}
-                  </div>
-                ))}
+            <nav className="oj-nav" aria-label="Jump to a journey chapter">
+              {chapters.map((item, i) => (
+                <button
+                  className={i === chapter ? "is-active" : undefined}
+                  type="button"
+                  key={item.label}
+                  aria-current={i === chapter ? "step" : undefined}
+                  onClick={() => scrollToChapter(i)}
+                >
+                  <span>{item.label}</span>
+                  <i />
+                </button>
+              ))}
+            </nav>
+
+            <div className="oj-readout oj-mono" aria-hidden="true">
+              Orbit <b>{`0${chapter + 1} / 04`}</b>
+            </div>
+            <a className="oj-skip oj-mono" href="#projects">
+              Skip to projects
+            </a>
+          </div>
+        </div>
+
+        {SR_LIST}
+
+        <div className="oj-closing" ref={closingRef}>
+          <h3>
+            Today, I build the connections
+            <span>users never have to think about.</span>
+          </h3>
+
+          <div className="oj-role">
+            <small className="oj-mono">Currently building at</small>
+            <strong>CarbonEthics &mdash; Fullstack Developer Associate Manager</strong>
+          </div>
+
+          <div className="oj-stats" role="group" aria-label="Experience summary">
+            {stats.map(({ value, suffix, label }) => (
+              <div className="oj-stat" key={label}>
+                <strong>
+                  <CountUp to={value} suffix={suffix} active={closingVisible} />
+                </strong>
+                <span className="oj-mono">{label}</span>
               </div>
+            ))}
+            <div className="oj-stat">
+              <strong>
+                Web <em>+</em> Mobile
+              </strong>
+              <span className="oj-mono">Full product range</span>
             </div>
           </div>
+
+          <div className="oj-actions">
+            <Link to="/projects" className="oj-button oj-button-primary">
+              Explore Projects <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+            <Link to="/about" className="oj-button oj-button-ghost">
+              About Me
+            </Link>
+          </div>
+
+          <p className="oj-proof oj-mono">
+            Selected proof &mdash; {proofItems.map((item, i) => (
+              <Fragment key={item}>
+                {i > 0 ? " · " : null}
+                <b>{item}</b>
+              </Fragment>
+            ))}
+          </p>
         </div>
       </section>
     </>
