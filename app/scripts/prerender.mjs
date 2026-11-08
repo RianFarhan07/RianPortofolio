@@ -12,7 +12,7 @@
 // exists in App.jsx but not in seoConfig will 404 on direct navigation.
 
 import { chromium } from "@playwright/test";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -41,6 +41,18 @@ const server = spawn(
   ["vite", "preview", "--port", String(PORT), "--strictPort"],
   { stdio: "ignore", shell: process.platform === "win32" }
 );
+
+// On Windows `shell: true` wraps vite in cmd.exe, so server.kill() only ends the wrapper and leaves
+// `vite preview` running on the port. That orphan kept the build's process tree alive and crashed
+// `firebase deploy` right after its predeploy step. Kill the whole tree instead.
+function stopServer() {
+  if (server.exitCode !== null) return;
+  if (process.platform === "win32") {
+    spawnSync("taskkill", ["/pid", String(server.pid), "/T", "/F"], { stdio: "ignore" });
+  } else {
+    server.kill();
+  }
+}
 
 async function waitForServer(timeoutMs = 30000) {
   const deadline = Date.now() + timeoutMs;
@@ -128,7 +140,7 @@ try {
   }
 } finally {
   await browser?.close();
-  server.kill();
+  stopServer();
 }
 
 console.log(`\nPrerendered ${targets.length} routes into ${DIST}/`);
