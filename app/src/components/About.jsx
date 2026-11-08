@@ -336,7 +336,7 @@ export default function About() {
               <a className="bp-soc" href={SOCIALS.mail} aria-label="Email"><Mail size={18} /></a>
             </div>
           </div>
-          <div className="bp-photo"><div className="bp-ava"><img loading="lazy" decoding="async" src={rianPhoto} alt="Rian Farhan" /><span className="bp-st" style={{ borderColor: isDark ? "#06101e" : "#eef5f1" }} /></div></div>
+          <div className="bp-photo"><div className="bp-ava" data-intro-portrait><img loading="lazy" decoding="async" src={rianPhoto} alt="Rian Farhan" /><span className="bp-st" style={{ borderColor: isDark ? "#06101e" : "#eef5f1" }} /></div></div>
         </div>
 
         {/* STATS */}
@@ -476,7 +476,7 @@ export default function About() {
         <div className="pk-frame">
           <section className="pk-identity" aria-label="Profile introduction">
             <div className="pk-kicker"><span /> PROFILE / ABOUT</div>
-            <div className="pk-portrait-wrap">
+            <div className="pk-portrait-wrap" data-intro-portrait>
               <div className="pk-portrait-index">01</div>
               <img src={rianPhoto} alt="Rian Farhan illustrated portrait" decoding="async" />
               <div className="pk-portrait-caption">

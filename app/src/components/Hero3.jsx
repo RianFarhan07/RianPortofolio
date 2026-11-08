@@ -201,6 +201,7 @@ export default function Hero3() {
 
           {/* ── FOTO FULL HEIGHT — background layer ── */}
           <div
+            data-intro-portrait
             style={{
               position: "absolute",
               bottom: "28%",
@@ -667,6 +668,7 @@ export default function Hero3() {
         {/* ── PHOTO CENTER ── */}
         <div
           ref={photoRef}
+          data-intro-portrait
           style={{
             position: "absolute",
             bottom: 0,

@@ -46,7 +46,7 @@ const INTRO_DURATION = 1800;
 const INTRO_EXIT = 450;
 const PAGE_TRANSITION_DURATION = 1200;
 const D = INTRO_DURATION / 1000;
-const INTRO_SESSION_KEY = "rian-landing-intro-seen";
+const INTRO_SESSION_KEY = "rian-landing-intro-seen"; // also read by the first-paint script in index.html
 
 /* ═══════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -63,7 +63,9 @@ export default function PageTransition6Clean({ children, variant = "slide-strips
 
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [showIntro, setShowIntro] = useState(false);
-  const [introExited, setIntroExited] = useState(true);
+  // Known on the very first render, so nothing gated on it (the hero portrait) renders visible
+  // for even one commit before a first-visit intro starts.
+  const [introExited, setIntroExited] = useState(() => sessionStorage.getItem(INTRO_SESSION_KEY) === "1");
   const [isPageTransition, setIsPageTransition] = useState(false);
   const pageTransitionDone = !isPageTransition;
   const previousPathRef = useRef(pathname);
@@ -91,6 +93,22 @@ export default function PageTransition6Clean({ children, variant = "slide-strips
 
     return () => clearTimeout(timer);
   }, []);
+
+  // index.html covers the prerendered page from the first paint of a first visit (html[data-intro]).
+  // The intro overlay lives inside the app's own stacking context, i.e. under that cover, so hand
+  // over as soon as the app is in control: fade the cover out while the intro fades in, then drop it.
+  // From here the portrait is hidden by introExited instead.
+  const appInControl = showIntro || introExited;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!appInControl || !root.hasAttribute("data-intro")) return undefined;
+    root.setAttribute("data-intro", "leaving");
+    const timer = setTimeout(() => {
+      root.removeAttribute("data-intro");
+      root.removeAttribute("data-intro-theme");
+    }, INTRO_EXIT);
+    return () => clearTimeout(timer);
+  }, [appInControl]);
 
   useEffect(() => {
     if (isInitialRender) return;
