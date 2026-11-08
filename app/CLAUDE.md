@@ -4,7 +4,7 @@ Guidance for agents working in this repository.
 
 ## Project
 
-Personal portfolio for **Rian Farhan** (Baso Rian Farhan Mallanti) — a full-stack and Android developer in Makassar, Indonesia. Vite + React 19 SPA, React Router 7, Tailwind CSS 3, framer-motion, and gsap. Live site: rianfarhan.com.
+Personal portfolio for **Rian Farhan** (Baso Rian Farhan Mallanti) — a full-stack and Android developer in Makassar, Indonesia. Vite + React 19 SPA, React Router 7, Tailwind CSS 3, framer-motion, and gsap. Live site: rianfarhan.my.id (Firebase Hosting project `rianportofolio`, also at rianportofolio.web.app).
 
 ## Design Context
 
