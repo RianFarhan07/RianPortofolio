@@ -352,12 +352,11 @@ const css = `
           box-shadow: 0 0 0 9px rgba(var(--ac1), .07), 0 0 42px rgba(var(--ac1), .2);
         }
 
-        /* Stage 6: chapter copy, navigation and readout fade in once the orbit has formed */
-        .oj-heading, .oj-copy, .oj-nav, .oj-readout { visibility: hidden; opacity: 0; }
+        /* Stage 6: chapter copy and navigation fade in once the orbit has formed */
+        .oj-heading, .oj-copy, .oj-nav { visibility: hidden; opacity: 0; }
         .oj-story.is-orbit-ready .oj-heading,
         .oj-story.is-orbit-ready .oj-copy,
-        .oj-story.is-orbit-ready .oj-nav,
-        .oj-story.is-orbit-ready .oj-readout { visibility: visible; }
+        .oj-story.is-orbit-ready .oj-nav { visibility: visible; }
 
         .oj-heading {
           position: absolute;
@@ -459,17 +458,6 @@ const css = `
         .oj-nav button.is-active i { background: var(--ac); box-shadow: 0 0 14px rgba(var(--ac1), .65); }
         .oj-nav button:focus-visible { outline: 1px solid var(--ac); outline-offset: 6px; }
 
-        .oj-readout {
-          position: absolute;
-          z-index: 12;
-          right: clamp(22px, 4vw, 60px);
-          bottom: 58px;
-          color: var(--oj-faint);
-          font-size: .62rem;
-          letter-spacing: .14em;
-          text-transform: uppercase;
-        }
-        .oj-readout b { color: var(--ac); font-weight: 500; }
 
         .oj-skip {
           position: absolute;
@@ -623,7 +611,7 @@ const css = `
           .oj-copy small { margin-bottom: 6px; font-size: .62rem; }
           .oj-copy h3 { margin-bottom: 8px; font-size: 1.3rem; }
           .oj-copy p { font-size: .8rem; line-height: 1.55; }
-          .oj-nav, .oj-readout { display: none; }
+          .oj-nav { display: none; }
           .oj-skip { top: 12px; right: 20px; bottom: auto; }
           .oj-stats { grid-template-columns: 1fr; }
           .oj-stat, .oj-stat + .oj-stat {
@@ -744,7 +732,7 @@ export default function AboutPreview() {
     const label = stage.querySelector(".oj-core-label");
     const nodes = all("[data-node]");
     const risers = all(".oj-heading, .oj-copy");
-    const faders = all(".oj-nav, .oj-readout");
+    const faders = all(".oj-nav");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const compact = window.matchMedia("(max-width: 767px)");
 
@@ -1009,9 +997,6 @@ export default function AboutPreview() {
               ))}
             </nav>
 
-            <div className="oj-readout oj-mono" aria-hidden="true">
-              Orbit <b>{`0${chapter + 1} / 04`}</b>
-            </div>
             <a className="oj-skip oj-mono" href="#projects">
               Skip to projects
             </a>
