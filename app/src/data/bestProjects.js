@@ -46,15 +46,15 @@ export const bestProjects = [
     id: 4,
     title: "Recipedia",
     description:
-      "Recipedia adalah platform pintar untuk menemukan resep yang membantu pengguna mencari resep berdasarkan bahan yang tersedia, kebutuhan nutrisi, dan preferensi pribadi. Dengan teknologi pengenalan gambar berbasis AI, Recipedia dapat menganalisis gambar makanan dan menghasilkan daftar bahan, membuat memasak lebih mudah dan dapat diakses.",
+      "Asisten resep berbasis AI. Pengguna mencari resep dari bahan yang ada di kulkas, meminta AI membuatkan resep sesuai keinginan, atau memotret makanan untuk langsung mendapatkan resepnya. Dilengkapi info nutrisi, filter diet, resep favorit, rencana makan mingguan, dan daftar belanja otomatis.",
     category: "web",
     image: "images/recipedia.webp",
-    liveUrl: "https://recipedia-e625b.web.app/",
+    liveUrl: "https://recipedia-client-eight.vercel.app/",
     techStack: {
-      frontend: ["React.js", "Tailwind CSS"],
-      backend: ["Node.js", "Express.js"],
-      database: ["PostgreSQL"],
-      utilities: ["AI", "Spoonacular API", "Axios"],
+      frontend: ["Next.js", "Tailwind CSS"],
+      backend: ["NestJS", "Prisma"],
+      database: ["PostgreSQL", "Redis"],
+      utilities: ["Google Gemini AI", "Supabase Auth"],
     },
   },
   {
