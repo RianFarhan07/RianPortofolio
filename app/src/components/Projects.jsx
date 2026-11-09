@@ -232,7 +232,7 @@ export default function Projects() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center mt-10 gap-1.5">
-                <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="pp-page-btn" style={{ borderColor: chipBorder, color: muted }}>
+                <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="pp-page-btn" aria-label="Previous page" style={{ borderColor: chipBorder, color: muted }}>
                   <ChevronLeft size={18} />
                 </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
@@ -254,7 +254,7 @@ export default function Projects() {
                   }
                   return null;
                 })}
-                <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="pp-page-btn" style={{ borderColor: chipBorder, color: muted }}>
+                <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="pp-page-btn" aria-label="Next page" style={{ borderColor: chipBorder, color: muted }}>
                   <ChevronRight size={18} />
                 </button>
               </div>

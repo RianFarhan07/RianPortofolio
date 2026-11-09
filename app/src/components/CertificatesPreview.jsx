@@ -557,10 +557,12 @@ export default function CertificatesPreview() {
                 borderTop: `1px solid rgba(var(--ac2),.08)`,
               }}
             >
-              {certificates.map((_, i) => (
+              {certificates.map((cert, i) => (
                 <button
                   key={i}
                   onClick={() => handleSelect(i)}
+                  aria-label={`Show certificate: ${cert.title}`}
+                  aria-current={i === activeIndex ? "true" : undefined}
                   style={{
                     width: i === activeIndex ? 18 : 5,
                     height: 5,

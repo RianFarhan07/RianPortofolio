@@ -20,9 +20,9 @@ export default function Footer() {
 
   const navItems = ["Home", "About", "Projects", "Certificates", "Contact"];
   const socialLinks = [
-    { icon: <Github size={16} />, href: "https://github.com/RianFarhan07" },
-    { icon: <Linkedin size={16} />, href: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/" },
-    { icon: <Mail size={16} />, href: "mailto:rian.mallanti@gmail.com" },
+    { icon: <Github size={16} />, href: "https://github.com/RianFarhan07", label: "GitHub" },
+    { icon: <Linkedin size={16} />, href: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/", label: "LinkedIn" },
+    { icon: <Mail size={16} />, href: "mailto:rian.mallanti@gmail.com", label: "Email Rian" },
   ];
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -52,7 +52,7 @@ export default function Footer() {
 
       <div className="relative z-10 flex flex-col items-center gap-8" style={{ padding: "0 clamp(20px,4vw,60px)", maxWidth: 800, margin: "0 auto" }}>
         {/* Back to top */}
-        <motion.button onClick={scrollToTop}
+        <motion.button onClick={scrollToTop} aria-label="Back to top"
           className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
           style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.2)`, color: A }}
           whileHover={{ scale: 1.1, boxShadow: `0 0 20px rgba(${AR}, 0.3)` }} whileTap={{ scale: 0.95 }}>
@@ -79,7 +79,7 @@ export default function Footer() {
         {/* Social */}
         <div className="flex gap-3">
           {socialLinks.map((s, i) => (
-            <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
+            <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
               className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
               style={{ background: `rgba(${AR}, 0.06)`, border: `1px solid rgba(${AR}, 0.18)`, color: A }}
               onMouseEnter={e => e.currentTarget.style.background = `rgba(${AR}, 0.14)`}

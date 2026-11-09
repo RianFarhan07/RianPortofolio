@@ -49,9 +49,9 @@ export default function Contact() {
   ];
 
   const socialLinks = [
-    { icon: <Linkedin size={16} />, url: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/" },
-    { icon: <Github size={16} />, url: "https://github.com/RianFarhan07" },
-    { icon: <Instagram size={16} />, url: "https://www.instagram.com/rianfarhan/" },
+    { icon: <Linkedin size={16} />, url: "https://www.linkedin.com/in/baso-rian-farhan-82bb73245/", label: "LinkedIn" },
+    { icon: <Github size={16} />, url: "https://github.com/RianFarhan07", label: "GitHub" },
+    { icon: <Instagram size={16} />, url: "https://www.instagram.com/rianfarhan/", label: "Instagram" },
   ];
 
   const handleChange = (e) => {
@@ -157,7 +157,7 @@ export default function Contact() {
               <p className="text-xs tracking-wider uppercase mb-3" style={{ color: muted2 }}>Social</p>
               <div className="flex gap-2">
                 {socialLinks.map((s, i) => (
-                  <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
+                  <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}
                     className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
                     style={{ background: chipBg, border: `1px solid ${chipBorder}`, color: A }}>
                     {s.icon}

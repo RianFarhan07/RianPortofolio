@@ -700,10 +700,12 @@ export default function ProjectPreview() {
                 borderTop: `1px solid rgba(var(--ac2),.08)`,
               }}
             >
-              {projects.map((_, i) => (
+              {projects.map((p, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveIndex(i)}
+                  aria-label={`Show project: ${p.title}`}
+                  aria-current={i === activeIndex ? "true" : undefined}
                   style={{
                     width: i === activeIndex ? 18 : 5,
                     height: 5,
