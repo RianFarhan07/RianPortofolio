@@ -8,10 +8,10 @@ import rianPhoto from "../assets/rian-animate-editorial.webp";
    DATA
 ────────────────────────────────────────────── */
 const EXPERIENCES = [
-  { role: "IT Support", org: "Dept. of Manpower, Makassar", period: "2022 → 23", desc: "Daily technical support, hardware/software & internal networks." },
-  { role: "Freelance Android Developer", org: "SMKN 4 Jeneponto", period: "2023", desc: "Built & maintained Android apps for school needs using Kotlin." },
+  { role: "IT Support Intern", org: "Dept. of Manpower, Makassar", period: "2023 → 24", desc: "Daily technical support, hardware/software & internal networks." },
+  { role: "Freelance Android Developer", org: "SMAN 4 Jeneponto", period: "2024", desc: "Built & maintained Android apps for school needs using Kotlin." },
   {
-    role: "Fullstack Developer Associate Manager", org: "CarbonEthics", period: "2025 → now",
+    role: "Fullstack Developer Associate Manager", org: "CarbonEthics", period: "2025 → 2026",
     desc: "Independently designed and built an end-to-end monitoring ecosystem—from database architecture to production deployment—replacing a manual Google Forms/Airtable workflow.",
     featured: true,
     highlights: [
@@ -24,7 +24,7 @@ const EXPERIENCES = [
   },
 ];
 const EDUCATION = [
-  { degree: "B.Sc Informatics", org: "Universitas Negeri Makassar", period: "2020 → 2024", desc: "Computer science, software development & IT fundamentals.", score: "3.86", scale: "/4.00", scoreLabel: "GPA" },
+  { degree: "Bachelor of Computer Science (Education)", org: "Universitas Negeri Makassar", period: "2020 → 2024", desc: "Computer science, software development & IT fundamentals.", score: "3.86", scale: "/4.00", scoreLabel: "GPA" },
   { degree: "Fullstack JavaScript Bootcamp", org: "Hacktiv8", period: "2024 → 2025", desc: "An intensive fullstack track covering React, Node.js, Express, and databases.", score: "99", scale: "/100", scoreLabel: "Final score", award: "Teacher's Award" },
 ];
 const WORK_PRINCIPLES = [
@@ -118,7 +118,7 @@ export default function About() {
     /* content */
     const neofetch = '<div class="nf"><div class="nf-ava">RF</div><div class="nf-info">'
       + '<div><span class="k">host</span> rian@portfolio</div><div><span class="k">role</span> Full Stack Developer</div>'
-      + '<div><span class="k">company</span> CarbonEthics</div><div><span class="k">location</span> Jakarta / Makassar, ID</div>'
+      + '<div><span class="k">last_company</span> CarbonEthics</div><div><span class="k">location</span> Jakarta / Makassar, ID</div>'
       + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 20+</div>'
       + '<div><span class="k">status</span> <span class="ok">● open_to_work</span></div></div></div>';
     const bio = '<span class="muted">"""</span> Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences. <span class="muted">"""</span>';
@@ -142,7 +142,7 @@ export default function About() {
       + `<a class="btn ghost" href="${SOCIALS.linkedin}" target="_blank" rel="noreferrer">↗ LinkedIn</a>`
       + `<a class="btn ghost" href="${SOCIALS.mail}">✉ Email</a></div>`
       + '<div class="cta-line">&gt; Let\'s build something <span class="hl">amazing</span> — <span class="ok">start a conversation</span></div>';
-    const whoami = '<span class="ok">Baso Rian Farhan Mallanti</span> — Full Stack Developer @ Carbonethics';
+    const whoami = '<span class="ok">Baso Rian Farhan Mallanti</span> — Full Stack Developer, previously @ CarbonEthics';
     const coffee = '<pre class="art">     ( (\n      ) )\n   ........\n   |      |]   brewing… ☕\n   \\      /\n    `----\'</pre>';
     const CMDS = ["whoami", "about", "experience", "education", "skills", "stack", "projects", "contact", "resume", "neofetch", "theme", "clear", "help", "page", "coffee", "matrix", "sudo hire-me"];
     const help = '<div class="help">'
@@ -390,7 +390,7 @@ export default function About() {
                     {item.featured && (
                       <div className="bp-company-lockup" aria-label="CarbonEthics">
                         <img src={CARBONETHICS_LOGO} alt="CarbonEthics logo" loading="lazy" decoding="async" />
-                        <span>Current role</span>
+                        <span>Latest role</span>
                       </div>
                     )}
                   </div>
@@ -656,7 +656,7 @@ const bpCss = `
 .bp-career-copy{border-bottom:1px solid;padding:4px 0 28px;border-color:inherit}.bp-career-item:last-child .bp-career-copy{border-bottom:0;padding-bottom:0}
 .bp-career-copy h3{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);margin:0 0 6px}.bp-career-copy p{font-size:.9rem;line-height:1.65;margin:13px 0 0;max-width:72ch}.bp-career-highlights{display:grid;gap:10px;margin:18px 0 0;padding:0;max-width:78ch;list-style:none}.bp-career-highlights li{position:relative;padding-left:20px;font-size:.84rem;line-height:1.62;color:var(--muted)}.bp-career-highlights li::before{content:'↳';position:absolute;left:0;color:var(--ac);font-family:ui-monospace,Menlo,monospace;font-weight:700}
 .bp-career-titleline{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}.bp-company-lockup{background:#08111f;border:1px solid rgba(224,168,58,.35);border-radius:10px;padding:9px 12px;min-width:176px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.bp-company-lockup img{display:block;width:150px;height:25px;object-fit:contain;object-position:left center}.bp-company-lockup span{font:9px ui-monospace,Menlo,monospace;color:#e0a83a;letter-spacing:.17em;text-transform:uppercase}
-.bp-career-item.is-current .bp-career-marker{background:var(--ac);color:#08111f}.bp-career-item.is-current .bp-career-copy{position:relative}.bp-career-item.is-current .bp-career-copy::before{content:'CURRENT';position:absolute;right:0;top:-18px;color:var(--ac);font:700 9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.bp-career-item.is-current .bp-career-marker{background:var(--ac);color:#08111f}.bp-career-item.is-current .bp-career-copy{position:relative}.bp-career-item.is-current .bp-career-copy::before{content:'LATEST';position:absolute;right:0;top:-18px;color:var(--ac);font:700 9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
 .bp-section-head{display:grid;grid-template-columns:1fr minmax(280px,.62fr);gap:36px;align-items:start;margin-bottom:30px}.bp-section-head .bp-label{margin-bottom:0}.bp-section-head>p{font-size:.92rem;line-height:1.7;margin:0;max-width:48ch}
 .bp-principles{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(var(--ac1),.18);border-bottom:1px solid rgba(var(--ac1),.18)}
 .bp-principle{padding:28px clamp(18px,2.8vw,34px) 30px;min-height:210px}.bp-principle:first-child{padding-left:0}.bp-principle+.bp-principle{border-left:1px solid rgba(var(--ac1),.18)}

@@ -41,7 +41,7 @@ const stats = [
   { value: 4, suffix: "+", label: "Years building" },
 ];
 
-const proofItems = ["CarbonEthics", "Disnaker Makassar", "Hacktiv8", "SMKN 4 Jeneponto"];
+const proofItems = ["CarbonEthics", "Disnaker Makassar", "Hacktiv8", "SMAN 4 Jeneponto"];
 
 /* Where each word comes from (fx/fy in vw/vh, scale, rotation in deg) and where it
    flies when dispersing (dx/dy in vw/vh). Fixed, never random, so it reverses exactly. */
@@ -1027,7 +1027,7 @@ export default function AboutPreview() {
           </h3>
 
           <div className="oj-role">
-            <small className="oj-mono">Currently building at</small>
+            <small className="oj-mono">Most recently at</small>
             <strong>CarbonEthics &mdash; Fullstack Developer Associate Manager</strong>
           </div>
 

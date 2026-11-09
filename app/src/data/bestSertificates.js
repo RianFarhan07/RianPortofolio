@@ -28,6 +28,17 @@ export const bestCertificates = [
     ],
   },
   {
+    id: 5,
+    title: "Project Planning: Putting It All Together",
+    issuer: "Google (Coursera)",
+    image: "images/certificates/coursera_project_planning.webp",
+    issueDate: "June 2026",
+    credentialId: "MYRZ96ZJU2K9",
+    category: "management",
+    credentialUrl: "https://coursera.org/verify/MYRZ96ZJU2K9",
+    skills: ["Project Planning", "Scheduling", "Budgeting", "Risk Management"],
+  },
+  {
     id: 2,
     title: "Certificate of Competence",
     issuer: "Jobhun",

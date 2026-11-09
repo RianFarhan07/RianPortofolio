@@ -71,7 +71,10 @@ test("CarbonEthics experience shows end-to-end product and leadership impact", a
   await page.goto("/about");
 
   const career = page.locator("#career-journey");
-  await expect(career.getByText("2025 → now", { exact: true })).toBeVisible();
+  await expect(career.getByText("2025 → 2026", { exact: true })).toBeVisible();
+  await expect(career.getByText("Latest role", { exact: true })).toBeVisible();
+  await expect(career.getByText("SMAN 4 Jeneponto", { exact: true })).toBeVisible();
+  await expect(career.getByText("IT Support Intern", { exact: true })).toBeVisible();
   await expect(career.getByText(/multi-role Internal Dashboard/)).toBeVisible();
   await expect(career.getByText(/offline-first Field Monitoring App/)).toBeVisible();
   await expect(career.getByText(/corporate website migration from Wix/)).toBeVisible();
