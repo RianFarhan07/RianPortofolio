@@ -118,7 +118,7 @@ export default function About() {
     /* content */
     const neofetch = '<div class="nf"><div class="nf-ava">RF</div><div class="nf-info">'
       + '<div><span class="k">host</span> rian@portfolio</div><div><span class="k">role</span> Full Stack Developer</div>'
-      + '<div><span class="k">last_company</span> CarbonEthics</div><div><span class="k">location</span> Jakarta / Makassar, ID</div>'
+      + '<div><span class="k">last_company</span> CarbonEthics</div><div><span class="k">location</span> Jakarta, ID</div>'
       + '<div><span class="k">uptime</span> 4+ years</div><div><span class="k">projects</span> 20+</div>'
       + '<div><span class="k">status</span> <span class="ok">● open_to_work</span></div></div></div>';
     const bio = '<span class="muted">"""</span> Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences. <span class="muted">"""</span>';
@@ -299,7 +299,7 @@ export default function About() {
             ))}
           </div>
         )}
-        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Jakarta / Makassar, ID</span><span className="sp">TSX · UTF-8</span></div>
+        <div className="term-status"><span>⎇ main</span><span>● open_to_work</span><span>📍 Jakarta, ID</span><span className="sp">TSX · UTF-8</span></div>
         <div className="crt" />
       </div>
     </div>
@@ -327,7 +327,7 @@ export default function About() {
             <div className="bp-eyebrow">console.log("Hello, World!")</div>
             <h1 className="bp-title"><span className="l1">Rian</span><span className="l2" style={{ WebkitTextStroke: `2px ${strk}` }}>Farhan</span></h1>
             <p className="bp-role" style={{ color: soft }}>Full Stack Developer · Mobile · UI/UX</p>
-            <span className="bp-badge"><span className="bp-dot" /> Available · Jakarta / Makassar</span>
+            <span className="bp-badge"><span className="bp-dot" /> Available · Jakarta</span>
             <p className="bp-lead" style={{ color: muted }}>Crafting elegant solutions to complex problems. Specialized in building modern web &amp; mobile applications with exceptional user experiences.</p>
             <div className="bp-actions">
               <a className="bp-cv" href={CV} target="_blank" rel="noreferrer"><Download size={16} /> Download CV</a>
@@ -485,7 +485,7 @@ export default function About() {
               </div>
             </div>
             <div className="pk-identity-copy">
-              <span className="pk-available"><i /> Available · Jakarta / Makassar</span>
+              <span className="pk-available"><i /> Available · Jakarta</span>
               <h1>Baso Rian<br />Farhan Mallanti</h1>
               <p>One story, two ways to explore it.</p>
             </div>

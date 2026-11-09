@@ -14,7 +14,7 @@ The person this is built for is a recruiter or hiring manager evaluating Baso Ri
 
 ## Product Purpose
 
-A personal portfolio for Rian, a full-stack and Android developer based in Makassar, Indonesia (currently Fullstack Developer Associate Manager at Carbonethics). It exists to hold an always-on professional presence: a credible, findable calling card that puts 20+ shipped projects in front of the right people and makes Rian easy to evaluate and contact. This is not a lead-generation funnel; it is reputation and reach. Success is a visitor coming away convinced of his range and shipping track record.
+A personal portfolio for Rian, a full-stack and Android developer based in Jakarta, Indonesia (currently Fullstack Developer Associate Manager at Carbonethics). It exists to hold an always-on professional presence: a credible, findable calling card that puts 20+ shipped projects in front of the right people and makes Rian easy to evaluate and contact. This is not a lead-generation funnel; it is reputation and reach. Success is a visitor coming away convinced of his range and shipping track record.
 
 ## Positioning
 

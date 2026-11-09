@@ -74,7 +74,7 @@ const textLayer = Buffer.from(`
   <text x="96" y="482" font-family="${FONT}" font-size="30" font-weight="400"
         fill="#9fb0c4">${esc("20+ apps shipped end-to-end")}</text>
   <text x="96" y="528" font-family="${FONT}" font-size="26" font-weight="400"
-        fill="#6d7f93">${esc("Makassar, Indonesia  ·  rianfarhan.my.id")}</text>
+        fill="#6d7f93">${esc("Jakarta, Indonesia  ·  rianfarhan.my.id")}</text>
 </svg>`);
 
 const canvas = sharp(layer)

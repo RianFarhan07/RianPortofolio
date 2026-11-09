@@ -31,7 +31,7 @@ export const IntroContext = createContext({
 const personalInfo = {
   name: "Baso Rian Farhan Mallanti",
   title: "FullStack Developer",
-  origin: "Makassar, Indonesia",
+  origin: "Jakarta, Indonesia",
   initials: "RF",
   tagline: "I build websites that just work — beautifully.",
 };

@@ -364,7 +364,7 @@ export default function Hero3() {
                 BASO RIAN FARHAN MALLANTI
                 <span className="sr-only">
                   {" "}
-                  — Software Engineer &amp; Fullstack Developer in Makassar, Indonesia
+                  — Software Engineer &amp; Fullstack Developer in Jakarta, Indonesia
                 </span>
               </h1>
             </div>
@@ -761,7 +761,7 @@ export default function Hero3() {
               color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
             }}
           >
-            Makassar — ID
+            Jakarta — ID
           </span>
         </div>
 
@@ -923,7 +923,7 @@ export default function Hero3() {
             BASO RIAN FARHAN MALLANTI
             <span className="sr-only">
               {" "}
-              — Software Engineer &amp; Fullstack Developer in Makassar, Indonesia
+              — Software Engineer &amp; Fullstack Developer in Jakarta, Indonesia
             </span>
           </h1>
           <div

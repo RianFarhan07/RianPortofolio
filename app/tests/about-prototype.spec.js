@@ -12,7 +12,7 @@ test("about picker remembers the selected view for one browser session", async (
   await expect(picker).toBeVisible({ timeout: 6_000 });
   await expect(page.getByRole("button", { name: "Visual Journey" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Terminal Mode" })).toBeVisible();
-  await expect(picker.getByText("Available · Jakarta / Makassar")).toBeVisible();
+  await expect(picker.getByText("Available · Jakarta")).toBeVisible();
   await expect(picker.locator('img[src*="rian-animate-editorial.webp"]')).toBeVisible();
 
   await page.getByRole("button", { name: "Visual Journey" }).click();

@@ -183,8 +183,8 @@ export default function ContactPreview() {
     {
       icon: <MapPin size={16} />,
       label: "Location",
-      value: "Makassar, ID",
-      href: "https://www.google.com/maps/place/Rezki+Ayra/@-4.2378229,119.6255899,20.6z",
+      value: "Jakarta, ID",
+      href: "https://www.google.com/maps/place/Jakarta",
       external: true,
     },
     {
