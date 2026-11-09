@@ -7,7 +7,7 @@ const variants = [
   ["src/assets/foto_rian_putih.webp", "src/assets/foto_rian_putih-960.webp", 960, 80],
   ["src/assets/foto-nobg-editorial-natural.webp", "src/assets/foto-nobg-editorial-natural-480.webp", 480, 78],
   ["src/assets/foto-nobg-editorial-natural.webp", "src/assets/foto-nobg-editorial-natural-768.webp", 768, 80],
-  ...["kelompro", "kostHuntMern", "artelux", "bukukita", "recipedia"].map(
+  ...["finlog", "website-revamp", "petani-app", "recipedia", "kostHuntMern"].map(
     (name) => [
       `public/images/${name}.webp`,
       `public/images/thumbs/${name}.webp`,

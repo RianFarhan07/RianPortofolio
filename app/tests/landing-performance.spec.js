@@ -87,7 +87,7 @@ test("below-fold carousels stay idle until the visitor reaches them", async ({
 
   const projectImage = page.locator("#projects img[alt]").first();
   const certificateImage = page.locator("#certificates img[alt]").first();
-  await expect(projectImage).toHaveAttribute("alt", "Kelompro App");
+  await expect(projectImage).toHaveAttribute("alt", "Finlog");
   await expect(certificateImage).toHaveAttribute(
     "alt",
     "Hacktiv8 Fullstack JavaScript Bootcamp",
@@ -95,7 +95,7 @@ test("below-fold carousels stay idle until the visitor reaches them", async ({
 
   await page.waitForTimeout(5_300);
 
-  await expect(projectImage).toHaveAttribute("alt", "Kelompro App");
+  await expect(projectImage).toHaveAttribute("alt", "Finlog");
   await expect(certificateImage).toHaveAttribute(
     "alt",
     "Hacktiv8 Fullstack JavaScript Bootcamp",

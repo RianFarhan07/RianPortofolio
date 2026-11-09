@@ -1140,9 +1140,74 @@ export default function ProjectPreview() {
               }}
             />
 
-            {/* Live Demo / Source — overlay pojok kanan-bawah gambar */}
+            {/* Bottom bar on image: info kiri, Live Demo / Source kanan.
+                Satu baris flex supaya judul panjang wrap, bukan menimpa tombol. */}
             <div
-              style={{ position: "absolute", bottom: 18, right: 18, display: "flex", gap: 8, zIndex: 6 }}
+              style={{
+                position: "absolute",
+                bottom: 18,
+                left: 20,
+                right: 18,
+                display: "flex",
+                alignItems: "flex-end",
+                gap: 16,
+                zIndex: 6,
+              }}
+            >
+            <div style={{ flex: 1, minWidth: 0, paddingBottom: 2 }}>
+              <div
+                style={{
+                  fontSize: ".6rem",
+                  letterSpacing: ".18em",
+                  textTransform: "uppercase",
+                  color: "rgba(var(--ac1),.55)",
+                  marginBottom: 6,
+                }}
+              >
+                Project — {String(activeIndex + 1).padStart(2, "0")}
+              </div>
+              <motion.h2
+                key={`img-title-${activeIndex}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45 }}
+                style={{
+                  fontFamily: "Syne,sans-serif",
+                  fontSize: "clamp(1.4rem,2.5vw,2.2rem)",
+                  fontWeight: 800,
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                  color: "#e7edf5",
+                  textShadow: "0 2px 18px rgba(10,20,32,.65)",
+                  marginBottom: 10,
+                }}
+              >
+                {currentProject.title}
+              </motion.h2>
+
+              {/* Tech chips on image */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                {getTechNames(currentProject.techStack, 5).map((name) => (
+                  <span
+                    key={name}
+                    style={{
+                      fontSize: ".65rem",
+                      padding: "3px 10px",
+                      borderRadius: 100,
+                      border: "1px solid rgba(255,255,255,.18)",
+                      background: "rgba(255,255,255,.08)",
+                      color: "rgba(255,255,255,.75)",
+                      letterSpacing: ".05em",
+                    }}
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{ display: "flex", gap: 8, flexShrink: 0 }}
               onMouseDown={(e) => e.stopPropagation()}
             >
               {currentProject.liveUrl && (
@@ -1169,59 +1234,6 @@ export default function ProjectPreview() {
                 </a>
               )}
             </div>
-
-
-            {/* Bottom info on image */}
-            <div
-              style={{ position: "absolute", bottom: 20, left: 20, right: 20 }}
-            >
-              <div
-                style={{
-                  fontSize: ".6rem",
-                  letterSpacing: ".18em",
-                  textTransform: "uppercase",
-                  color: "rgba(var(--ac1),.55)",
-                  marginBottom: 6,
-                }}
-              >
-                Project — {String(activeIndex + 1).padStart(2, "0")}
-              </div>
-              <motion.h2
-                key={`img-title-${activeIndex}`}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45 }}
-                style={{
-                  fontFamily: "Syne,sans-serif",
-                  fontSize: "clamp(1.4rem,2.5vw,2.2rem)",
-                  fontWeight: 800,
-                  letterSpacing: "-0.03em",
-                  color: "#e7edf5",
-                  marginBottom: 10,
-                }}
-              >
-                {currentProject.title}
-              </motion.h2>
-
-              {/* Tech chips on image */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                {getTechNames(currentProject.techStack, 5).map((name) => (
-                  <span
-                    key={name}
-                    style={{
-                      fontSize: ".65rem",
-                      padding: "3px 10px",
-                      borderRadius: 100,
-                      border: "1px solid rgba(255,255,255,.18)",
-                      background: "rgba(255,255,255,.08)",
-                      color: "rgba(255,255,255,.75)",
-                      letterSpacing: ".05em",
-                    }}
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
             </div>
 
             {/* Corner marks on image */}
