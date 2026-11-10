@@ -92,14 +92,14 @@ export const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
       >
         {/* Backdrop */}
         <div
-          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          className="absolute inset-0 bg-bgDarkSection/85 backdrop-blur-sm"
           onClick={handleClose}
         ></div>
 
         {/* Content */}
         <motion.div
-          className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
-            isDark ? "bg-gray-900" : "bg-white"
+          className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto thin-scroll rounded-2xl shadow-2xl ${
+            isDark ? "bg-gray-900" : "bg-gray-50"
           }`}
           variants={modalVariants}
           initial="hidden"
@@ -132,7 +132,7 @@ export const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
                     idx === currentImageIndex
                       ? "opacity-100"
                       : "opacity-0 absolute"
-                  } object-contain object-center bg-black`}
+                  } object-contain object-center ${isDark ? "bg-bgDarkSection" : "bg-gray-200"}`}
                 />
               ))}
             </div>

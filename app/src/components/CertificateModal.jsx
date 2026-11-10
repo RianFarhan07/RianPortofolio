@@ -77,7 +77,7 @@ export const CertificateModal = ({ certificate, isDark, onClose }) => {
 
   return (
     <motion.div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-bgDarkSection/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -85,7 +85,7 @@ export const CertificateModal = ({ certificate, isDark, onClose }) => {
     >
       <motion.div
         className={`relative max-w-4xl w-full rounded-2xl overflow-hidden ${
-          isDark ? "bg-gray-900" : "bg-white"
+          isDark ? "bg-gray-900" : "bg-gray-50"
         } shadow-2xl`}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -125,7 +125,7 @@ export const CertificateModal = ({ certificate, isDark, onClose }) => {
                   className={`absolute inset-0 ${
                     isDark
                       ? "bg-gradient-to-t from-gray-900 via-transparent to-transparent"
-                      : "bg-gradient-to-t from-white via-transparent to-transparent"
+                      : "bg-gradient-to-t from-gray-50 via-transparent to-transparent"
                   }`}
                 ></div>
               </div>

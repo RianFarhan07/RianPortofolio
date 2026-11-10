@@ -148,7 +148,7 @@ export default function Navbar() {
       <button
         onClick={toggleTheme}
         className={`md:hidden fixed bottom-20 right-4 z-50 p-3 rounded-full shadow-lg ${
-          isDark ? "bg-gray-800 text-gray-200" : "bg-white text-gray-800"
+          isDark ? "bg-gray-800 text-gray-200" : "bg-gray-50 text-gray-800"
         }`}
         aria-label="Toggle theme"
       >
