@@ -14,9 +14,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const pauseRef = usePauseWhenOffscreen();
 
-  const txt = isDark ? "#e7edf5" : "#10233f";
-  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
-  const muted2 = isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.28)";
+  const txt = isDark ? "#e2d6c6" : "#232b20";
+  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
+  const muted2 = isDark ? "rgba(226,214,198,0.25)" : "rgba(35,43,32,0.28)";
 
   const navItems = ["Home", "About", "Projects", "Certificates", "Contact"];
   const socialLinks = [

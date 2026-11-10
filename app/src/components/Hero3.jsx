@@ -3,11 +3,16 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
 import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
-import fotoRianDark from "../assets/foto_rian_nobg3.webp";
-import fotoRianDarkMobile from "../assets/foto_rian_nobg3-960.webp";
+// Navy-era originals, kept for rollback: swap these four lines back in
+// import fotoRianDark from "../assets/foto_rian_nobg3.webp";
+// import fotoRianDarkMobile from "../assets/foto_rian_nobg3-960.webp";
+// import fotoRianLight from "../assets/foto_rian_putih.webp";
+// import fotoRianLightMobile from "../assets/foto_rian_putih-960.webp";
 // import fotoRianDark from "../assets/foto_rian_nobg_light2.webp";
-import fotoRianLight from "../assets/foto_rian_putih.webp";
-import fotoRianLightMobile from "../assets/foto_rian_putih-960.webp";
+import fotoRianDark from "../assets/foto_rian_earth_dark.webp";
+import fotoRianDarkMobile from "../assets/foto_rian_earth_dark-960.webp";
+import fotoRianLight from "../assets/foto_rian_earth_light.webp";
+import fotoRianLightMobile from "../assets/foto_rian_earth_light-960.webp";
 
 /* ─── Animated Counter ────────────────────────────────────── */
 function AnimCounter({ to, suffix = "", delay = 0 }) {
@@ -34,6 +39,35 @@ function AnimCounter({ to, suffix = "", delay = 0 }) {
 }
 
 /* ─── Main Hero ───────────────────────────────────────────── */
+// The CV the About page already links to (public/rianCV.pdf)
+function DownloadCv({ className, short = false }) {
+  return (
+    <a
+      href="/rianCV.pdf"
+      download="Baso Rian Farhan Mallanti - CV.pdf"
+      aria-label="Download CV"
+      className={className}
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 3v12" />
+        <path d="M7 11l5 5 5-5" />
+        <path d="M5 21h14" />
+      </svg>
+      {short ? "CV" : "Download CV"}
+    </a>
+  );
+}
+
 export default function Hero3() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -135,12 +169,29 @@ export default function Hero3() {
             background: var(--ac-deep);
             border: none; border-radius: 100px; cursor: pointer;
             font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
-            font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+            font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
             transition: transform 0.25s, background 0.25s;
           }
           .mob-cta:hover {
             transform: translateY(-2px);
             background: var(--ac);
+          }
+          .mob-cta-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; flex-wrap: wrap;
+          }
+          .mob-cta-ghost {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 22px;
+            background: transparent;
+            border: 1px solid rgba(var(--ac2),0.6); border-radius: 100px; cursor: pointer;
+            font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+            font-weight: 500; color: ${isDark ? "#e2d6c6" : "#232b20"}; text-decoration: none;
+            transition: transform 0.25s, border-color 0.25s;
+          }
+          .mob-cta-ghost:hover {
+            transform: translateY(-2px);
+            border-color: var(--ac);
           }
         `}</style>
 
@@ -256,8 +307,8 @@ export default function Hero3() {
               height: "45%",
               background:
                 isDark
-                  ? "linear-gradient(to top, rgba(10,20,32,0.98) 0%, rgba(10,20,32,0.90) 45%, transparent 100%)"
-                  : "linear-gradient(to top, rgba(242,244,247,0.98) 0%, rgba(242,244,247,0.90) 45%, transparent 100%)",
+                  ? "linear-gradient(to top, rgba(27,33,25,0.98) 0%, rgba(27,33,25,0.90) 45%, transparent 100%)"
+                  : "linear-gradient(to top, rgba(226,214,198,0.98) 0%, rgba(226,214,198,0.90) 45%, transparent 100%)",
               zIndex: 3,
               pointerEvents: "none",
             }}
@@ -289,7 +340,7 @@ export default function Hero3() {
                 letterSpacing: "-0.03em",
                 lineHeight: 0.95,
                 textTransform: "uppercase",
-                color: isDark ? "rgba(232,236,241,0.9)" : "#10233f",
+                color: isDark ? "rgba(216,202,182,0.9)" : "#232b20",
               }}
             >
               SOFTWARE
@@ -304,8 +355,8 @@ export default function Hero3() {
                 textTransform: "uppercase",
                 color: "transparent",
                 WebkitTextStroke: isDark
-                  ? "1.5px rgba(255,255,255,0.2)"
-                  : "1.5px rgba(16,35,63,0.18)",
+                  ? "1.5px rgba(255,255,255,0.34)"
+                  : "1.5px rgba(35,43,32,0.32)",
               }}
             >
               ENGINEER
@@ -357,8 +408,11 @@ export default function Hero3() {
                   textTransform: "uppercase",
                   margin: 0,
                   color: isDark
-                    ? "rgba(255,255,255,0.75)"
-                    : "rgba(16,35,63,0.7)",
+                    ? "rgba(255,255,255,0.9)"
+                    : "#232b20",
+                  textShadow: isDark
+                    ? "0 1px 8px rgba(0,0,0,0.55)"
+                    : "0 0 5px rgba(226,214,198,0.95), 0 0 12px rgba(226,214,198,0.9), 0 0 20px rgba(226,214,198,0.8)",
                 }}
               >
                 BASO RIAN FARHAN MALLANTI
@@ -392,7 +446,7 @@ export default function Hero3() {
                 fontSize: "0.83rem",
                 lineHeight: 1.6,
                 textAlign: "center",
-                color: isDark ? "rgba(210,222,235,0.62)" : "rgba(16,35,63,0.6)",
+                color: isDark ? "rgba(226,214,198,0.72)" : "rgba(35,43,32,0.78)",
                 margin: 0,
                 maxWidth: 280,
               }}
@@ -421,7 +475,7 @@ export default function Hero3() {
                       fontSize: "1.5rem",
                       fontWeight: 700,
                       lineHeight: 1,
-                      color: isDark ? "#e7edf5" : "#10233f",
+                      color: isDark ? "#e2d6c6" : "#232b20",
                     }}
                   >
                     <AnimCounter to={to} suffix={suf} delay={delay} />
@@ -432,8 +486,8 @@ export default function Hero3() {
                       letterSpacing: "0.07em",
                       textTransform: "uppercase",
                       color: isDark
-                        ? "rgba(210,222,235,0.35)"
-                        : "rgba(16,35,63,0.4)",
+                        ? "rgba(226,214,198,0.62)"
+                        : "rgba(35,43,32,0.75)",
                       marginTop: 2,
                     }}
                   >
@@ -444,20 +498,23 @@ export default function Hero3() {
             </div>
 
             {/* CTA */}
-            <Link to="/contact" className="mob-cta">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
-                <path d="M1 1l22 22" />
-              </svg>
-              Contact Me
-            </Link>
+            <div className="mob-cta-row">
+              <Link to="/contact" className="mob-cta">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
+                  <path d="M1 1l22 22" />
+                </svg>
+                Contact Me
+              </Link>
+              <DownloadCv className="mob-cta-ghost" short />
+            </div>
 
             {/* Scroll hint */}
             <div
@@ -468,7 +525,7 @@ export default function Hero3() {
                 fontSize: "0.62rem",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
+                color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
               }}
             >
               <div className="mob-scroll-arrow" />
@@ -527,7 +584,7 @@ export default function Hero3() {
           background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-          font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+          font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
           transition: transform 0.25s, background 0.25s;
           white-space: nowrap;
         }
@@ -535,13 +592,27 @@ export default function Hero3() {
           transform: translateY(-2px);
           background: var(--ac);
         }
+        .h2-cta-ghost {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 11px 22px;
+          background: transparent;
+          border: 1px solid rgba(var(--ac2),0.6); border-radius: 100px; cursor: pointer;
+          font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+          font-weight: 500; color: ${isDark ? "#e2d6c6" : "#232b20"}; text-decoration: none;
+          transition: transform 0.25s, border-color 0.25s;
+          white-space: nowrap;
+        }
+        .h2-cta-ghost:hover {
+          transform: translateY(-2px);
+          border-color: var(--ac);
+        }
         .h2-nav-link {
-          font-size: 0.72rem; color: rgba(210,222,235,0.35);
+          font-size: 0.72rem; color: rgba(226,214,198,0.35);
           letter-spacing: 0.12em; text-transform: uppercase;
           text-decoration: none; transition: color 0.2s;
           font-family: 'DM Sans', sans-serif;
         }
-        .h2-nav-link:hover { color: #e7edf5; }
+        .h2-nav-link:hover { color: #e2d6c6; }
         .h2-social {
           width: 34px; height: 34px;
           border: 1px solid rgba(255,255,255,0.12); border-radius: 50%;
@@ -635,7 +706,7 @@ export default function Hero3() {
               lineHeight: 0.92,
               textTransform: "uppercase",
               whiteSpace: "nowrap",
-              color: isDark ? "#e7edf5" : "#10233f",
+              color: isDark ? "#e2d6c6" : "#232b20",
               opacity: entered ? 1 : 0,
               transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
               transform: entered ? "translateY(0)" : "translateY(-30px)",
@@ -654,8 +725,8 @@ export default function Hero3() {
               whiteSpace: "nowrap",
               color: "transparent",
               WebkitTextStroke: isDark
-                ? "2px rgba(255,255,255,0.18)"
-                : "2px rgba(16,35,63,0.15)",
+                ? "2px rgba(255,255,255,0.32)"
+                : "2px rgba(35,43,32,0.3)",
               opacity: entered ? 1 : 0,
               transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
               transform: entered ? "translateY(0)" : "translateY(30px)",
@@ -737,7 +808,7 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
+              color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
             }}
           >
             Portfolio 2025
@@ -758,7 +829,7 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(210,222,235,0.25)" : "rgba(16,35,63,0.3)",
+              color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
             }}
           >
             Jakarta — ID
@@ -815,30 +886,37 @@ export default function Hero3() {
                 fontSize: "0.85rem",
                 lineHeight: 1.65,
                 maxWidth: 260,
-                color: isDark ? "rgba(210,222,235,0.62)" : "rgba(16,35,63,0.6)",
+                color: isDark ? "rgba(226,214,198,0.72)" : "rgba(35,43,32,0.78)",
                 margin: 0,
               }}
             >
               Passionate about building products people love to use
             </p>
-            <Link
-              to="/contact"
-              className="h2-cta"
-              style={{ alignSelf: "flex-start" }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                flexWrap: "wrap",
+                alignSelf: "flex-start",
+              }}
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
-                <path d="M1 1l22 22" />
-              </svg>
-              Contact Me
-            </Link>
+              <Link to="/contact" className="h2-cta">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.77 9.81" />
+                  <path d="M1 1l22 22" />
+                </svg>
+                Contact Me
+              </Link>
+              <DownloadCv className="h2-cta-ghost" />
+            </div>
           </div>
 
           {/* RIGHT — Stats */}
@@ -862,7 +940,7 @@ export default function Hero3() {
                     fontSize: "1.9rem",
                     fontWeight: 700,
                     lineHeight: 1,
-                    color: isDark ? "#e7edf5" : "#10233f",
+                    color: isDark ? "#e2d6c6" : "#232b20",
                   }}
                 >
                   <AnimCounter to={to} suffix={suf} delay={delay} />
@@ -873,8 +951,8 @@ export default function Hero3() {
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     color: isDark
-                      ? "rgba(210,222,235,0.35)"
-                      : "rgba(16,35,63,0.4)",
+                      ? "rgba(226,214,198,0.62)"
+                      : "rgba(35,43,32,0.75)",
                   }}
                 >
                   {label}
@@ -916,7 +994,10 @@ export default function Hero3() {
               letterSpacing: "0.18em",
               textTransform: "uppercase",
               margin: 0,
-              color: isDark ? "rgba(255,255,255,0.85)" : "rgba(16,35,63,0.7)",
+              color: isDark ? "rgba(255,255,255,0.92)" : "#232b20",
+              textShadow: isDark
+                ? "0 1px 10px rgba(0,0,0,0.55)"
+                : "0 0 6px rgba(226,214,198,0.95), 0 0 14px rgba(226,214,198,0.9), 0 0 24px rgba(226,214,198,0.8)",
               whiteSpace: "nowrap",
             }}
           >
@@ -931,7 +1012,7 @@ export default function Hero3() {
               fontSize: "0.68rem",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(210,222,235,0.3)" : "rgba(16,35,63,0.35)",
+              color: isDark ? "rgba(226,214,198,0.58)" : "rgba(35,43,32,0.72)",
               display: "flex",
               alignItems: "center",
               gap: 6,

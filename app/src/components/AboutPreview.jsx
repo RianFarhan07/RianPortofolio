@@ -923,12 +923,12 @@ export default function AboutPreview() {
   };
 
   const themeStyles = {
-    "--oj-bg": isDark ? "#08121f" : "#eef2f6",
-    "--oj-panel": isDark ? "rgba(10, 20, 32, .94)" : "rgba(232, 236, 241, .96)",
-    "--oj-ink": isDark ? "#e7edf5" : "#10233f",
-    "--oj-muted": isDark ? "#91a0b2" : "#58677b",
-    "--oj-faint": isDark ? "#7d8ca0" : "#5c6a7d",
-    "--oj-button-text": isDark ? "#10233f" : "#ffffff",
+    "--oj-bg": isDark ? "#181e16" : "#e0d3c2",
+    "--oj-panel": isDark ? "rgba(27, 33, 25, .94)" : "rgba(216, 202, 182, .96)",
+    "--oj-ink": isDark ? "#e2d6c6" : "#232b20",
+    "--oj-muted": isDark ? "#a39680" : "#686350",
+    "--oj-faint": isDark ? "#908671" : "#6c6552",
+    "--oj-button-text": isDark ? "#232b20" : "#ffffff",
   };
 
   const active = chapters[chapter];

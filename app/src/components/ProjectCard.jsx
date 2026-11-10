@@ -30,10 +30,10 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
     threshold: 0.1,
   });
 
-  const cardBg = isDark ? "rgba(10,20,32,0.96)" : "rgba(232,236,241,0.96)";
+  const cardBg = isDark ? "rgba(27,33,25,0.96)" : "rgba(216,202,182,0.96)";
   const cardBorder = `rgba(${AR2}, 0.18)`;
-  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
-  const muted2 = isDark ? "rgba(210,222,235,0.35)" : "rgba(16,35,63,0.35)";
+  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
+  const muted2 = isDark ? "rgba(226,214,198,0.35)" : "rgba(35,43,32,0.35)";
   const cat = categoryMap[project.category] || { label: project.category };
 
   return (
@@ -63,7 +63,7 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
         />
         {/* Navy-tinted overlay */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: `linear-gradient(to top, ${isDark ? "rgba(10,20,32,0.85)" : "rgba(232,236,241,0.85)"} 0%, rgba(10,20,32,0.08) 55%, transparent 100%)` }} />
+          style={{ background: `linear-gradient(to top, ${isDark ? "rgba(27,33,25,0.85)" : "rgba(216,202,182,0.85)"} 0%, rgba(27,33,25,0.08) 55%, transparent 100%)` }} />
 
         {/* Corner brackets */}
         {[

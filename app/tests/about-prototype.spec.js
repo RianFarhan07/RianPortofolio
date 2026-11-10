@@ -145,7 +145,7 @@ test("page view explains working principles and uses one capability toolbox", as
   await expect(page.getByRole("heading", { name: "Tech Stack", exact: true })).toHaveCount(0);
 });
 
-test("favicon uses the current deep-navy and ochre palette", async ({ request }) => {
+test("favicon uses the earth palette (dark green and tan)", async ({ request }) => {
   const response = await request.get("/favicon-192.png");
   expect(response.status()).toBe(200);
 
@@ -158,6 +158,6 @@ test("favicon uses the current deep-navy and ochre palette", async ({ request })
     return Array.from(data.subarray(index, index + 3));
   };
 
-  expect(pixel(2, 2)).toEqual([8, 17, 31]);
-  expect(pixel(50, 60)).toEqual([224, 168, 58]);
+  expect(pixel(2, 2)).toEqual([35, 43, 32]);
+  expect(pixel(50, 60)).toEqual([201, 162, 122]);
 });

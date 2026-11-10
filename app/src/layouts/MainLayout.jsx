@@ -15,21 +15,21 @@ const ACTIVE_THEME = 12;
 const THEME_1 = {
   effect: "grid",
   pageBg: {
-    dark: "linear-gradient(180deg,#08111f 0%,#0a1730 42%,#03070f 100%)",
+    dark: "linear-gradient(180deg,#181e16 0%,#232b20 42%,#0e120c 100%)",
     light: "linear-gradient(180deg,#edf6f2 0%,#e2f1ec 46%,#f5faf8 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 65% 42% at 50% 50%,rgba(0,180,255,0.32),rgba(0,110,255,0.15) 42%,transparent 70%)",
+    dark: "radial-gradient(ellipse 65% 42% at 50% 50%,rgba(128,120,99,0.32),rgba(128,120,99,0.15) 42%,transparent 70%)",
     light:
-      "radial-gradient(ellipse 65% 42% at 50% 50%,rgba(20,184,166,0.26),rgba(16,185,129,0.12) 42%,transparent 70%)",
+      "radial-gradient(ellipse 65% 42% at 50% 50%,rgba(101,97,78,0.26),rgba(16,185,129,0.12) 42%,transparent 70%)",
   },
   orb: {
-    dark: "radial-gradient(circle,rgba(120,220,255,0.45),rgba(0,130,255,0.20) 48%,transparent 70%)",
+    dark: "radial-gradient(circle,rgba(187,173,150,0.45),rgba(128,120,99,0.20) 48%,transparent 70%)",
     light: null,
   },
   gridLines: {
-    dark: ["rgba(31,182,255,0.42)", "rgba(56,130,255,0.36)"],
-    light: ["rgba(20,184,166,0.34)", "rgba(16,185,129,0.26)"],
+    dark: ["rgba(145,134,113,0.42)", "rgba(157,145,123,0.36)"],
+    light: ["rgba(101,97,78,0.34)", "rgba(16,185,129,0.26)"],
   },
 };
 
@@ -40,18 +40,18 @@ const THEME_1 = {
 const THEME_2 = {
   effect: "animgrid",
   pageBg: {
-    dark: "linear-gradient(180deg,#050d18 0%,#07152a 42%,#020810 100%)",
+    dark: "linear-gradient(180deg,#131811 0%,#1e251c 42%,#0e120c 100%)",
     light: "linear-gradient(180deg,#edf6f2 0%,#e2f1ec 46%,#f5faf8 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 70% 40% at 50% 50%,rgba(0,180,255,0.22),rgba(0,100,255,0.10) 42%,transparent 70%)",
+    dark: "radial-gradient(ellipse 70% 40% at 50% 50%,rgba(128,120,99,0.22),rgba(128,120,99,0.10) 42%,transparent 70%)",
     light:
-      "radial-gradient(ellipse 70% 40% at 50% 50%,rgba(20,184,166,0.20),rgba(16,185,129,0.10) 42%,transparent 70%)",
+      "radial-gradient(ellipse 70% 40% at 50% 50%,rgba(101,97,78,0.20),rgba(16,185,129,0.10) 42%,transparent 70%)",
   },
   orb: { dark: null, light: null },
   gridLines: {
-    dark: ["rgba(31,182,255,0.28)", "rgba(56,130,255,0.22)"],
-    light: ["rgba(20,184,166,0.28)", "rgba(16,185,129,0.20)"],
+    dark: ["rgba(145,134,113,0.28)", "rgba(157,145,123,0.22)"],
+    light: ["rgba(101,97,78,0.28)", "rgba(16,185,129,0.20)"],
   },
   animated: true,
 };
@@ -63,16 +63,16 @@ const THEME_2 = {
 const THEME_3 = {
   effect: "dots",
   pageBg: {
-    dark: "linear-gradient(160deg,#060a12 0%,#090f1e 55%,#040810 100%)",
-    light: "linear-gradient(160deg,#f0f4f8 0%,#e8eff6 55%,#f5f8fb 100%)",
+    dark: "linear-gradient(160deg,#11150f 0%,#181e16 55%,#0f130d 100%)",
+    light: "linear-gradient(160deg,#e2d5c5 0%,#ddd0be 55%,#e9dfd0 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 60% 40% at 50% 30%,rgba(56,170,255,0.14),transparent 70%)",
+    dark: "radial-gradient(ellipse 60% 40% at 50% 30%,rgba(157,145,123,0.14),transparent 70%)",
     light:
-      "radial-gradient(ellipse 60% 40% at 50% 30%,rgba(14,165,233,0.14),transparent 70%)",
+      "radial-gradient(ellipse 60% 40% at 50% 30%,rgba(124,116,96,0.14),transparent 70%)",
   },
   orb: { dark: null, light: null },
-  dotColor: { dark: "rgba(255,255,255,0.10)", light: "rgba(0,80,200,0.08)" },
+  dotColor: { dark: "rgba(255,255,255,0.10)", light: "rgba(99,95,77,0.08)" },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -82,13 +82,13 @@ const THEME_3 = {
 const THEME_4 = {
   effect: "particles",
   pageBg: {
-    dark: "linear-gradient(160deg,#050810 0%,#080c1a 55%,#030610 100%)",
-    light: "linear-gradient(160deg,#f0f4f8 0%,#e8eff6 55%,#f5f8fb 100%)",
+    dark: "linear-gradient(160deg,#0f130d 0%,#161b14 55%,#0f120d 100%)",
+    light: "linear-gradient(160deg,#e2d5c5 0%,#ddd0be 55%,#e9dfd0 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 70% 40% at 50% -5%,rgba(56,130,255,0.12),transparent 65%)",
+    dark: "radial-gradient(ellipse 70% 40% at 50% -5%,rgba(157,145,123,0.12),transparent 65%)",
     light:
-      "radial-gradient(ellipse 70% 40% at 50% -5%,rgba(56,130,255,0.10),transparent 65%)",
+      "radial-gradient(ellipse 70% 40% at 50% -5%,rgba(157,145,123,0.10),transparent 65%)",
   },
   orb: { dark: null, light: null },
 };
@@ -100,8 +100,8 @@ const THEME_4 = {
 const THEME_5 = {
   effect: "aurora",
   pageBg: {
-    dark: "linear-gradient(170deg,#07091a 0%,#0e0c28 40%,#060a14 100%)",
-    light: "linear-gradient(170deg,#f0f5fb 0%,#eaf0f8 40%,#f5f8fc 100%)",
+    dark: "linear-gradient(170deg,#151a13 0%,#20271d 40%,#121610 100%)",
+    light: "linear-gradient(170deg,#e4d8c9 0%,#dfd2c1 40%,#eae0d2 100%)",
   },
   glowA: { dark: "none", light: "none" },
   orb: { dark: null, light: null },
@@ -115,14 +115,14 @@ const THEME_6 = {
   effect: "scanlines",
   scanOpacity: 0.04,
   pageBg: {
-    dark: "linear-gradient(160deg,#050810 0%,#080c18 55%,#030610 100%)",
-    light: "linear-gradient(160deg,#f0f4ff 0%,#e8eeff 55%,#f5f8ff 100%)",
+    dark: "linear-gradient(160deg,#0f130d 0%,#141912 55%,#0f120d 100%)",
+    light: "linear-gradient(160deg,#e8ddcf 0%,#e1d5c4 55%,#ece3d6 100%)",
   },
   glowA: {
-    dark: `radial-gradient(ellipse 55% 40% at 10% 40%,rgba(0,255,240,0.12) 0%,transparent 60%),
+    dark: `radial-gradient(ellipse 55% 40% at 10% 40%,rgba(128,120,99,0.12) 0%,transparent 60%),
           radial-gradient(ellipse 55% 40% at 90% 40%,rgba(255,0,220,0.10) 0%,transparent 60%),
-          radial-gradient(ellipse 70% 25% at 50% -5%,rgba(80,120,255,0.09) 0%,transparent 65%)`,
-    light: `radial-gradient(ellipse 55% 40% at 10% 40%,rgba(6,182,212,0.10) 0%,transparent 60%),
+          radial-gradient(ellipse 70% 25% at 50% -5%,rgba(168,156,133,0.09) 0%,transparent 65%)`,
+    light: `radial-gradient(ellipse 55% 40% at 10% 40%,rgba(108,102,83,0.10) 0%,transparent 60%),
            radial-gradient(ellipse 55% 40% at 90% 40%,rgba(168,85,247,0.09) 0%,transparent 60%)`,
   },
   orb: { dark: null, light: null },
@@ -172,13 +172,13 @@ const THEME_8 = {
 const THEME_9 = {
   effect: "none",
   pageBg: {
-    dark: "linear-gradient(180deg,#08111f 0%,#0a1730 42%,#03070f 100%)",
+    dark: "linear-gradient(180deg,#181e16 0%,#232b20 42%,#0e120c 100%)",
     light: "linear-gradient(180deg,#edf6f2 0%,#e2f1ec 46%,#f5faf8 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(0,140,255,0.15),transparent 65%)",
+    dark: "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(128,120,99,0.15),transparent 65%)",
     light:
-      "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(6,182,212,0.14),transparent 65%)",
+      "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(108,102,83,0.14),transparent 65%)",
   },
   orb: { dark: null, light: null },
 };
@@ -190,13 +190,13 @@ const THEME_9 = {
 const THEME_10 = {
   effect: "none",
   pageBg: {
-    dark: "linear-gradient(160deg,#09060f 0%,#110c1e 45%,#070410 100%)",
-    light: "linear-gradient(160deg,#f5f2ff 0%,#ede8ff 45%,#f8f6ff 100%)",
+    dark: "linear-gradient(160deg,#0f130d 0%,#1a2018 45%,#0f130d 100%)",
+    light: "linear-gradient(160deg,#eae0d2 0%,#e1d5c4 45%,#ede4d7 100%)",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(139,92,246,0.18),transparent 65%)",
+    dark: "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(170,157,134,0.18),transparent 65%)",
     light:
-      "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(139,92,246,0.14),transparent 65%)",
+      "radial-gradient(ellipse 65% 42% at 50% -5%,rgba(170,157,134,0.14),transparent 65%)",
   },
   orb: { dark: null, light: null },
 };
@@ -219,12 +219,12 @@ const THEME_11 = {
 const THEME_12 = {
   effect: "none",
   pageBg: {
-    dark: "linear-gradient(160deg,#0d1520 0%,#111d2c 55%,#0a121c 100%)",
-    light: "#f2f4f7",
+    dark: "linear-gradient(160deg,#1b2119 0%,#232b20 55%,#181d16 100%)",
+    light: "#e2d6c6",
   },
   glowA: {
-    dark: "radial-gradient(ellipse 70% 35% at 50% -5%,rgba(224,168,58,0.06),transparent 65%)",
-    light: `radial-gradient(ellipse 80% 45% at 50% -10%,rgba(156,106,18,0.14),rgba(232,236,241,0.25) 45%,transparent 70%)`,
+    dark: "radial-gradient(ellipse 70% 35% at 50% -5%,rgba(201, 162, 122,0.06),transparent 65%)",
+    light: `radial-gradient(ellipse 80% 45% at 50% -10%,rgba(108, 72, 48,0.14),rgba(216,202,182,0.25) 45%,transparent 70%)`,
   },
   orb: { dark: null, light: null },
 };
@@ -294,7 +294,7 @@ function useCanvasEffect(canvasRef, effect, isDark) {
         if (p.y > H) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100,180,255,${p.a * 0.7})`;
+        ctx.fillStyle = `rgba(178,164,141,${p.a * 0.7})`;
         ctx.fill();
       });
       for (let i = 0; i < particles.length; i++) {
@@ -306,7 +306,7 @@ function useCanvasEffect(canvasRef, effect, isDark) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(80,160,255,${(1 - d / 120) * 0.18})`;
+            ctx.strokeStyle = `rgba(168,156,133,${(1 - d / 120) * 0.18})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -392,7 +392,7 @@ function useCanvasEffect(canvasRef, effect, isDark) {
       const cols = 30,
         rows = Math.ceil(H / 60) + 2;
       const alpha = isDark ? 0.1 : 0.06;
-      ctx.strokeStyle = `rgba(31,182,255,${alpha})`;
+      ctx.strokeStyle = `rgba(145,134,113,${alpha})`;
       ctx.lineWidth = 0.8;
       for (let r = 0; r < rows; r++) {
         const y = r * 60 - gridOff;

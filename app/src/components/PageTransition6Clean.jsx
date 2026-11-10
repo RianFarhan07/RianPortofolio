@@ -172,8 +172,8 @@ function IntroWrap({ children, isDark }) {
    Gradient bg → RF circle + 3 expanding rings → staggered text → progress bar
    ═══════════════════════════════════════════════════════════ */
 function IntroPulse({ isDark }) {
-  const bgEnd = isDark ? "#020817" : "#eef2ff";
-  const muted = isDark ? "rgba(255,255,255,0.5)" : "rgba(16,35,63,0.5)";
+  const bgEnd = isDark ? "#11160f" : "#e6dbcc";
+  const muted = isDark ? "rgba(255,255,255,0.5)" : "rgba(35,43,32,0.5)";
   return (
     <IntroWrap>
       {/* Gradient background */}
@@ -256,7 +256,7 @@ function IntroPulse({ isDark }) {
 
       {/* Progress bar */}
       <motion.div className="absolute bottom-16 w-48 h-0.5 rounded-full overflow-hidden"
-        style={{ background: isDark ? "rgba(255,255,255,0.1)" : "rgba(16,35,63,0.08)" }}
+        style={{ background: isDark ? "rgba(255,255,255,0.1)" : "rgba(35,43,32,0.08)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0, 1, 1, 0], transition: { duration: D, times: [0, 0.7, 0.78, 0.94, 1] } }}>
         <motion.div className="h-full rounded-full"
@@ -283,8 +283,8 @@ function IntroPulse({ isDark }) {
    Name typed char-by-char with rAF → cursor bounce → title reveals with stagger
    ═══════════════════════════════════════════════════════════ */
 function IntroTypewriter({ isDark }) {
-  const bgEnd = isDark ? "#020817" : "#eef2ff";
-  const txt = isDark ? "#fff" : "#10233f";
+  const bgEnd = isDark ? "#11160f" : "#e6dbcc";
+  const txt = isDark ? "#fff" : "#232b20";
   const nameChars = [...personalInfo.name];
   const [visible, setVisible] = useState(0);
   const [typingDone, setTypingDone] = useState(false);
@@ -383,8 +383,8 @@ function IntroTypewriter({ isDark }) {
    3 glass cards flip in with depth, glass morphism, spring timing
    ═══════════════════════════════════════════════════════════ */
 function IntroCards({ isDark }) {
-  const bgEnd = isDark ? "#020817" : "#eef2ff";
-  const txt = isDark ? "#fff" : "#10233f";
+  const bgEnd = isDark ? "#11160f" : "#e6dbcc";
+  const txt = isDark ? "#fff" : "#232b20";
   const glassBg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
   const glassBorder = `rgba(${AR}, 0.3)`;
   return (
@@ -430,7 +430,7 @@ function IntroCards({ isDark }) {
             transition: { times: [0, 0.25, 0.33, 0.43, 0.75, 1], duration: D, delay: 0.08, ease: "easeInOut" } }}>
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 60%)" }} />
           <p className="relative text-base md:text-lg font-light" style={{ color: A }}>{personalInfo.title}</p>
-          <p className="relative text-xs mt-1 opacity-50 tracking-wider" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(16,35,63,0.4)" }}>{personalInfo.origin}</p>
+          <p className="relative text-xs mt-1 opacity-50 tracking-wider" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(35,43,32,0.4)" }}>{personalInfo.origin}</p>
         </motion.div>
       </div>
 
@@ -449,8 +449,8 @@ function IntroCards({ isDark }) {
    60 particles terbang dari pinggir → nyatu jadi lingkaran → lingkaran bubar
    ═══════════════════════════════════════════════════════════ */
 function IntroParticles({ isDark }) {
-  const bgEnd = isDark ? "#020817" : "#eef2ff";
-  const txt = isDark ? "#fff" : "#10233f";
+  const bgEnd = isDark ? "#11160f" : "#e6dbcc";
+  const txt = isDark ? "#fff" : "#232b20";
   const COUNT = 60;
   const CIRCLE_R = 100; // radius lingkaran saat partikel nyatu
   const particles = Array.from({ length: COUNT }, (_, i) => {
@@ -558,9 +558,9 @@ function IntroParticles({ isDark }) {
    3..2..1 with ring-wave + glow → name reveal with scale
    ═══════════════════════════════════════════════════════════ */
 function IntroCountdown({ isDark }) {
-  const bgEnd = isDark ? "#020817" : "#eef2ff";
-  const txt = isDark ? "#fff" : "#10233f";
-  const countNumColor = isDark ? "#fff" : "#10233f";
+  const bgEnd = isDark ? "#11160f" : "#e6dbcc";
+  const txt = isDark ? "#fff" : "#232b20";
+  const countNumColor = isDark ? "#fff" : "#232b20";
   const numStyle = {
     fontFamily: "'Syne', sans-serif",
     fontWeight: 800,
@@ -625,7 +625,7 @@ function IntroCountdown({ isDark }) {
           {personalInfo.name}
         </div>
         <p className="text-lg md:text-xl font-light mt-2 text-center" style={{ color: A }}>{personalInfo.title}</p>
-        <p className="text-sm mt-1 opacity-50 tracking-wide text-center" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(16,35,63,0.4)" }}>{personalInfo.origin}</p>
+        <p className="text-sm mt-1 opacity-50 tracking-wide text-center" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(35,43,32,0.4)" }}>{personalInfo.origin}</p>
       </motion.div>
     </IntroWrap>
   );
@@ -657,7 +657,7 @@ function CurtainRevealTransition({ pathname, isDark, pageName, pageCode }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -15], transition: { duration: dur, times: [0, 0.4, 0.8, 1], delay: 0.05, ease: "easeOut" } }}>[{pageCode}]</motion.div>
         <motion.h1 className="text-6xl md:text-8xl font-bold tracking-tight mt-2"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#10233f", textShadow: isDark ? `0 0 50px rgba(${AR}, 0.4)` : undefined }}
+          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#232b20", textShadow: isDark ? `0 0 50px rgba(${AR}, 0.4)` : undefined }}
           initial={{ opacity: 0, y: 40, scale: 0.85 }}
           animate={{ opacity: [0, 1, 1, 0], y: [40, 0, 0, -20], scale: [0.85, 1, 1, 0.85], transition: { duration: dur, times: [0, 0.42, 0.78, 1], delay: 0.1, ease: "easeOut" } }}>{pageName}</motion.h1>
         <motion.div className="flex items-center gap-4 mt-4"
@@ -680,13 +680,13 @@ function CurtainRevealTransition({ pathname, isDark, pageName, pageCode }) {
 
 function FlipCardTransition({ pathname, isDark, pageName, pageCode }) {
   const dur = 1.3;
-  const bg = isDark ? "#020817" : "#eef2ff";
+  const bg = isDark ? "#11160f" : "#e6dbcc";
   return (
     <motion.div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center" style={{ perspective: "1500px" }}>
       <motion.div className="absolute inset-0" style={{ background: bg }}
         initial={{ opacity: 0 }} animate={{ opacity: [0, 0.92, 0.92, 0], transition: { times: [0, 0.08, 0.92, 1], duration: dur, ease: "easeInOut" } }} />
       <motion.div className="relative flex flex-col items-center justify-center border rounded-2xl overflow-hidden"
-        style={{ width: "min(560px, 75vw)", height: "min(360px, 45vh)", background: `linear-gradient(145deg, ${bg}, ${isDark ? "rgba(0,180,255,0.04)" : "rgba(20,184,166,0.04)"})`, borderColor: `rgba(${AR}, 0.25)`, boxShadow: `0 30px 80px rgba(${AR}, 0.15), 0 0 100px rgba(${AR}, 0.08)` }}
+        style={{ width: "min(560px, 75vw)", height: "min(360px, 45vh)", background: `linear-gradient(145deg, ${bg}, ${isDark ? "rgba(128,120,99,0.04)" : "rgba(101,97,78,0.04)"})`, borderColor: `rgba(${AR}, 0.25)`, boxShadow: `0 30px 80px rgba(${AR}, 0.15), 0 0 100px rgba(${AR}, 0.08)` }}
         initial={{ rotateY: -90, opacity: 0, scale: 0.9 }}
         animate={{ rotateY: [-90, 10, -5, 0, 0, 90], opacity: [0, 1, 1, 1, 1, 0], scale: [0.9, 1.02, 0.98, 1, 1, 0.9], transition: { times: [0, 0.15, 0.25, 0.4, 0.75, 1], duration: dur, ease: "easeInOut" } }}>
         {[{ t: -2, l: -2, br: "border-r border-b" }, { t: -2, r: -2, bl: "border-l border-b" }, { b: -2, l: -2, tr: "border-r border-t" }, { b: -2, r: -2, tl: "border-l border-t" }].map((s, i) => (
@@ -699,7 +699,7 @@ function FlipCardTransition({ pathname, isDark, pageName, pageCode }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: [0, 1, 1, 0], y: [12, 0, 0, -10], transition: { duration: dur, times: [0, 0.3, 0.75, 1], delay: 0.08 } }}>{pageCode} — {pageName}</motion.p>
         <motion.h1 className="text-5xl md:text-7xl font-bold tracking-tight mt-2"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#10233f", textShadow: isDark ? `0 0 40px rgba(${AR}, 0.4)` : undefined }}
+          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#232b20", textShadow: isDark ? `0 0 40px rgba(${AR}, 0.4)` : undefined }}
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
           animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -15], scale: [0.9, 1, 1, 0.9], transition: { duration: dur, times: [0, 0.32, 0.72, 1], delay: 0.12, ease: "easeOut" } }}>{pageName}</motion.h1>
         <motion.div className="flex gap-2 mt-6"
@@ -718,7 +718,7 @@ function FlipCardTransition({ pathname, isDark, pageName, pageCode }) {
 
 function RadialExpandTransition({ pathname, isDark, pageName, pageCode }) {
   const dur = 1.4;
-  const bg = isDark ? "#020817" : "#f8fcff";
+  const bg = isDark ? "#11160f" : "#eee6d9";
   return (
     <motion.div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center overflow-hidden">
       <motion.div className="absolute inset-0" style={{ background: bg }}
@@ -740,10 +740,10 @@ function RadialExpandTransition({ pathname, isDark, pageName, pageCode }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: [0, 1, 1, 0], y: [10, 0, 0, -8], transition: { duration: dur, times: [0, 0.35, 0.78, 1], delay: 0.05 } }}>{pathname === "/" ? "HOME" : pathname.replace("/", "").toUpperCase()}</motion.div>
         <motion.h1 className="text-6xl md:text-8xl font-bold tracking-tight mt-2"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#10233f", textShadow: isDark ? `0 0 50px rgba(${AR}, 0.5)` : undefined }}
+          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#232b20", textShadow: isDark ? `0 0 50px rgba(${AR}, 0.5)` : undefined }}
           initial={{ opacity: 0, y: 25, scale: 0.85 }}
           animate={{ opacity: [0, 1, 1, 0], y: [25, 0, 0, -18], scale: [0.85, 1, 1, 0.85], transition: { duration: dur, times: [0, 0.38, 0.75, 1], delay: 0.08, ease: "easeOut" } }}>{pageName}</motion.h1>
-        <motion.p className="text-sm mt-3 opacity-60" style={{ fontFamily: "'DM Sans', sans-serif", color: isDark ? "rgba(255,255,255,0.6)" : "rgba(16,35,63,0.5)" }}
+        <motion.p className="text-sm mt-3 opacity-60" style={{ fontFamily: "'DM Sans', sans-serif", color: isDark ? "rgba(255,255,255,0.6)" : "rgba(35,43,32,0.5)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 0.7, 0.7, 0], transition: { duration: dur, times: [0, 0.4, 0.75, 1], delay: 0.15 } }}>{pageCode} / {pageName} — portfolio 2025</motion.p>
       </motion.div>
@@ -784,7 +784,7 @@ function SlideStripsTransition({ pathname, isDark, pageName, pageCode }) {
           <div className="w-6 h-px" style={{ background: A }} />
         </motion.div>
         <motion.h1 className="text-6xl md:text-8xl font-bold tracking-tight mt-2"
-          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#10233f", textShadow: isDark ? `0 0 40px rgba(${AR}, 0.45)` : undefined }}
+          style={{ fontFamily: "'Syne', sans-serif", color: isDark ? "#fff" : "#232b20", textShadow: isDark ? `0 0 40px rgba(${AR}, 0.45)` : undefined }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: [0, 1, 1, 0], y: [30, 0, 0, -15], transition: { duration: dur, times: [0, 0.42, 0.78, 1], delay: 0.1, ease: "easeOut" } }}>{pageName}</motion.h1>
         <motion.div className="mt-5 w-36 h-0.5 rounded-full overflow-hidden" style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}

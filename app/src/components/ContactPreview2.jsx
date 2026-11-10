@@ -216,9 +216,9 @@ export default function ContactPreview() {
 
   /* ── Shared tokens ── */
   const accent = "var(--ac)";
-  const textPrimary = isDark ? "#e7edf5" : "#10233f";
-  const textMuted = isDark ? "rgba(210,222,235,.62)" : "rgba(16,35,63,.6)";
-  const textFaint = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
+  const textPrimary = isDark ? "#e2d6c6" : "#232b20";
+  const textMuted = isDark ? "rgba(226,214,198,.62)" : "rgba(35,43,32,.6)";
+  const textFaint = isDark ? "rgba(226,214,198,.45)" : "rgba(35,43,32,.45)";
   const borderColor = "rgba(var(--ac2),.12)";
   const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
 
@@ -270,7 +270,7 @@ export default function ContactPreview() {
         }
         .cp-social-btn:hover { border-color: var(--ac); color: var(--ac); }
         .cp-social-btn-light {
-          border-color: rgba(16,35,63,.15); color: rgba(16,35,63,.35);
+          border-color: rgba(35,43,32,.15); color: rgba(35,43,32,.35);
         }
         .cp-social-btn-light:hover { border-color: var(--ac); color: var(--ac); }
         .cp-stat-bar-bg {
@@ -278,7 +278,7 @@ export default function ContactPreview() {
           background: rgba(255,255,255,.08); margin-top: 5px;
         }
         .cp-stat-bar-bg-light {
-          background: rgba(16,35,63,.08);
+          background: rgba(35,43,32,.08);
         }
         .cp-stat-bar-fill {
           height: 2px; border-radius: 2px;
@@ -290,7 +290,7 @@ export default function ContactPreview() {
           background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: .82rem;
-          font-weight: 500; color: ${isDark ? "#10233f" : "white"}; text-decoration: none;
+          font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
           transition: transform .2s, background .2s;
         }
         .cp-cta:hover {
@@ -361,7 +361,7 @@ export default function ContactPreview() {
                     color: "transparent",
                     WebkitTextStroke: isDark
                       ? "2px rgba(255,255,255,.15)"
-                      : "2px rgba(16,35,63,.15)",
+                      : "2px rgba(35,43,32,.15)",
                   }}
                 >
                   TOGETHER

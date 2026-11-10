@@ -390,7 +390,7 @@ test("a skip link jumps past the journey to the projects", async ({ page }) => {
 
 test("uses the repo theme tokens: dark and light grounds", async ({ page }) => {
   await openHome(page, { theme: "dark" });
-  await expect(page.locator(".oj-stage")).toHaveCSS("background-color", "rgb(8, 18, 31)");
+  await expect(page.locator(".oj-stage")).toHaveCSS("background-color", "rgb(24, 30, 22)");
 
   const light = await page.context().newPage();
   await light.addInitScript(() => {
@@ -398,9 +398,9 @@ test("uses the repo theme tokens: dark and light grounds", async ({ page }) => {
     localStorage.setItem("theme", "light");
   });
   await light.goto("/");
-  await expect(light.locator(".oj-stage")).toHaveCSS("background-color", "rgb(238, 242, 246)");
+  await expect(light.locator(".oj-stage")).toHaveCSS("background-color", "rgb(224, 211, 194)");
   await scrollStory(light, 0.7);
-  await expect(light.locator(".oj-copy h3")).toHaveCSS("color", "rgb(16, 35, 63)");
+  await expect(light.locator(".oj-copy h3")).toHaveCSS("color", "rgb(35, 43, 32)");
   await light.close();
 });
 

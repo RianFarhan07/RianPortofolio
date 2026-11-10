@@ -330,10 +330,10 @@ export default function ProjectPreview() {
 
   const currentProject = projects[activeIndex];
 
-  const textPrimary = isDark ? "#e7edf5" : "#10233f";
-  const textMuted = isDark ? "rgba(210,222,235,.45)" : "rgba(16,35,63,.45)";
+  const textPrimary = isDark ? "#e2d6c6" : "#232b20";
+  const textMuted = isDark ? "rgba(226,214,198,.45)" : "rgba(35,43,32,.45)";
   const borderColor = "rgba(var(--ac2),.18)";
-  const cardBg = isDark ? "rgba(10,20,32,.96)" : "rgba(232,236,241,.96)";
+  const cardBg = isDark ? "rgba(27,33,25,.96)" : "rgba(216,202,182,.96)";
 
   /* ══════════════════════════════════════════
      MOBILE LAYOUT
@@ -373,7 +373,7 @@ export default function ProjectPreview() {
             background:var(--ac-deep);
             border:none; border-radius:100px; cursor:pointer;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
-            font-weight:500; color:${isDark ? "#10233f" : "white"};
+            font-weight:500; color:${isDark ? "#232b20" : "white"};
             text-decoration:none;
             transition:background .2s;
           }
@@ -384,7 +384,7 @@ export default function ProjectPreview() {
             background:rgba(var(--ac2),.06);
             border:1px solid rgba(var(--ac2),.22); border-radius:100px;
             font-family:'DM Sans',sans-serif; font-size:.8rem;
-            font-weight:500; color:rgba(210,222,235,.72);
+            font-weight:500; color:rgba(226,214,198,.72);
             text-decoration:none;
           }
         `}</style>
@@ -496,7 +496,7 @@ export default function ProjectPreview() {
                 color: "transparent",
                 WebkitTextStroke: isDark
                   ? "1.5px rgba(255,255,255,.15)"
-                  : "1.5px rgba(16,35,63,.15)",
+                  : "1.5px rgba(35,43,32,.15)",
               }}
             >
               WORKS
@@ -594,7 +594,7 @@ export default function ProjectPreview() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(to top, rgba(10,20,32,.85) 0%, transparent 60%)",
+                    "linear-gradient(to top, rgba(27,33,25,.85) 0%, transparent 60%)",
                 }}
               />
 
@@ -745,7 +745,7 @@ export default function ProjectPreview() {
                 borderRadius: 100,
                 fontSize: ".83rem",
                 fontWeight: 500,
-                color: isDark ? "#10233f" : "white",
+                color: isDark ? "#232b20" : "white",
                 textDecoration: "none",
               }}
             >
@@ -811,7 +811,7 @@ export default function ProjectPreview() {
           background:var(--ac-deep);
           border:none; border-radius:100px; cursor:pointer;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
-          font-weight:500; color:${isDark ? "#10233f" : "white"};
+          font-weight:500; color:${isDark ? "#232b20" : "white"};
           text-decoration:none;
           transition:transform .22s, background .22s;
           white-space:nowrap;
@@ -824,7 +824,7 @@ export default function ProjectPreview() {
           background:rgba(var(--ac2),.06);
           border:1px solid rgba(var(--ac2),.22); border-radius:100px;
           font-family:'DM Sans',sans-serif; font-size:.82rem;
-          font-weight:500; color:rgba(210,222,235,.72);
+          font-weight:500; color:rgba(226,214,198,.72);
           text-decoration:none;
           transition:transform .22s, border-color .22s;
           white-space:nowrap;
@@ -1016,7 +1016,7 @@ export default function ProjectPreview() {
                     color: "transparent",
                     WebkitTextStroke: isDark
                       ? "2px rgba(255,255,255,.15)"
-                      : "2px rgba(16,35,63,.15)",
+                      : "2px rgba(35,43,32,.15)",
                   }}
                 >
                   WORKS
@@ -1130,7 +1130,7 @@ export default function ProjectPreview() {
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to top, rgba(10,20,32,.85) 0%, rgba(10,20,32,.1) 60%, transparent 100%)",
+                  "linear-gradient(to top, rgba(27,33,25,.85) 0%, rgba(27,33,25,.1) 60%, transparent 100%)",
               }}
             />
             <div
@@ -1138,7 +1138,7 @@ export default function ProjectPreview() {
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to right, rgba(10,20,32,.15) 0%, transparent 40%)",
+                  "linear-gradient(to right, rgba(27,33,25,.15) 0%, transparent 40%)",
               }}
             />
 
@@ -1179,8 +1179,8 @@ export default function ProjectPreview() {
                   fontWeight: 800,
                   letterSpacing: "-0.03em",
                   lineHeight: 1.05,
-                  color: "#e7edf5",
-                  textShadow: "0 2px 18px rgba(10,20,32,.65)",
+                  color: "#e2d6c6",
+                  textShadow: "0 2px 18px rgba(27,33,25,.65)",
                   marginBottom: 10,
                 }}
               >
@@ -1523,7 +1523,7 @@ export default function ProjectPreview() {
                 fontSize: ".62rem",
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(210,222,235,.25)" : "rgba(16,35,63,.3)",
+                color: isDark ? "rgba(226,214,198,.25)" : "rgba(35,43,32,.3)",
               }}
             >
               <div className="pp-scroll-arrow" />

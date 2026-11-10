@@ -4,11 +4,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#e0a83a",
-        primaryInLight: "#9c6a12",
-        bgDark: "#0d1520",
-        bgDarkSection: "#060d18",
-        bgLight: "#f2f4f7",
+        primary: "#c9a27a",
+        primaryInLight: "#6c4830",
+        bgDark: "#1b2119",
+        bgDarkSection: "#151a13",
+        bgLight: "#e2d6c6",
+        gray: {
+          50: "#f3ece1",
+          100: "#ebe1d3",
+          200: "#e2d6c6",
+          300: "#d3c5b0",
+          400: "#a89a84",
+          500: "#7d725f",
+          600: "#5b5848",
+          700: "#3c4636",
+          800: "#2a3326",
+          900: "#1b2119",
+        },
+        blue: { 400: "#c9a27a", 500: "#6c4830" },
+        indigo: { 400: "#a67c52", 500: "#4f3322" },
       },
       //buat warna nama ubah ubah
       keyframes: {

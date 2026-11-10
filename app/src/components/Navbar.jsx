@@ -50,8 +50,8 @@ export default function Navbar() {
             maxWidth: isScrolled ? 760 : 1200,
             backgroundColor: isScrolled
               ? isDark
-                ? "#111d2c"
-                : "#f7f9fb"
+                ? "#232b20"
+                : "#ebe1d3"
               : "transparent",
             boxShadow: isScrolled ? "0 10px 30px -12px rgba(0,0,0,0.35)" : "none",
             transition:
@@ -106,11 +106,11 @@ export default function Navbar() {
       {/* Mobile  */}
       <nav
         className={`md:hidden fixed bottom-0 left-0 right-0 z-40 ${
-          isDark ? "bg-[#111d2c] border-gray-800" : "bg-[#f7f9fb] border-gray-200"
+          isDark ? "bg-[#232b20] border-gray-800" : "bg-[#ebe1d3] border-gray-200"
         } border-t shadow-lg border-0`}
         style={{
           borderTopWidth: "1px",
-          borderTopColor: isDark ? "rgba(184,134,11,0.25)" : "rgba(125,84,16,0.18)",
+          borderTopColor: isDark ? "rgba(166, 124, 82,0.25)" : "rgba(79, 51, 34,0.18)",
           borderLeft: 0,
           borderRight: 0,
           borderBottom: 0,

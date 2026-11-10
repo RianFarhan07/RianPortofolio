@@ -5,9 +5,9 @@ import { stat } from "node:fs/promises";
 
 const W = 1200;
 const H = 630;
-const BG = "#0d1520";
-const AC = "#e0a83a";
-const SRC = "src/assets/foto_rian_nobg3.webp";
+const BG = "#1b2119";
+const AC = "#c9a27a";
+const SRC = "src/assets/foto_rian_earth_dark.webp";
 const OUT_JPG = "public/og-image.jpg";
 const OUT_WEBP = "public/og-image.webp";
 
@@ -65,16 +65,16 @@ const textLayer = Buffer.from(`
         letter-spacing="7" fill="${AC}">${esc("BASO RIAN FARHAN MALLANTI")}</text>
 
   <text x="96" y="306" font-family="${FONT}" font-size="72" font-weight="800"
-        letter-spacing="-1.5" fill="#e7edf5">${esc("Full Stack &")}</text>
+        letter-spacing="-1.5" fill="#e2d6c6">${esc("Full Stack &")}</text>
   <text x="96" y="386" font-family="${FONT}" font-size="72" font-weight="800"
-        letter-spacing="-1.5" fill="#e7edf5">${esc("Android Developer")}</text>
+        letter-spacing="-1.5" fill="#e2d6c6">${esc("Android Developer")}</text>
 
   <rect x="96" y="424" width="72" height="3" fill="${AC}"/>
 
   <text x="96" y="482" font-family="${FONT}" font-size="30" font-weight="400"
-        fill="#9fb0c4">${esc("20+ apps shipped end-to-end")}</text>
+        fill="#cdbfa8">${esc("20+ apps shipped end-to-end")}</text>
   <text x="96" y="528" font-family="${FONT}" font-size="26" font-weight="400"
-        fill="#6d7f93">${esc("Jakarta, Indonesia  ·  rianfarhan.my.id")}</text>
+        fill="#9b8f78">${esc("Jakarta, Indonesia  ·  rianfarhan.my.id")}</text>
 </svg>`);
 
 const canvas = sharp(layer)

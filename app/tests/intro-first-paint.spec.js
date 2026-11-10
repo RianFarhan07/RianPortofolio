@@ -39,7 +39,7 @@ test("a first visit covers the prerendered page and hides the portrait before th
   await openPrerenderedWithoutApp(page);
   expect(await coverState(page)).toEqual({
     intro: "pending",
-    cover: "rgb(13, 21, 32)",
+    cover: "rgb(27, 33, 25)",
     coverOpacity: 1,
     portraitOpacity: 0,
   });
@@ -48,7 +48,7 @@ test("a first visit covers the prerendered page and hides the portrait before th
 test("the first-paint cover follows the saved light theme", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("theme", "light"));
   await openPrerenderedWithoutApp(page);
-  expect((await coverState(page)).cover).toBe("rgb(242, 244, 247)");
+  expect((await coverState(page)).cover).toBe("rgb(226, 214, 198)");
 });
 
 test("returning visitors in the same session see the page straight away", async ({ page }) => {

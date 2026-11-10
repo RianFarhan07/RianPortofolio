@@ -31,8 +31,8 @@ export default function NotFound() {
     prevPTD.current = pageTransitionDone;
   }, [introExited, pageTransitionDone]);
 
-  const txt = isDark ? "#e7edf5" : "#10233f";
-  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
+  const txt = isDark ? "#e2d6c6" : "#232b20";
+  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
 
   return (
     <section
@@ -91,7 +91,7 @@ export default function NotFound() {
             className="block"
             style={{
               color: "transparent",
-              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(16,35,63,0.15)",
+              WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(35,43,32,0.15)",
               WebkitTextFillColor: "transparent",
             }}
             initial={{ opacity: 0, y: 30 }}
@@ -125,7 +125,7 @@ export default function NotFound() {
               fontFamily: "'Syne', sans-serif",
               fontWeight: 700,
               background: A,
-              color: "#0d1520",
+              color: "#1b2119",
             }}
           >
             <ArrowLeft size={15} />

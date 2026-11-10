@@ -60,12 +60,12 @@ export default function Certificates() {
     setFilteredCertificates(filtered);
   }, [searchTerm, selectedCategory]);
 
-  const txt = isDark ? "#e7edf5" : "#10233f";
-  const muted = isDark ? "rgba(210,222,235,0.45)" : "rgba(16,35,63,0.45)";
-  const muted2 = isDark ? "rgba(210,222,235,0.28)" : "rgba(16,35,63,0.32)";
+  const txt = isDark ? "#e2d6c6" : "#232b20";
+  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
+  const muted2 = isDark ? "rgba(226,214,198,0.28)" : "rgba(35,43,32,0.32)";
   const chipBg = `rgba(${AR}, 0.07)`;
   const chipBorder = `rgba(${AR}, 0.22)`;
-  const inputBg = isDark ? "rgba(10,20,32,0.96)" : "rgba(232,236,241,0.96)";
+  const inputBg = isDark ? "rgba(27,33,25,0.96)" : "rgba(216,202,182,0.96)";
 
   return (
     <section id="certificates" className="py-16 md:py-24 relative min-h-screen"
@@ -111,7 +111,7 @@ export default function Certificates() {
           </motion.div>
           <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(3rem, 6vw, 6.5rem)", lineHeight: 0.92, letterSpacing: "-0.04em", textTransform: "uppercase", margin: 0, color: txt }}>
             <motion.span className="block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}>Professional</motion.span>
-            <motion.span className="block" style={{ color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(16,35,63,0.15)", WebkitTextFillColor: "transparent" }}
+            <motion.span className="block" style={{ color: "transparent", WebkitTextStroke: isDark ? "2px rgba(255,255,255,0.18)" : "2px rgba(35,43,32,0.15)", WebkitTextFillColor: "transparent" }}
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}>Certifications</motion.span>
           </h1>
         </div>

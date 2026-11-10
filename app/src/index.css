@@ -21,54 +21,54 @@
 /* In your main CSS file (e.g., index.css) */
 :root {
   /* Light theme variables */
-  --bg-light: #f2f4f7;
-  --text-light: #10233f;
-  --accent-light: #9c6a12;
+  --bg-light: #e2d6c6;
+  --text-light: #232b20;
+  --accent-light: #6c4830;
 
   /* Dark theme variables */
-  --bg-dark: #0d1520;
-  --text-dark: #e7edf5;
-  --accent-dark: #e0a83a;
+  --bg-dark: #1b2119;
+  --text-dark: #e2d6c6;
+  --accent-dark: #c9a27a;
 
   /* Accent fallback (defaults to dark/blueprint until a theme class mounts) */
-  --ac: #e0a83a;
-  --ac-deep: #b8860b;
-  --ac1: 224, 168, 58;
-  --ac2: 184, 134, 11;
-  --ac-glow: 224, 168, 58;
+  --ac: #c9a27a;
+  --ac-deep: #a67c52;
+  --ac1: 201, 162, 122;
+  --ac2: 166, 124, 82;
+  --ac-glow: 201, 162, 122;
 }
 
 body.light-theme {
-  background-color: #f2f4f7;
+  background-color: #e2d6c6;
   color: var(--text-light);
 
   /* Accent — Blueprint Schematic (ochre revision-stamp on vellum) */
-  --ac: #9c6a12; /* ochre accent (solid)        */
-  --ac-deep: #7d5410; /* deep ochre (gradient stops) */
-  --ac1: 156, 106, 18; /* ochre accent as rgb triplet */
-  --ac2: 125, 84, 16; /* secondary / border rgb      */
-  --ac-glow: 156, 106, 18;
+  --ac: #6c4830; /* ochre accent (solid)        */
+  --ac-deep: #4f3322; /* deep ochre (gradient stops) */
+  --ac1: 108, 72, 48; /* ochre accent as rgb triplet */
+  --ac2: 79, 51, 34; /* secondary / border rgb      */
+  --ac-glow: 108, 72, 48;
 }
 
 body.dark-theme {
-  background-color: #0d1520;
+  background-color: #1b2119;
   color: var(--text-dark);
 
   /* Accent — Blueprint Schematic (brighter ochre for dark-navy contrast) */
-  --ac: #e0a83a;
-  --ac-deep: #b8860b;
-  --ac1: 224, 168, 58;
-  --ac2: 184, 134, 11;
-  --ac-glow: 224, 168, 58;
+  --ac: #c9a27a;
+  --ac-deep: #a67c52;
+  --ac1: 201, 162, 122;
+  --ac2: 166, 124, 82;
+  --ac-glow: 201, 162, 122;
 }
 
 /* Additional theme-specific styles */
 .light-theme .special-element {
-  background: linear-gradient(to right, #9c6a12, #7d5410);
+  background: linear-gradient(to right, #6c4830, #4f3322);
 }
 
 .dark-theme .special-element {
-  background: linear-gradient(to right, #b8860b, #e0a83a);
+  background: linear-gradient(to right, #a67c52, #c9a27a);
 }
 
 /* Sembunyikan scrollbar tetapi tetap bisa scroll */
