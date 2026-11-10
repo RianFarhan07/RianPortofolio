@@ -4,6 +4,7 @@ import { IntroContext } from "./PageTransition6Clean";
 import emailjs from "@emailjs/browser";
 import { Send, Phone, Mail, MapPin, Linkedin, Github, Loader2, CheckCircle, AlertCircle, Instagram, Handshake, Clock } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { trackEvent } from "../lib/analytics";
 
 const A = "var(--ac)";
 const AD = "var(--ac-deep)";
@@ -81,6 +82,7 @@ export default function Contact() {
         subject: formState.subject, message: formState.message, to_name: "Rian Farhan",
       }, "2G8xLwErCmOXqXE70");
       setFormStatus("success");
+      trackEvent("contact_form_sent");
       setFormState({ name: "", email: "", subject: "", message: "" });
       setTimeout(() => setFormStatus(null), 3000);
     } catch {

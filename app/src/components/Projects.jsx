@@ -10,6 +10,7 @@ import { useTheme } from "../context/ThemeContext";
 import { projectsData } from "../data/projects";
 import { ProjectModal } from "./ProjectModal";
 import { ProjectCard } from "./ProjectCard";
+import { slugify, trackEvent } from "../lib/analytics";
 
 const A = "var(--ac)";
 const AD = "var(--ac-deep)";
@@ -223,7 +224,7 @@ export default function Projects() {
                     key={item.id}
                     project={item}
                     isDark={isDark}
-                    onOpenModal={(p) => { setSelectedProject(p); setIsModalOpen(true); }}
+                    onOpenModal={(p) => { setSelectedProject(p); setIsModalOpen(true); trackEvent(`project_view_${slugify(p.title)}`); }}
                   />
                 ))}
               </AnimatePresence>

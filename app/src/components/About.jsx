@@ -3,6 +3,7 @@ import { useTheme } from "../context/ThemeContext";
 import { IntroContext } from "./PageTransition6Clean";
 import { Terminal, Download, Github, Linkedin, Mail } from "lucide-react";
 import rianPhoto from "../assets/rian-animate-editorial.webp";
+import { trackEvent } from "../lib/analytics";
 
 /* ──────────────────────────────────────────────
    DATA
@@ -190,7 +191,7 @@ export default function About() {
       if (key === "clear") return clearScreen();
       if (key === "theme") { toggleThemeRef.current(); out('<span class="muted">theme →</span> toggled'); return; }
       if (key === "page") { out('<span class="ok">↗</span> opening readable view…'); setTimeout(() => setViewRef.current("page"), 380); return; }
-      if (key === "resume" || key === "cv") { out('<span class="ok">↓</span> opening <span class="hl">rianCV.pdf</span> …'); window.open(CV, "_blank"); return; }
+      if (key === "resume" || key === "cv") { out('<span class="ok">↓</span> opening <span class="hl">rianCV.pdf</span> …'); trackEvent("cv_download"); window.open(CV, "_blank"); return; }
       if (key === "coffee") return out(coffee);
       if (key === "matrix") { matrixRain(); return out('<span class="ok">wake up, Neo…</span> <span class="muted">(the stack has you)</span>'); }
       if (key === "sudo hire-me" || key === "sudo hire me") { confetti(); out('<span class="ok">[sudo]</span> access granted ✓ — <span class="hl">opening /contact…</span> 🎉'); setTimeout(() => { window.location.href = "/contact"; }, 1400); return; }
