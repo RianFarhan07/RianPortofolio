@@ -169,7 +169,7 @@ export default function Hero3() {
             background: var(--ac-deep);
             border: none; border-radius: 100px; cursor: pointer;
             font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
-            font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
+            font-weight: 500; color: ${isDark ? "#12160f" : "white"}; text-decoration: none;
             transition: transform 0.25s, background 0.25s;
           }
           .mob-cta:hover {
@@ -525,7 +525,7 @@ export default function Hero3() {
                 fontSize: "0.62rem",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
+                color: isDark ? "rgba(226,214,198,0.62)" : "rgba(35,43,32,0.74)",
               }}
             >
               <div className="mob-scroll-arrow" />
@@ -584,7 +584,7 @@ export default function Hero3() {
           background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-          font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
+          font-weight: 500; color: ${isDark ? "#12160f" : "white"}; text-decoration: none;
           transition: transform 0.25s, background 0.25s;
           white-space: nowrap;
         }
@@ -808,7 +808,7 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
+              color: isDark ? "rgba(226,214,198,0.62)" : "rgba(35,43,32,0.74)",
             }}
           >
             Portfolio 2025
@@ -829,7 +829,7 @@ export default function Hero3() {
               fontSize: "0.65rem",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: isDark ? "rgba(226,214,198,0.55)" : "rgba(35,43,32,0.68)",
+              color: isDark ? "rgba(226,214,198,0.62)" : "rgba(35,43,32,0.74)",
             }}
           >
             Jakarta — ID

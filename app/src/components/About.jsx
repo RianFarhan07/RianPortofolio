@@ -465,7 +465,7 @@ export default function About() {
   if (view === "picker") {
     const pickerTheme = isDark
       ? { "--pk-bg": "#181e16", "--pk-panel": "#20271d", "--pk-text": "#ddd1be", "--pk-soft": "#a69a83", "--pk-line": "#313a2b" }
-      : { "--pk-bg": "#e2d6c6", "--pk-panel": "#ebe1d3", "--pk-text": "#232b20", "--pk-soft": "#79715e", "--pk-line": "#cbbda7" };
+      : { "--pk-bg": "#e2d6c6", "--pk-panel": "#ebe1d3", "--pk-text": "#232b20", "--pk-soft": "#5c5546", "--pk-line": "#cbbda7" };
     return (
       <main
         id="about-view-picker"

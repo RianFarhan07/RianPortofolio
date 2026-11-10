@@ -7,8 +7,8 @@ const AR2 = "var(--ac2)";
 export const CertificateCard = ({ certificate, isDark, onClick }) => {
   const cardBg = isDark ? "rgba(27,33,25,0.96)" : "rgba(216,202,182,0.96)";
   const cardBorder = `rgba(${AR2}, 0.18)`;
-  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
-  const muted2 = isDark ? "rgba(226,214,198,0.28)" : "rgba(35,43,32,0.32)";
+  const muted = isDark ? "rgba(226,214,198,0.68)" : "rgba(35,43,32,0.76)";
+  const muted2 = isDark ? "rgba(226,214,198,0.60)" : "rgba(35,43,32,0.72)";
   const txt = isDark ? "#e2d6c6" : "#232b20";
 
   return (

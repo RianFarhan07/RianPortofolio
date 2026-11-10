@@ -217,8 +217,8 @@ export default function ContactPreview() {
   /* ── Shared tokens ── */
   const accent = "var(--ac)";
   const textPrimary = isDark ? "#e2d6c6" : "#232b20";
-  const textMuted = isDark ? "rgba(226,214,198,.62)" : "rgba(35,43,32,.6)";
-  const textFaint = isDark ? "rgba(226,214,198,.45)" : "rgba(35,43,32,.45)";
+  const textMuted = isDark ? "rgba(226,214,198,.72)" : "rgba(35,43,32,.78)";
+  const textFaint = isDark ? "rgba(226,214,198,.64)" : "rgba(35,43,32,.72)";
   const borderColor = "rgba(var(--ac2),.12)";
   const cardBg = isDark ? "rgba(255,255,255,.025)" : "rgba(255,255,255,.7)";
 
@@ -290,7 +290,7 @@ export default function ContactPreview() {
           background: var(--ac-deep);
           border: none; border-radius: 100px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-size: .82rem;
-          font-weight: 500; color: ${isDark ? "#232b20" : "white"}; text-decoration: none;
+          font-weight: 500; color: ${isDark ? "#12160f" : "white"}; text-decoration: none;
           transition: transform .2s, background .2s;
         }
         .cp-cta:hover {

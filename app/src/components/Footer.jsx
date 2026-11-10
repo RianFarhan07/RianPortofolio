@@ -15,8 +15,8 @@ export default function Footer() {
   const pauseRef = usePauseWhenOffscreen();
 
   const txt = isDark ? "#e2d6c6" : "#232b20";
-  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
-  const muted2 = isDark ? "rgba(226,214,198,0.25)" : "rgba(35,43,32,0.28)";
+  const muted = isDark ? "rgba(226,214,198,0.68)" : "rgba(35,43,32,0.76)";
+  const muted2 = isDark ? "rgba(226,214,198,0.60)" : "rgba(35,43,32,0.72)";
 
   const navItems = ["Home", "About", "Projects", "Certificates", "Contact"];
   const socialLinks = [

@@ -92,8 +92,8 @@ export default function Projects() {
   };
 
   const txt = isDark ? "#e2d6c6" : "#232b20";
-  const muted = isDark ? "rgba(226,214,198,0.45)" : "rgba(35,43,32,0.45)";
-  const muted2 = isDark ? "rgba(226,214,198,0.28)" : "rgba(35,43,32,0.32)";
+  const muted = isDark ? "rgba(226,214,198,0.68)" : "rgba(35,43,32,0.76)";
+  const muted2 = isDark ? "rgba(226,214,198,0.60)" : "rgba(35,43,32,0.72)";
   const chipBg = `rgba(${AR}, 0.07)`;
   const chipBorder = `rgba(${AR}, 0.22)`;
   const pageBg = isDark ? "rgba(27,33,25,0.96)" : "rgba(216,202,182,0.96)";
@@ -147,7 +147,7 @@ export default function Projects() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}>
             <div style={{ width: 36, height: 1, background: `linear-gradient(90deg, transparent, ${A})` }} />
-            <span className="text-xs tracking-[0.22em] uppercase" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: `rgba(${AR}, 0.7)` }}>
+            <span className="text-xs tracking-[0.22em] uppercase" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: `rgba(${AR}, 0.95)` }}>
               My Work
             </span>
             <motion.div className="pp-pdot"

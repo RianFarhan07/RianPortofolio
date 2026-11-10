@@ -236,25 +236,6 @@ const css = `
           line-height: 1.7;
         }
 
-        .oj-cue {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          margin-top: 30px;
-          color: var(--ac);
-          font-size: .64rem;
-          letter-spacing: .16em;
-          text-transform: uppercase;
-        }
-        .oj-cue::before {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--ac);
-          box-shadow: 0 0 0 6px rgba(var(--ac1), .12);
-          content: '';
-        }
-
         /* Stages 3 + 4: a point is born, rings expand from it */
         .oj-system {
           position: absolute;
@@ -647,7 +628,6 @@ const INTRO_AND_HEADING = (
                   My journey is not a list of dates. It is an expanding view of what a useful
                   product needs&mdash;and who it needs to connect.
                 </p>
-                <span className="oj-cue oj-mono">Scroll to enter the orbit</span>
               </div>
             </div>
 
@@ -926,8 +906,8 @@ export default function AboutPreview() {
     "--oj-bg": isDark ? "#181e16" : "#e0d3c2",
     "--oj-panel": isDark ? "rgba(27, 33, 25, .94)" : "rgba(216, 202, 182, .96)",
     "--oj-ink": isDark ? "#e2d6c6" : "#232b20",
-    "--oj-muted": isDark ? "#a39680" : "#686350",
-    "--oj-faint": isDark ? "#908671" : "#6c6552",
+    "--oj-muted": isDark ? "#a39680" : "#575246",
+    "--oj-faint": isDark ? "#908671" : "#5e5848",
     "--oj-button-text": isDark ? "#232b20" : "#ffffff",
   };
 

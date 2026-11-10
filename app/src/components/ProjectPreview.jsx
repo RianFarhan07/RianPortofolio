@@ -331,7 +331,7 @@ export default function ProjectPreview() {
   const currentProject = projects[activeIndex];
 
   const textPrimary = isDark ? "#e2d6c6" : "#232b20";
-  const textMuted = isDark ? "rgba(226,214,198,.45)" : "rgba(35,43,32,.45)";
+  const textMuted = isDark ? "rgba(226,214,198,.68)" : "rgba(35,43,32,.76)";
   const borderColor = "rgba(var(--ac2),.18)";
   const cardBg = isDark ? "rgba(27,33,25,.96)" : "rgba(216,202,182,.96)";
 
