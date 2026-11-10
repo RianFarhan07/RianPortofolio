@@ -67,6 +67,7 @@ export default function About() {
   }, [introExited, pageTransitionDone]);
 
   const openView = useCallback((target) => {
+    trackEvent(`about_view_${target}`);
     window.sessionStorage.setItem(ABOUT_VIEW_KEY, target);
     setSelecting(null);
     setView(target);
@@ -188,6 +189,8 @@ export default function About() {
       if (cmd) history.push(cmd); histIdx = history.length;
       if (!cmd) { refocus(); return; }
       const key = cmd.toLowerCase();
+      // Only known command names are logged; free text a visitor types never leaves the page.
+      trackEvent("about_terminal_" + (CMDS.includes(key) || key === "cv" || key === "sudo hire me" ? key.replace(/\s+/g, "-") : "unknown"));
       if (key === "clear") return clearScreen();
       if (key === "theme") { toggleThemeRef.current(); out('<span class="muted">theme →</span> toggled'); return; }
       if (key === "page") { out('<span class="ok">↗</span> opening readable view…'); setTimeout(() => setViewRef.current("page"), 380); return; }

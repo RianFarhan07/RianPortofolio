@@ -14,6 +14,7 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import { bestCertificates as certificates } from "../data/bestSertificates";
+import { slugify, trackEvent } from "../lib/analytics";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -284,6 +285,7 @@ export default function CertificatesPreview() {
   const handleSelect = (i) => {
     setActiveIndex(i);
     setAutoplay(false);
+    trackEvent(`home_certificate_${slugify(certificates[i].title)}`);
   };
   const current = certificates[activeIndex];
 

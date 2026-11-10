@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { trackEvent } from "../lib/analytics";
 import {
   NODE_PATHS,
   chapterScrollProgress,
@@ -752,6 +753,9 @@ export default function AboutPreview() {
     };
 
     let lastChapter = -1;
+    // Chapters the visitor has seen with the orbit on screen, logged once each
+    // (orbit_chapter_1 = reached the orbit, orbit_chapter_4 = watched to the end).
+    const seenChapters = new Set();
     let motionState = "";
     const setMotion = (value) => {
       if (motionState === value) return;
@@ -818,6 +822,10 @@ export default function AboutPreview() {
       });
       faders.forEach((el) => put(el, "opacity", copy));
       flag(story, "is-orbit-ready", state.copy >= 0.5);
+      if (state.copy >= 0.5 && !seenChapters.has(state.chapter)) {
+        seenChapters.add(state.chapter);
+        trackEvent(`orbit_chapter_${state.chapter + 1}`);
+      }
 
       if (state.chapter !== lastChapter) {
         lastChapter = state.chapter;
@@ -977,7 +985,7 @@ export default function AboutPreview() {
               ))}
             </nav>
 
-            <a className="oj-skip oj-mono" href="#projects">
+            <a className="oj-skip oj-mono" href="#projects" onClick={() => trackEvent("orbit_skip")}>
               Skip to projects
             </a>
           </div>

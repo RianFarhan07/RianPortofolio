@@ -55,7 +55,12 @@ export default function Contact() {
     { icon: <Instagram size={16} />, url: "https://www.instagram.com/rianfarhan/", label: "Instagram" },
   ];
 
+  const formStartedRef = useRef(false);
   const handleChange = (e) => {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackEvent("contact_form_started");
+    }
     const { name, value } = e.target;
     setFormState({ ...formState, [name]: value });
     if (errors[name]) setErrors({ ...errors, [name]: null });
@@ -74,7 +79,10 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) {
+      trackEvent("contact_form_invalid");
+      return;
+    }
     setFormStatus("submitting");
     try {
       await emailjs.send("service_gqzjzjd", "template_n3a7ndg", {
@@ -86,6 +94,7 @@ export default function Contact() {
       setFormState({ name: "", email: "", subject: "", message: "" });
       setTimeout(() => setFormStatus(null), 3000);
     } catch {
+      trackEvent("contact_form_error");
       setFormStatus("error");
       setTimeout(() => setFormStatus(null), 3000);
     }

@@ -6,6 +6,7 @@ import { ArrowRight, ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 import { bestProjects as projects } from "../data/bestProjects";
+import { slugify, trackEvent } from "../lib/analytics";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -295,10 +296,16 @@ export default function ProjectPreview() {
     return () => clearInterval(timer);
   }, [dragging, descOpen, hovered, inView]);
 
+  // Slides the visitor picks (arrows, swipe, thumbnails, dots) are logged;
+  // the auto-advance above is not.
+  const showProject = (i) => {
+    setActiveIndex(i);
+    trackEvent(`home_project_${slugify(projects[i].title)}`);
+  };
   const nextSlide = () =>
-    setActiveIndex((p) => (p === projects.length - 1 ? 0 : p + 1));
+    showProject(activeIndex === projects.length - 1 ? 0 : activeIndex + 1);
   const prevSlide = () =>
-    setActiveIndex((p) => (p === 0 ? projects.length - 1 : p - 1));
+    showProject(activeIndex === 0 ? projects.length - 1 : activeIndex - 1);
 
   /* ── Drag / swipe handlers ── */
   const handleMouseDown = (e) => {
@@ -703,7 +710,7 @@ export default function ProjectPreview() {
               {projects.map((p, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveIndex(i)}
+                  onClick={() => showProject(i)}
                   aria-label={`Show project: ${p.title}`}
                   aria-current={i === activeIndex ? "true" : undefined}
                   style={{
@@ -1376,7 +1383,10 @@ export default function ProjectPreview() {
                 {currentProject.description &&
                   currentProject.description.length > 150 && (
                     <button
-                      onClick={() => setDescOpen((o) => !o)}
+                      onClick={() => {
+                        if (!descOpen) trackEvent(`home_project_readmore_${slugify(currentProject.title)}`);
+                        setDescOpen((o) => !o);
+                      }}
                       style={{
                         alignSelf: "flex-start",
                         marginTop: 8,
@@ -1466,7 +1476,7 @@ export default function ProjectPreview() {
               <button
                 key={i}
                 className={`pp-proj-thumb${i === activeIndex ? " active" : ""}`}
-                onClick={() => setActiveIndex(i)}
+                onClick={() => showProject(i)}
                 style={{
                   width: 52,
                   height: 36,

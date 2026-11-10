@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { linkEvent, slugify } from "../src/lib/analytics.js";
+import { cleanRef, linkEvent, slugify } from "../src/lib/analytics.js";
 
 const ORIGIN = "https://rianfarhan.my.id";
 
@@ -16,6 +16,17 @@ test("links map to the analytics events Rian reads in Clarity", () => {
   expect(linkEvent("#projects", ORIGIN)).toBeNull();
   expect(linkEvent(`${ORIGIN}/contact`, ORIGIN)).toBeNull();
   expect(slugify("CarbonEthics Petani App")).toBe("carbonethics-petani-app");
+});
+
+test("?ref= values become safe, short session tags", () => {
+  expect(cleanRef("cv")).toBe("cv");
+  expect(cleanRef("Datasaur")).toBe("datasaur");
+  expect(cleanRef("  LinkedIn Post!! ")).toBe("linkedin-post");
+  expect(cleanRef("glints_hrd-2026")).toBe("glints_hrd-2026");
+  expect(cleanRef("x".repeat(60))).toHaveLength(40);
+  expect(cleanRef("<script>")).toBe("script");
+  expect(cleanRef("")).toBeNull();
+  expect(cleanRef(null)).toBeNull();
 });
 
 async function stubClarity(page) {

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { setTag, trackEvent } from "../lib/analytics";
 
 /*
   THEME SWITCH VARIANTS:
@@ -22,9 +23,11 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem("theme", theme);
     document.body.classList.remove("light-theme", "dark-theme");
     document.body.classList.add(`${theme}-theme`);
+    setTag("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
+    trackEvent(`theme_switch_${theme === "dark" ? "light" : "dark"}`);
     setIsTransitioning(true);
     setTimeout(
       () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),

@@ -1,24 +1,34 @@
 // Microsoft Clarity: visits, engagement, heatmaps and session recordings, plus
-// custom events for what a recruiter actually does here (download the CV,
-// reach out, open a project, follow a demo link).
+// custom events and tags for what a recruiter actually does here.
 //
 // - The Clarity script loads only in production builds, only once the page has
 //   finished loading, and never for automated browsers (the prerender step and
 //   Playwright both run with navigator.webdriver = true).
 // - Visit any page with ?analytics=off to stop tracking your own browser
 //   (remembered in localStorage); ?analytics=on turns it back on.
-// - Events are only sent when Clarity is on the page, so in dev they no-op.
+// - Links shared with ?ref=<source> (cv, linkedin, kalibrr, a company name...)
+//   tag the whole session with that source, so Clarity can filter by it.
+// - Events and tags are only sent when Clarity is enabled, so in dev they no-op.
 
 const env = import.meta.env ?? {};
 // Clarity project "rianfarhan.my.id" (public, it ships in every page anyway).
 // VITE_CLARITY_ID overrides it, e.g. to point a test build at another project.
 const CLARITY_ID = env.VITE_CLARITY_ID || "zbeuor45kt";
 const OPT_OUT_KEY = "rian-analytics-off";
+const REF_KEY = "rian-analytics-ref";
+
+function call(...args) {
+  if (typeof window !== "undefined" && typeof window.clarity === "function") {
+    window.clarity(...args);
+  }
+}
 
 export function trackEvent(name) {
-  if (typeof window !== "undefined" && typeof window.clarity === "function") {
-    window.clarity("event", name);
-  }
+  call("event", name);
+}
+
+export function setTag(key, value) {
+  call("set", key, String(value));
 }
 
 export const slugify = (text) =>
@@ -26,6 +36,16 @@ export const slugify = (text) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+/** A ?ref= value made safe to use as a tag: lowercase, [a-z0-9_-], max 40 chars. */
+export function cleanRef(raw) {
+  const value = String(raw ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+  return value || null;
+}
 
 /** The event a click on this link should log, or null for internal navigation. */
 export function linkEvent(href, origin) {
@@ -58,18 +78,15 @@ function optedOut() {
   }
 }
 
-function loadClarity(id) {
-  // Same queue stub as Clarity's official snippet: calls made before the
-  // script arrives are kept and replayed.
-  window.clarity =
-    window.clarity ||
-    function () {
-      (window.clarity.q = window.clarity.q || []).push(arguments);
-    };
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.clarity.ms/tag/${encodeURIComponent(id)}`;
-  document.head.appendChild(script);
+/** The session's source: ?ref= on this visit, or the one the session arrived with. */
+function sessionRef() {
+  try {
+    const fromUrl = cleanRef(new URLSearchParams(window.location.search).get("ref"));
+    if (fromUrl) sessionStorage.setItem(REF_KEY, fromUrl);
+    return sessionStorage.getItem(REF_KEY);
+  } catch {
+    return null;
+  }
 }
 
 export function startAnalytics() {
@@ -89,9 +106,29 @@ export function startAnalytics() {
 
   if (!env.PROD || !CLARITY_ID || navigator.webdriver || optedOut()) return;
 
+  // Clarity's own queue stub (same as its official snippet): everything sent
+  // before the script arrives is kept and replayed, so tags set during the
+  // first render are not lost.
+  window.clarity =
+    window.clarity ||
+    function () {
+      (window.clarity.q = window.clarity.q || []).push(arguments);
+    };
+
+  const ref = sessionRef();
+  if (ref) setTag("ref", ref);
+
   const load = () => {
     const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1500));
-    idle(() => loadClarity(CLARITY_ID), { timeout: 4000 });
+    idle(
+      () => {
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = `https://www.clarity.ms/tag/${encodeURIComponent(CLARITY_ID)}`;
+        document.head.appendChild(script);
+      },
+      { timeout: 4000 },
+    );
   };
   if (document.readyState === "complete") load();
   else window.addEventListener("load", load, { once: true });

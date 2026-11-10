@@ -6,6 +6,7 @@ import { CertificateCard } from "./CertificateCard";
 import { CertificateModal } from "./CertificateModal";
 import { useTheme } from "../context/ThemeContext";
 import { certificatesData } from "../data/certificates";
+import { slugify, trackEvent } from "../lib/analytics";
 
 const A = "var(--ac)";
 const AD = "var(--ac-deep)";
@@ -144,7 +145,7 @@ export default function Certificates() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {filteredCertificates.map((certificate) => (
                 <CertificateCard key={certificate.id} certificate={certificate} isDark={isDark}
-                  onClick={() => { setSelectedCertificate(certificate); document.body.style.overflow = "hidden"; }} />
+                  onClick={() => { setSelectedCertificate(certificate); document.body.style.overflow = "hidden"; trackEvent(`certificate_view_${slugify(certificate.title)}`); }} />
               ))}
             </div>
             <div className="mt-6 text-center text-xs tracking-wider uppercase" style={{ color: muted2, fontFamily: "'DM Sans', sans-serif" }}>
