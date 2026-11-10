@@ -942,7 +942,8 @@ export default function CertificatesPreview() {
               style={{
                 position: "relative",
                 height: 220,
-                flexShrink: 0,
+                flexShrink: 1,
+                minHeight: 84,
                 overflow: "hidden",
               }}
             >
@@ -1036,8 +1037,8 @@ export default function CertificatesPreview() {
               ))}
             </div>
 
-            {/* Details */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "18px 20px 0" }}>
+            {/* Details — deliberately does not scroll */}
+            <div data-scroll="cert-details" style={{ flex: "0 0 auto", overflow: "hidden", padding: "18px 20px 0" }}>
               <motion.div
                 key={`detail-${activeIndex}`}
                 initial={{ opacity: 0, y: 12 }}
@@ -1205,7 +1206,7 @@ export default function CertificatesPreview() {
             </div>
 
             {/* List */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "12px 14px" }}>
+            <div className="thin-scroll" data-scroll="cert-list" style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "12px 14px" }}>
               {certificates.map((cert, i) => (
                 <div
                   key={cert.id}

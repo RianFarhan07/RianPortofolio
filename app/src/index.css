@@ -80,6 +80,35 @@ html {
   scrollbar-width: none;
 }
 
+/* Thin scroll areas inside cards: 4px, no arrows, transparent track, accent thumb.
+   Chromium reads ::-webkit-scrollbar; the standard properties are only for browsers without it
+   (setting scrollbar-width in Chromium would override the 4px width with its default "thin"). */
+.thin-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(var(--ac2), 0.38);
+  border-radius: 999px;
+}
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--ac2), 0.65);
+}
+.thin-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--ac2), 0.4) transparent;
+  }
+}
+
 /* smooth scroll */
 html {
   scroll-behavior: smooth;

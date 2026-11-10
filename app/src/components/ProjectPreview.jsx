@@ -1306,8 +1306,8 @@ export default function ProjectPreview() {
               </span>
             </div>
 
-            {/* Content — no scroll: deskripsi clamp + "Baca selengkapnya" */}
-            <div style={{ flex: 1, overflow: "hidden", padding: "20px 20px 18px", display: "flex", flexDirection: "column" }}>
+            {/* Content — scrolls (thin, blended scrollbar) when the card is shorter than its content */}
+            <div className="thin-scroll" data-scroll="project-details" style={{ flex: 1, minHeight: 0, overflowY: "auto", overflowX: "hidden", padding: "20px 20px 18px", display: "flex", flexDirection: "column" }}>
               <motion.div
                 key={`content-${activeIndex}`}
                 initial={{ opacity: 0, y: 14 }}
