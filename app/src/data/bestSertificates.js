@@ -64,10 +64,10 @@ export const bestCertificates = [
   },
   {
     id: 4,
-    title: "The Complete Android 14 & Kotlin Development Masterclass",
+    title: "The Complete Android 12 & Kotlin Development Masterclass",
     issuer: "Udemy",
     image: "images/certificates/udemy_kotlin.webp",
-    issueDate: "October 2022",
+    issueDate: "September 2023",
     credentialId: "UC-4f0c03d6-c1d4-49e8-9b40-72d3501590f1",
     category: "android",
     credentialUrl:
