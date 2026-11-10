@@ -117,8 +117,8 @@ export const ProjectCard = ({ project, isDark, onOpenModal }) => {
 
         {/* Title on image */}
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
-          <h3 className="text-lg font-bold drop-shadow-md"
-            style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>
+          <h3 className={`text-lg font-bold${isDark ? " drop-shadow-md" : ""}`}
+            style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: isDark ? "#fff" : "#232b20", letterSpacing: "-0.01em" }}>
             {project.title}
           </h3>
         </div>

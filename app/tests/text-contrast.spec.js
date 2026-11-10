@@ -44,5 +44,8 @@ for (const theme of ["light", "dark"]) {
       const ratio = await contrastOf(locator);
       expect(ratio, `${name} contrast in ${theme} mode`).toBeGreaterThanOrEqual(4.5);
     }
+
+    // the title sits on the image, whose bottom fades into the card colour: ink on beige in light mode, white on dark green
+    await expect(page.locator("[data-project-card] h3").first()).toHaveCSS("color", theme === "light" ? "rgb(35, 43, 32)" : "rgb(255, 255, 255)");
   });
 }
