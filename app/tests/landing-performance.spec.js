@@ -86,20 +86,15 @@ test("below-fold carousels stay idle until the visitor reaches them", async ({
   await page.goto("/", { waitUntil: "domcontentloaded" });
 
   const projectImage = page.locator("#projects img[alt]").first();
-  const certificateImage = page.locator("#certificates img[alt]").first();
+  // the certificate card shows the active certificate as text (its image is a hover preview), so watch the title
+  const certificateTitle = page.locator("#certificates [data-scroll=\"cert-details\"] h3").first();
   await expect(projectImage).toHaveAttribute("alt", "Finlog");
-  await expect(certificateImage).toHaveAttribute(
-    "alt",
-    "Hacktiv8 Fullstack JavaScript Bootcamp",
-  );
+  await expect(certificateTitle).toHaveText("Hacktiv8 Fullstack JavaScript Bootcamp");
 
   await page.waitForTimeout(5_300);
 
   await expect(projectImage).toHaveAttribute("alt", "Finlog");
-  await expect(certificateImage).toHaveAttribute(
-    "alt",
-    "Hacktiv8 Fullstack JavaScript Bootcamp",
-  );
+  await expect(certificateTitle).toHaveText("Hacktiv8 Fullstack JavaScript Bootcamp");
 });
 
 test("landing prioritizes a responsive hero and lazy-loads below-fold imagery", async ({

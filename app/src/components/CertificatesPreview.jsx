@@ -1,4 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { usePauseWhenOffscreen } from "../lib/usePauseWhenOffscreen";
@@ -30,12 +31,17 @@ export default function CertificatesPreview() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
+  const [peek, setPeek] = useState(null); // index of the certificate previewed while hovering the list
   const [entered, setEntered] = useState(false);
   const [isMobile, setIsMobile] = useState(null);
   // Animasi selalu jalan — abaikan prefers-reduced-motion dari OS
   const reduced = false;
 
   const autoplayRef = useRef(null);
+  const peekRef = useRef(null);
+  const peekPos = useRef({ x: 0, y: 0 });
+  const peekFrame = useRef(0);
+  const peekPrefer = useRef("left"); // which side of the cursor the preview prefers
   const wrapperRef = useRef(null);
   const headerRef = useRef(null);
   const headerSideRef = useRef(null);
@@ -50,9 +56,50 @@ export default function CertificatesPreview() {
   const pauseRef = usePauseWhenOffscreen();
 
   const textPrimary = isDark ? "#e2d6c6" : "#232b20";
-  const textMuted = isDark ? "rgba(226,214,198,.45)" : "rgba(35,43,32,.45)";
+  const textMuted = isDark ? "rgba(226,214,198,.68)" : "rgba(35,43,32,.76)";
   const borderColor = "rgba(var(--ac2),.18)";
   const cardBg = isDark ? "rgba(27,33,25,.96)" : "rgba(216,202,182,.96)";
+
+  /* ── Hover preview: the certificate follows the cursor over the list (pointer devices only) ── */
+  const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const placePeek = () => {
+    peekFrame.current = 0;
+    const el = peekRef.current;
+    if (!el) return;
+    const { x, y } = peekPos.current;
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    const fitsRight = x + 22 + w <= window.innerWidth - 12;
+    const fitsLeft = x - w - 22 >= 12;
+    // over the list (right side of the page) open to the left of the cursor; over the detail card open to its right,
+    // so the preview never covers the text being read
+    const goLeft = peekPrefer.current === "left" ? fitsLeft || !fitsRight : !fitsRight && fitsLeft;
+    const left = Math.min(Math.max(12, goLeft ? x - w - 22 : x + 22), window.innerWidth - w - 12);
+    const top = Math.min(Math.max(12, y - h / 2), window.innerHeight - h - 12);
+    el.style.transform = `translate3d(${Math.round(left)}px, ${Math.round(top)}px, 0)`;
+  };
+  const movePeek = (e) => {
+    peekPos.current = { x: e.clientX, y: e.clientY };
+    if (!peekFrame.current) peekFrame.current = requestAnimationFrame(placePeek);
+  };
+  const showPeek = (e, i, prefer = "left") => {
+    if (!canHover()) return;
+    peekPrefer.current = prefer;
+    movePeek(e);
+    setPeek(i);
+  };
+  useLayoutEffect(() => {
+    if (peek !== null) placePeek();
+  }, [peek]);
+  useEffect(() => () => cancelAnimationFrame(peekFrame.current), []);
+  // warm the cache once the section is on screen so the preview never pops in late
+  useEffect(() => {
+    if (!inView || !canHover()) return;
+    certificates.forEach((c) => {
+      const im = new Image();
+      im.src = getCertificatePreview(c.image);
+    });
+  }, [inView]);
 
   /* ── Responsive ── */
   useEffect(() => {
@@ -664,6 +711,8 @@ export default function CertificatesPreview() {
         .cp-gridbg{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px),repeating-linear-gradient(90deg,transparent,transparent 72px,rgba(var(--ac2),.018) 72px,rgba(var(--ac2),.018) 73px);z-index:0}
         .cp-pdot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
         .cp-pdot-sm{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0;animation:cp-pdot 2s infinite}
+        .cp-peek{animation:cp-peek-in .14s ease-out}
+        @keyframes cp-peek-in{from{opacity:0}to{opacity:1}}
 
         .cp-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid rgba(var(--ac2),.2);border-radius:100px;font-size:.7rem;color:rgba(var(--ac1),.75);background:rgba(var(--ac2),.07);letter-spacing:.06em;transition:border-color .2s,background .2s}
         .cp-chip:hover{border-color:rgba(var(--ac2),.45);background:rgba(var(--ac2),.13)}
@@ -892,8 +941,16 @@ export default function CertificatesPreview() {
               height: 480,
               maxHeight: "56vh",
             }}
-            onMouseEnter={() => setAutoplay(false)}
-            onMouseLeave={() => setAutoplay(true)}
+            data-cert-card="detail"
+            onMouseEnter={(e) => {
+              setAutoplay(false);
+              showPeek(e, activeIndex, "right");
+            }}
+            onMouseMove={movePeek}
+            onMouseLeave={() => {
+              setAutoplay(true);
+              setPeek(null);
+            }}
           >
             {/* Panel header */}
             <div
@@ -937,108 +994,8 @@ export default function CertificatesPreview() {
               </span>
             </div>
 
-            {/* Image */}
-            <div
-              style={{
-                position: "relative",
-                height: 220,
-                flexShrink: 1,
-                minHeight: 84,
-                overflow: "hidden",
-              }}
-            >
-              <motion.img
-                key={activeIndex}
-                src={getCertificatePreview(current.image) || "/placeholder.svg"}
-                alt={current.title}
-                loading="lazy"
-                decoding="async"
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.55 }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "top center",
-                  display: "block",
-                  position: "absolute",
-                  inset: 0,
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(to top, rgba(27,33,25,.75) 0%, transparent 55%)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(to right, rgba(27,33,25,.1) 0%, transparent 40%)",
-                }}
-              />
-
-              {/* Issuer badge */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 14,
-                  right: 16,
-                  background: "#1a2018",
-                  borderRadius: 9,
-                  padding: "6px 12px",
-                  display: "flex",
-                  gap: 6,
-                  alignItems: "center",
-                  border: "1px solid rgba(var(--ac2),.22)",
-                }}
-              >
-                <span
-                  style={{ fontSize: ".65rem", color: "rgba(226,214,198,.55)" }}
-                >
-                  Issued by
-                </span>
-                <span
-                  style={{
-                    fontSize: ".72rem",
-                    fontWeight: 700,
-                    color: "var(--ac)",
-                    fontFamily: "Syne,sans-serif",
-                  }}
-                >
-                  {current.issuer}
-                </span>
-              </div>
-
-              {/* Corner marks on image */}
-              {[
-                {
-                  top: 10,
-                  left: 10,
-                  borderTop: "1px solid rgba(var(--ac2),.45)",
-                  borderLeft: "1px solid rgba(var(--ac2),.45)",
-                },
-                {
-                  top: 10,
-                  right: 10,
-                  borderTop: "1px solid rgba(var(--ac2),.45)",
-                  borderRight: "1px solid rgba(var(--ac2),.45)",
-                },
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  style={{ position: "absolute", width: 12, height: 12, ...s }}
-                />
-              ))}
-            </div>
-
-            {/* Details — deliberately does not scroll */}
-            <div data-scroll="cert-details" style={{ flex: "0 0 auto", overflow: "hidden", padding: "18px 20px 0" }}>
+            {/* Details — deliberately does not scroll; the certificate image is a hover preview on the list */}
+            <div data-scroll="cert-details" style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: "22px 24px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <motion.div
                 key={`detail-${activeIndex}`}
                 initial={{ opacity: 0, y: 12 }}
@@ -1048,7 +1005,7 @@ export default function CertificatesPreview() {
                 <h3
                   style={{
                     fontFamily: "Syne,sans-serif",
-                    fontSize: "1.25rem",
+                    fontSize: "1.6rem",
                     fontWeight: 800,
                     letterSpacing: "-0.03em",
                     color: textPrimary,
@@ -1077,6 +1034,17 @@ export default function CertificatesPreview() {
                     flexWrap: "wrap",
                   }}
                 >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: ".75rem",
+                      color: textMuted,
+                    }}
+                  >
+                    <Award size={12} /> {current.issuer}
+                  </div>
                   <div
                     style={{
                       display: "flex",
@@ -1207,11 +1175,83 @@ export default function CertificatesPreview() {
 
             {/* List */}
             <div className="thin-scroll" data-scroll="cert-list" style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "12px 14px" }}>
+              {peek !== null &&
+                createPortal(
+                  <div
+                    ref={peekRef}
+                    aria-hidden="true"
+                    className="cp-peek"
+                    style={{
+                      position: "fixed",
+                      left: 0,
+                      top: 0,
+                      width: 320,
+                      pointerEvents: "none",
+                      zIndex: 70,
+                      borderRadius: 12,
+                      overflow: "hidden",
+                      border: "1px solid rgba(var(--ac2),.3)",
+                      background: isDark ? "#1b2119" : "#ece3d6",
+                      boxShadow: "0 20px 44px -14px rgba(0,0,0,.45)",
+                    }}
+                  >
+                    <img
+                      src={getCertificatePreview(certificates[peek].image)}
+                      alt=""
+                      decoding="async"
+                      onLoad={placePeek} // the card grows when the image arrives; keep it inside the viewport
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        maxHeight: 260,
+                        objectFit: "contain",
+                        background: isDark ? "#151a13" : "#e2d6c6",
+                      }}
+                    />
+                    <div
+                      style={{
+                        padding: "9px 12px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                        gap: 10,
+                        borderTop: "1px solid rgba(var(--ac2),.14)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "Syne,sans-serif",
+                          fontSize: ".74rem",
+                          fontWeight: 700,
+                          color: textPrimary,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {certificates[peek].title}
+                      </span>
+                      <span style={{ fontSize: ".66rem", color: textMuted, flexShrink: 0 }}>
+                        {certificates[peek].issueDate}
+                      </span>
+                    </div>
+                  </div>,
+                  document.body,
+                )}
               {certificates.map((cert, i) => (
                 <div
                   key={cert.id}
                   className={`cp-list-item${i === activeIndex ? " active" : ""}`}
                   onClick={() => handleSelect(i)}
+                  onMouseEnter={(e) => {
+                    setAutoplay(false);
+                    showPeek(e, i);
+                  }}
+                  onMouseMove={movePeek}
+                  onMouseLeave={() => {
+                    setAutoplay(true);
+                    setPeek(null);
+                  }}
                 >
                   {/* Icon */}
                   <div
@@ -1250,8 +1290,8 @@ export default function CertificatesPreview() {
                           i === activeIndex
                             ? textPrimary
                             : isDark
-                              ? "rgba(226,214,198,.65)"
-                              : "rgba(35,43,32,.6)",
+                              ? "rgba(226,214,198,.76)"
+                              : "rgba(35,43,32,.8)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
